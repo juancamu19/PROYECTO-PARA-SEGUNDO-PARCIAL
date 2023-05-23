@@ -5,7 +5,7 @@ class Alquiler():
     cantAlquileres = 0
     registroAlquileres = {} 
     
-def __init__(self, idReserva):
+    def __init__(self, idReserva):
         self.id = self.cantAlquileres+1  #agrego el 1 porque cuando cree, a cant le sumo 1 una vez creado el objeto
         self.idReserva = idReserva #numero de reserva
         #antes de asignar un auto debo hacer la verificacion de si esta disponible, pero antes de eso debo preguntar que tipo de auto quiere

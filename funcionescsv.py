@@ -55,15 +55,19 @@ def validarReserva(id):
 
 ### FUNCION PARA ASIGNAR UN AUTO AUTOMÁTICAMENTE ###
 
-def asignarauto(fecinicio, fecfin,diccreservas,diccvehiculos):
+def asignarauto(fecinicio, fecfin,diccreservas):
     ### OBS: aca se pasa como parametro los diccionarios sobre los cuales se va a buscar, los mismos son "rellenado" al inicializar el programa"
+    ### Asumo que la compañia tiene al menos un auto
     ### METODOLOGIA DE BUSQUEDA: tomo aquellas reservas con las cuales se le superponen las fechas, y le asigno el primer auto que encuentre que no este ocupado por las mismas. Si no se superpone fechas con ninguna reserva, se le asigna el primer auto que encuentre.  
     setvehiculosdisponibles=Vehiculos.setVehiculos
     for k in diccreservas.keys():
         if (fecinicio >= diccreservas[k].fechaInicio and fecinicio <= diccreservas[k].fechaFin) or ( fecfin <= diccreservas[k].fechaFin and fecfin >= diccreservas[k].fechaIncio) or (fecinicio<=diccreservas[k].fechaInicio and fecfin >= diccreservas[k].fechaFin):  ##selecciono aquellas reservas donde se superpongan las fechas
             
             setvehiculosdisponibles.difference_update(diccreservas[k].patente)  ## voy actualizando el set de vehiculos disponibles con aquellos que no estan dentro de estas fechas
-            return random.choice(list(setvehiculosdisponibles))
+            if len(setvehiculosdisponibles)==0:
+                return None
+            else:
+                return random.choice(list(setvehiculosdisponibles))
         else: 
             
             return random.choice(list(Vehiculos.setVehiculos)) ##no hay ninguna reserva que superponga su fecha con la del cliente, entonces se toma al azar cualquier auto

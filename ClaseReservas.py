@@ -1,4 +1,5 @@
 import validaciones as val
+import datetime
 class Reserva():
     cantReservas = 0  
     setReservas=set()
@@ -19,7 +20,11 @@ class Reserva():
         print('su id de reserva es {}'.format(Reserva.cantReservas))
 
     def cancelarreserva(idreserva,diccres):
-        diccres.pop(idreserva)                
+        ##EL CODIGO DE LA RESTA DE DIAS SE PUEDE BUSCAR ALGUNA FUNCION DE DATETIME
+        if # FECHA ACTUAL - FECHA DE INICIO DE ALQUILER < 5 DIAS, 
+            print('faltan menos de 5 dias para que comience su alquiler, no puede cancelar la reserva')
+        else:
+            diccres[idreserva].fechaCancel=datetime.datetime.now()                
         
     def cambiarfechaExpiracionAlquiler(idreserva,diccres):
         fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')

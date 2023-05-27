@@ -3,7 +3,21 @@ from claseEmpresa import Empresa
 import validaciones as val
 import funcionescsv as fn
 import string
-import ClasePersonas as per
+from ClasePersonas import Personas
+from ClaseAlquileres import Alquiler
+from ClaseReservas import Reserva
+from ClaseVehiculos import Vehiculos
+
+##bajamos archivos a los diccionarios
+diccPersonas=fn.leerCsv('Personas.csv',Personas)
+diccAlquileres=fn.leerCsv('Alquileres.csv',Alquiler)
+diccReservas=fn.leerCsv('Reservas.csv',Reserva)
+diccVehiculos=fn.leerCsv('Vehiculos.csv',Vehiculos)
+
+##EJECUTO AUTOMATICAMENTE LOS ALQUILERES QUE CORRESPONDAN
+for k in diccReservas.keys():
+    if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():
+        Alquiler.aggAlquiler(k,diccReservas,diccAlquileres)
 
 
 letras = string.ascii_letters
@@ -77,8 +91,7 @@ while seguir_operando == "SI":
             contraseña = input("Ingrese su contraseña ")
             confirmar_contraseña = input('Confirmar contraseña ingresada ')
                     
-        #Empresa.aggCliente(dni, nombre, apellido, fecnac, email, usuario, contraseña)
-        
+        Personas.aggCliente(dni,nombre,apellido,fecnac,email,contraseña,diccPersonas)       
             
     elif opcion_elegida == "2":
         validado = False
@@ -99,7 +112,6 @@ while seguir_operando == "SI":
                 print("Si desea realizar una reserva ingrese 1")
                 print("Si desea cambiar una fecha de reserva ingrese 2")
                 print("Si desea cancelar una reserva ingrese 3")
-                print("Si ya tiene su reserva, y desea comenzar el alquiler ingrese 4")
                 print("Si desea cambiar alguno de sus datos ingrese 5")
                 print("Si desea salir ingrese 6")
 
@@ -114,19 +126,20 @@ while seguir_operando == "SI":
                         
                     fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY')
 
-                    while val.validarFechaInicio(fechainicio) == False:
+                    while val.validarAgregarFechaInicio(fechainicio) == False:
                         print('Ingrese una fecha válida')
                         fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
 
                     fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
 
                     while val.validarFechaFin(fechainicio,fechafin) == False: 
+                        print('Ingrese una fecha válida')
                         fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
-                        auto = fn.asignarauto()  ##le asigno un auto
-                        if auto == None:
+                    auto = fn.asignarauto()  ##le asigno un auto
+                    if auto == None:
                                 print('no hay auto disponible')
-                        else: 
-                            Empresa.aggReserva(dnix, auto, fechainicio, fechafin)  
+                    else: 
+                            Reserva.aggReserva(dnix, auto, fechainicio, fechafin,diccReservas)  
                             
                             
 
@@ -140,46 +153,36 @@ while seguir_operando == "SI":
                     while cambio not in [1,2,3]: #Valido que elija una operacion permitida
                         print('ingrese opcion valida')
                         cambio = int(input("ingrese su operacion a realizar "))
+                    
+                    validado = False
+                            
+                    while validado == False:
+                        idres = input("ingrese el id de su reserva ")
+                        validado= fn.validarReserva(idres)
 
 
                     if cambio == 1:
-                        validado = False
-                            
-                        while validado == False:
-                            idres = input("ingrese el id de su reserva ")
-                            validado = fn.validarReserva(idres)
                                 
-                            Empresa.cambiarfechaInicioAlquiler(idres)
+                        Reserva.cambiarfechaInicioAlquiler(idres,diccReservas)
 
 
                     elif cambio == 2:
-                        validado = False
-                            
-                        while validado == False:
-                            idres = input("ingrese el id de su reserva ")
-                            validado = fn.validarReserva(idres)
 
-                        Empresa.cambiarfechaExpiracionAlquiler(idres)
+                        Reserva.cambiarfechaExpiracionAlquiler(idres,diccReservas)
 
 
                     elif cambio == 3:
-                        validado = False
-                            
-                        while validado == False:
-                            idres = input("ingrese el id de su reserva ")
-                            validado= fn.validarReserva(idres)
                                                     
-                        Empresa.cambiarfechaInicioAlquiler(idres)
-                        Empresa.cambiarfechaExpiracionAlquiler(idres)
+                        Reserva.cambiarfechaInicioAlquiler(idres,diccReservas)
+                        Reserva.cambiarfechaExpiracionAlquiler(idres,diccReservas)
 
                             
                 elif operacion == 3:
                     validado = False
-                    idres=''
                     while validado == False:
                         idres = input("ingrese el id de su reserva")
                         validado = fn.validarReserva(idres)
-                    Empresa.cancelarreserva(idres)
+                    Reserva.cancelarreserva(idres,diccReservas)
 
                 elif operacion == 4:
                     validado = False

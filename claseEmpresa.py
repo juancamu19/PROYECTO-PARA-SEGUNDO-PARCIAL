@@ -4,7 +4,7 @@ from ClaseVehiculos import Vehiculos
 from ClaseReservas import Reserva
 from ClasePersonas import Personas
 from datetime import datetime
-import funcionescsv as fn
+import funcionescsv as funcsv
 import validaciones as val
 
 class Empresa():

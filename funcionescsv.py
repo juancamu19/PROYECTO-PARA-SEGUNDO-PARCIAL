@@ -25,6 +25,7 @@ def leerCsv(archivo, clase):
             dic1[clave] = clase(*row[1:])
     return dic1
 
+
 ### FUNCION PARA VALIDAR CONTRASEÑA ###
 
 def validarexistenciaPersona(dni, contraseñaing,dicc):

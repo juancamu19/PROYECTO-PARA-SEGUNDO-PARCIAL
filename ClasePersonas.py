@@ -16,8 +16,8 @@ class Personas:
     def contador_reservas(self):
         self.cantreservas += 1
     
-    def aggCliente(dni, nombre, apellido, fecnac, email, contraseña,diccPersonas):  ##no lleva atributo self
-         diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, contraseña)
+    def aggCliente(dni, nombre, apellido, fecnac, email, contraseña, diccPersonas):  ##no lleva atributo self
+        diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, contraseña)
 
     def cambiar_dato(self):
         print("1.DNI, 2.Nombre, 3.Apellido, 4.Fecha de Nacimiento, 5.Email, 6.Contraseña")

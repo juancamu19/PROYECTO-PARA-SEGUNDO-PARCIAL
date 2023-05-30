@@ -1,4 +1,4 @@
-
+import hashlib
 class Personas:
     setdnis=set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
@@ -18,7 +18,11 @@ class Personas:
         self.cantreservas += 1
     
     def aggCliente(dni, nombre, apellido, fecnac, email, contraseña,diccPersonas):  
-         diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, contraseña)
+        contraseña = contraseña.encode('utf-8')
+        hash_object = hashlib.sha256(contraseña)
+        hashed_password = hash_object.hexdigest()
+
+        diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, hashed_password)
 
     def validarexistenciaDNI(dni):
 
@@ -30,7 +34,10 @@ class Personas:
     def validarexistenciaPersona(dni, contraseñaing,dicc):
         for k in dicc.keys():
             if k == dni: 
-                if dicc[k].contraseña == contraseñaing:  
+                contraseñaing = contraseñaing.encode('utf-8')
+                hash_object = hashlib.sha256(contraseñaing)
+                hashed_password = hash_object.hexdigest()
+                if dicc[k].contraseña == hashed_password:  
                     return True
         else:
             return False

@@ -1,5 +1,5 @@
 import validaciones as val
-import datetime
+from datetime import datetime
 class Reserva():
     cantReservas = 0  
     setReservas=set()
@@ -16,12 +16,12 @@ class Reserva():
         Reserva.setReservas.add(self.id)
     
     def aggReserva(dni, patente_auto, fechaInicio, fechaFin,diccres):
-        diccres[Reserva.cantReservas+1] = Reserva(dni, patente_auto, fechaInicio, fechaFin)  ##instancio el objeto
+        diccres[Reserva.cantReservas+1] = Reserva(dni, patente_auto, fechaInicio, fechaFin)  
         print('su id de reserva es {}'.format(Reserva.cantReservas))
 
     def cancelarreserva(idreserva,diccres):
-        ##EL CODIGO DE LA RESTA DE DIAS SE PUEDE BUSCAR ALGUNA FUNCION DE DATETIME
-        if # FECHA ACTUAL - FECHA DE INICIO DE ALQUILER < 5 DIAS, 
+        fechainicio=datetime.strptime(diccres[idreserva].fechaInicio,"%d-%m-%Y").date()
+        if  (fechainicio-datetime.now()).days()<5:
             print('faltan menos de 5 dias para que comience su alquiler, no puede cancelar la reserva')
         else:
             diccres[idreserva].fechaCancel=datetime.datetime.now()                
@@ -32,13 +32,19 @@ class Reserva():
                     
             fechanueva = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
         
-        diccres[idreserva].fechaFin = fechanueva ##cambio la fecha de expiración
+        diccres[idreserva].fechaFin = fechanueva 
 
     def cambiarfechaInicioAlquiler(idreserva,diccres):
         fechanueva = input('ingrese fecha de Inicio de alquiler de la forma D-M-YYYY')
         while val.validarModifFechaInicio(fechanueva,diccres[idreserva].fechaFin) == False:
             fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')      
-        diccres[idreserva].fechaInicio = fechanueva ##cambio la fecha de inicio
+        diccres[idreserva].fechaInicio = fechanueva 
+
+    def validarReserva(id):
+        if id in Reserva.setReservas:  
+            return True          
+        else:
+            return False
 
     
     def __str__(self):

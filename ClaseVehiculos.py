@@ -2,18 +2,20 @@ from datetime import datetime
 class Vehiculos():
     cantVehiculos = 0
     setVehiculos=set()
-    def __init__(self, patente, modelo, marca, anio, precio):
+    def __init__(self, patente, modelo, marca, anio,tipo,gama,precioxdia):
         self.patente = patente
         self.modelo = modelo
         self.marca = marca
         self.anio = anio
-        self.precio = precio             #Por día de alquiler
-        self.disponible = True   ##se podría sacar, creo que no lo usamos mas
+        self.tipo = tipo
+        self.gama = gama
+        self.precioxdia = precioxdia
+        self.disponible = True   
         Vehiculos.cantVehiculos+=1
         Vehiculos.setVehiculos.add(self.patente)
     
-    def aggVehiculo(patente, modelo, marca, anio, precio,dicc):  ##este atributo no tiene self
-        dicc[patente]= Vehiculos(patente, modelo, marca, anio, precio)
+    def aggVehiculo(patente, modelo, marca, anio,tipo,gama, precioxdia,dicc):  
+        dicc[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama,precioxdia) #precioxdia debe ir automatico
         
     def devolverVehiculo(idalquiler,diccalq,diccVehi):
         diccalq[idalquiler].fechadev=datetime.now()

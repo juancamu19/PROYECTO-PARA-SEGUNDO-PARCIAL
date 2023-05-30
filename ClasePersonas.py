@@ -1,3 +1,4 @@
+
 class Personas:
     setdnis=set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
@@ -8,7 +9,7 @@ class Personas:
         self.email = email
         self.contraseña = contraseña
         self.cantreservas = 0
-        Personas.setdnis.add(self.dni)  ### cuando se lea el csv, y se instancien los objetos en el diccionario, al instanciarlos se agregan los dnis al set
+        Personas.setdnis.add(self.dni)  
 
     def __str__(self):
         return f"""{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, su contraseña es {self.contraseña}, y realizó {self.cantreservas} reservas"""
@@ -16,8 +17,25 @@ class Personas:
     def contador_reservas(self):
         self.cantreservas += 1
     
-    def aggCliente(dni, nombre, apellido, fecnac, email, contraseña, diccPersonas):  ##no lleva atributo self
-        diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, contraseña)
+    def aggCliente(dni, nombre, apellido, fecnac, email, contraseña,diccPersonas):  
+         diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, contraseña)
+
+    def validarexistenciaDNI(dni):
+
+        if dni in Personas.setdnis:  
+            return True          
+        else:
+            return False
+        
+    def validarexistenciaPersona(dni, contraseñaing,dicc):
+        for k in dicc.keys():
+            if k == dni: 
+                if dicc[k].contraseña == contraseñaing:  
+                    return True
+        else:
+            return False
+
+   
 
     def cambiar_dato(self):
         print("1.DNI, 2.Nombre, 3.Apellido, 4.Fecha de Nacimiento, 5.Email, 6.Contraseña")

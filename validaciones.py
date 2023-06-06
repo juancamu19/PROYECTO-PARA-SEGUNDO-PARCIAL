@@ -124,7 +124,7 @@ def validarnombre(nombre):
     nombre = str(nombre)
     
     try:
-         if len(nombre) == 0 or (nombre.isalpha() or nombre.count(' ')>=0) == False:
+         if (len(nombre) == 0 or (nombre.isalpha() or nombre.count(' ')>=0)) == False:
               raise ValueError("El nombre propio es incorrecto, intente de nuevo")
          
     except ValueError as error:

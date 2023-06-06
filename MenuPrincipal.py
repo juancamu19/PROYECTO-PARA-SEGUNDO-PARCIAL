@@ -68,7 +68,7 @@ while seguir_operando == "SI":
             fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
         fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
                 
-        usuario= input("Ingrese su nombre de usuario (mínimo 5 caracteres, máximo 20)")
+        usuario= input("Ingrese su nombre de usuario (mínimo 5 caracteres, máximo 20) ")
 
         while val.validarusuario(usuario) == False:
             print('Ingrese un usuario válido')

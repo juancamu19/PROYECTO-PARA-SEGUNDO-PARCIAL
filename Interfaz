@@ -1,0 +1,68 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
+
+class LoginWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Login')
+        self.setMinimumSize(600, 600)
+
+        # Create a central widget and a layout
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('logo.png')  # Adjust the path to your logo image file
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+
+        # Create a welcome label
+        welcome_label = QLabel('Bienvenido/a a NoVoyEnTren.com', self)
+        welcome_label.setAlignment(Qt.AlignCenter)
+
+        # Create labels
+        label_user = QLabel('Username:', self)
+        label_password = QLabel('Password:', self)
+
+        # Create input boxes
+        input_user = QLineEdit(self)
+        input_password = QLineEdit(self)
+        input_password.setEchoMode(QLineEdit.Password)
+
+        # Create login button
+        button_login = QPushButton('Login', self)
+
+        # Add widgets to the layout
+        layout.addWidget(logo_label)
+        layout.addWidget(welcome_label)
+        layout.addWidget(label_user)
+        layout.addWidget(input_user)
+        layout.addWidget(label_password)
+        layout.addWidget(input_password)
+        layout.addWidget(button_login)
+
+        # Set the central widget and apply the style sheet
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as f:
+            style = f.read()
+            self.setStyleSheet(style)
+
+    def resizeEvent(self, event):
+        # Center the objects when the window is resized
+        super().resizeEvent(event)
+        self.centerObjects()
+
+    def centerObjects(self):
+        # Center the objects in the window
+        central_widget = self.centralWidget()
+        layout = central_widget.layout()
+        layout.setAlignment(Qt.AlignCenter)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    login_window = LoginWindow()
+    login_window.show()
+    sys.exit(app.exec_())

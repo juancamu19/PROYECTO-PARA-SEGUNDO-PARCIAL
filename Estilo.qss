@@ -1,0 +1,45 @@
+/* Styles for the login window */
+
+/* Window background gradient */
+QWidget {
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 128, 255, 255), stop:1 rgba(0, 255, 128, 255));
+}
+
+/* Label styles */
+QLabel {
+    font-size: 14px;
+    color: #333333;
+}
+
+/* Input box styles */
+QLineEdit {
+    padding: 8px;
+    border: 2px solid #CCCCCC;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Input box when focused */
+QLineEdit:focus {
+    border: 2px solid #4D90FE;
+}
+
+/* Push button styles */
+QPushButton {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #FFFFFF;
+    background-color: #4D90FE;
+    border: none;
+    border-radius: 4px;
+}
+
+/* Push button when hovered */
+QPushButton:hover {
+    background-color: #307BFF;
+}
+
+/* Push button when pressed */
+QPushButton:pressed {
+    background-color: #0046AE;
+}

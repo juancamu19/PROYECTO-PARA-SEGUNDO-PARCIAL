@@ -1,4 +1,5 @@
 from datetime import datetime
+import pandas as pd
 class Vehiculos():
     cantVehiculos = 0
     setVehiculos=set()
@@ -14,9 +15,17 @@ class Vehiculos():
         Vehiculos.cantVehiculos+=1
         Vehiculos.setVehiculos.add(self.patente)
     
-    def aggVehiculo(patente, modelo, marca, anio,tipo,gama, precioxdia,dicc):  
+    def aggVehiculo(patente, modelo, marca, anio,tipo,gama,dicc):  
+        precioxdia=Vehiculos.asignar_precio(tipo,gama)
+
+        
         dicc[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama,precioxdia) #precioxdia debe ir automatico
 
+    def asignar_precio(tipo,gama):
+        df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
+        if tipo in df.columns and gama in df.index:
+            precio = df.loc[gama, tipo]
+        return precio
     def objeto_a_lista(self):
         obj_list = []
         for attr, value in self.__dict__.items():

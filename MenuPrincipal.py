@@ -34,8 +34,8 @@ while seguir_operando == "SI":
     print('')
     opcion_elegida = input('Ingrese el número de operación que desea realizar ')
 
-    while opcion_elegida not in [1,2,3]: 
-        opcion_elegida = int(input("ingrese nuevamente la opcion: "))
+    while opcion_elegida not in ['1','2','3']: 
+        opcion_elegida = input("ingrese nuevamente la opcion: ")
         
 
     if opcion_elegida == "1":
@@ -45,7 +45,7 @@ while seguir_operando == "SI":
             print('Ingrese un dni válido')
             dni = input("Ingrese su dni (sólo números) ")
 
-        while funcsv.validarexistenciaDNI(dni)==False:
+        while Personas.validarexistenciaDNI(dni)==True:
             print('el usuario ya esta registrado')
             dni = input("Ingrese su dni (sólo números) ")
                 
@@ -100,7 +100,7 @@ while seguir_operando == "SI":
 
             dnix = input("Ingrese su dni ")
             contraseñax = input("Ingrese su contraseña ")
-            validado = funcsv.validarexistenciaPersona(dnix, contraseñax)
+            validado = Personas.validarexistenciaPersona(dnix,contraseñax,diccPersonas)
             
             if not validado:
                 print("Su dni o contraseña son incorrectos")
@@ -124,14 +124,12 @@ while seguir_operando == "SI":
                 if operacion == 1:
                         
                     fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY')
-                    while val.validarFecha(fechainicio) == False:
-                        print('Ingrese una fecha válida')
-                        fechainicio = input('Ingrese fecha de la forma D-M-YYYY ')
-                    fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
+                    
 
                     while val.validarAgregarFechaInicio(fechainicio) == False:
                         print('Ingrese una fecha válida')
                         fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
+                    fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
 
                     fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
                     while val.validarFecha(fechafin) == False:
@@ -148,7 +146,7 @@ while seguir_operando == "SI":
                     if auto == None:
                         print('no hay auto disponible')
                     else: 
-                            Reserva.aggReserva(dnix, auto, fechainicio, fechafin, diccReservas)  
+                            Reserva.aggReserva(dnix, auto, fechainicio, fechafin, diccReservas) ##funciona 
                             
                             
 
@@ -267,3 +265,8 @@ while seguir_operando == "SI":
         break
         
     seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
+    if seguir_operando=='NO':
+        funcsv.escribirCsv('Personas.csv',diccPersonas)
+        funcsv.escribirCsv('Alquileres.csv',diccAlquileres)
+        funcsv.escribirCsv('Reservas.csv',diccReservas)
+        funcsv.escribirCsv('Vehiculos.csv',diccVehiculos)

@@ -4,27 +4,34 @@ class Reserva():
     cantReservas = 0  
     setReservas=set()
 
-    def __init__(self, dni, patente_auto, fechaInicio, fechaFin):
-        self.id = Reserva.cantReservas+1
+    def __init__(self, id = None,dni=None, patente_auto=None, fechaInicio=None, fechaFin=None,fechaCancel=None):
+        self.id =id
         self.dni = dni
         self.patente_auto = patente_auto
         self.fechaInicio = fechaInicio
         self.fechaFin = fechaFin
-        self.fechaCancel = 'no hay fecha de cancelacion'
+        self.fechaCancel = fechaCancel
 
         Reserva.cantReservas += 1
         Reserva.setReservas.add(self.id)
     
     def aggReserva(dni, patente_auto, fechaInicio, fechaFin,diccres):
-        diccres[Reserva.cantReservas+1] = Reserva(dni, patente_auto, fechaInicio, fechaFin)  
+        diccres[Reserva.cantReservas+1] = Reserva(Reserva.cantReservas+1,dni, patente_auto, fechaInicio, fechaFin)  
         print('su id de reserva es {}'.format(Reserva.cantReservas))
 
+    def objeto_a_lista(self):
+        obj_list = []
+        for attr, value in self.__dict__.items():
+            obj_list.append(value)
+        return obj_list
+    
     def cancelarreserva(idreserva,diccres):
         fechainicio=datetime.strptime(diccres[idreserva].fechaInicio,"%d-%m-%Y").date()
-        if  (fechainicio-datetime.now()).days()<5:
+        fechaactual=datetime.now()
+        if  (fechainicio-fechaactual.date()).days<5:
             print('faltan menos de 5 dias para que comience su alquiler, no puede cancelar la reserva')
         else:
-            diccres[idreserva].fechaCancel=datetime.datetime.now()                
+            diccres[idreserva].fechaCancel=datetime.now()                
         
     def cambiarfechaExpiracionAlquiler(idreserva,diccres):
         fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')

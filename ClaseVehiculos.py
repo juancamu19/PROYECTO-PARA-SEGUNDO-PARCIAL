@@ -2,7 +2,7 @@ from datetime import datetime
 class Vehiculos():
     cantVehiculos = 0
     setVehiculos=set()
-    def __init__(self, patente, modelo, marca, anio,tipo,gama,precioxdia):
+    def __init__(self, patente, modelo, marca, anio,tipo,gama,precioxdia,disponible=True):
         self.patente = patente
         self.modelo = modelo
         self.marca = marca
@@ -16,6 +16,12 @@ class Vehiculos():
     
     def aggVehiculo(patente, modelo, marca, anio,tipo,gama, precioxdia,dicc):  
         dicc[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama,precioxdia) #precioxdia debe ir automatico
+
+    def objeto_a_lista(self):
+        obj_list = []
+        for attr, value in self.__dict__.items():
+            obj_list.append(value)
+        return obj_list
         
     def devolverVehiculo(idalquiler,diccalq,diccVehi):
         diccalq[idalquiler].fechadev=datetime.now()
@@ -28,4 +34,6 @@ class Vehiculos():
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    pass
+   pass
+    
+

@@ -5,6 +5,7 @@ import string
 
 def validarFecha(fecha):
     try:
+        fecha = datetime.strptime(fecha,"%d-%m-%Y").date()
         if fecha.year > datetime.today().year:
             raise ValueError("El año ingresado es inválido, no hemos alcanzado ese año aún!")
         if fecha.year == datetime.today().year and fecha.month > datetime.today().month:
@@ -36,7 +37,8 @@ def validarFechaNac(fecha):
 def validarAgregarFechaInicio(fechainicio):
     try:
         fecha_ing = datetime.strptime(fechainicio,"%d-%m-%Y").date()
-        if (fecha_ing - datetime.now()).days() >= 5:
+        fechaactual=datetime.now()
+        if (fecha_ing - fechaactual.date()).days >= 5:
              return True
         else:
              print('la fecha ingresada debe tener como mínimo una anticipación de 5 días')

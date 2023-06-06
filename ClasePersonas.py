@@ -1,14 +1,14 @@
 import hashlib
 class Personas:
     setdnis=set()
-    def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
+    def __init__(self, dni, nombre, apellido, fecnac, email, contraseña,cantreservas=0):
         self.dni = dni
         self.nombre = nombre
         self.apellido = apellido
         self.fecnac = fecnac
         self.email = email
         self.contraseña = contraseña
-        self.cantreservas = 0
+        self.cantreservas = cantreservas
         Personas.setdnis.add(self.dni)  
 
     def __str__(self):
@@ -16,6 +16,12 @@ class Personas:
 
     def contador_reservas(self):
         self.cantreservas += 1
+    
+    def objeto_a_lista(self):
+        obj_list = []
+        for attr, value in self.__dict__.items():
+            obj_list.append(value)
+        return obj_list
     
     def aggCliente(dni, nombre, apellido, fecnac, email, contraseña,diccPersonas):  
         contraseña = contraseña.encode('utf-8')
@@ -83,6 +89,7 @@ class Personas:
 
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    Per1 = Personas(44788302, "Juan Cruz", "Varela", "28-04-2023", "jvarela@itba.eduar", "juancin")
-    dic = list(vars(Per1).values())
-    print(dic)
+    Per1 = Personas(44788302, "Juan Cruz", "Varela", "28-04-2023", "jvarela@itba.eduar", "juancin",2)
+    print(Per1.objeto_a_lista())
+    
+

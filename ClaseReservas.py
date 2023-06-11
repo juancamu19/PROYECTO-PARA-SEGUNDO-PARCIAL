@@ -4,6 +4,7 @@ from datetime import datetime
 class Reserva():
     cantReservas = 0  
     setReservas = set()
+    diccionario=dict()
 
     def __init__(self, id = None, dni = None, patente_auto = None, fechaInicio = None, fechaFin = None, fechaCancel = None):
         self.id = id
@@ -16,12 +17,6 @@ class Reserva():
         Reserva.cantReservas += 1
         Reserva.setReservas.add(self.id)
     
-
-    def aggReserva(dni, patente_auto, fechaInicio, fechaFin, diccres):
-        diccres[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, dni, patente_auto, fechaInicio, fechaFin)  
-        return f'La reserva de id {Reserva.cantReservas} , hecha por el usuario de dni {dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}'
-        
-    
     def objeto_a_lista(self):
         obj_list = []
         for attr, value in self.__dict__.items():
@@ -29,29 +24,29 @@ class Reserva():
         return obj_list
     
     
-    def cancelarreserva(idreserva,diccres):
-        fechainicio=datetime.strptime(diccres[idreserva].fechaInicio,"%d-%m-%Y").date()
+    def cancelarreserva(self):
+        fechainicio=datetime.strptime(self.fechaInicio,"%d-%m-%Y").date()
         fechaactual=datetime.now()
         if  (fechainicio-fechaactual.date()).days<5:
             print('faltan menos de 5 dias para que comience su alquiler, no puede cancelar la reserva')
         else:
-            diccres[idreserva].fechaCancel=datetime.now()                
+            self.fechaCancel=datetime.now()                
         
     
-    def cambiarfechaExpiracionAlquiler(idreserva,diccres):
+    def cambiarfechaExpiracionAlquiler(self):
         fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')
-        while val.validarFechaFin(diccres[idreserva].fechaInicio,fechanueva) == False:
+        while val.validarFechaFin(self.fechaInicio,fechanueva) == False:
                     
             fechanueva = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
         
-        diccres[idreserva].fechaFin = fechanueva 
+        self.fechaFin = fechanueva 
 
     
-    def cambiarfechaInicioAlquiler(idreserva,diccres):
+    def cambiarfechaInicioAlquiler(self):
         fechanueva = input('ingrese fecha de Inicio de alquiler de la forma D-M-YYYY')
-        while val.validarModifFechaInicio(fechanueva,diccres[idreserva].fechaFin) == False:
+        while val.validarModifFechaInicio(fechanueva,self.fechaFin) == False:
             fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')      
-        diccres[idreserva].fechaInicio = fechanueva 
+        self.fechaInicio = fechanueva 
 
     
     def validarReserva(id):

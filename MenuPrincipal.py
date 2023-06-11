@@ -2,20 +2,28 @@ from datetime import datetime
 from claseEmpresa import Empresa
 import validaciones as val
 import funcionescsv as funcsv
-from ClasePersonas import Personas
+from ClasePersonas import Usuarios,Administrador
 from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
 
-diccPersonas = funcsv.leerCsv('Personas.csv', Personas)
+diccEmpleados = funcsv.leerCsv('Empleados.csv', Administrador)
+diccUsuarios = funcsv.leerCsv('Usuarios.csv', Usuarios)
 diccAlquileres = funcsv.leerCsv('Alquileres.csv', Alquiler)
 diccReservas = funcsv.leerCsv('Reservas.csv', Reserva)
 diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
 
-for k in diccReservas.keys():
-    if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():
-        Alquiler.aggAlquiler(k,diccReservas,diccAlquileres)
+Administrador.diccionario=diccEmpleados
+Usuarios.diccionario=diccUsuarios
+Alquiler.diccionario=diccAlquileres
+Reserva.diccionario=diccReservas
+Vehiculos.diccionario=diccVehiculos
 
+
+for k in diccReservas.keys():
+    if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():          
+        diccAlquileres[Alquiler.cantAlquileres+1]=Alquiler(k,diccReservas[k].dni,diccReservas[k].patente_auto,diccReservas[k].fechaInicio,diccReservas[k].fechaFin)
+        diccVehiculos[diccAlquileres[Alquiler.cantAlquileres].patente_auto].disponible=False
 
 seguir_operando = "SI"
 

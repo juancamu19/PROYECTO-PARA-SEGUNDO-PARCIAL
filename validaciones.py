@@ -2,8 +2,21 @@
 from datetime import datetime
 from datetime import date
 import string
+import hashlib
 
 letras_habilitadas = set(string.ascii_letters + " ")
+
+def validarexistenciaPersona(dni, contraseña_ingresada, dicc):
+        for k in dicc.keys():
+            if k == dni: 
+                contraseña_ingresada = contraseña_ingresada.encode('utf-8')
+                hash_object = hashlib.sha256(contraseña_ingresada)
+                hashed_password = hash_object.hexdigest()
+                if dicc[k].contraseña == hashed_password:  
+                    return True
+       
+        else:
+            return False
 
 def validarFecha(fecha):
     try:

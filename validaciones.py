@@ -3,6 +3,8 @@ from datetime import datetime
 from datetime import date
 import string
 
+letras_habilitadas = set(string.ascii_letters + " ")
+
 def validarFecha(fecha):
     try:
         fecha = datetime.strptime(fecha,"%d-%m-%Y").date()
@@ -19,6 +21,7 @@ def validarFecha(fecha):
 
     return True
 
+
 def validarFechaNac(fecha):
     try:
         fecha_ing = datetime.strptime(fecha,"%d-%m-%Y").date()
@@ -26,11 +29,11 @@ def validarFechaNac(fecha):
         if fecha_ing < fecha_actual:
              return True
         else:
-             print('la fecha ingresada no es valida')
+             print('La fecha ingresada no es valida')
              return False
         
     except ValueError:
-        print('el formato de fecha ingresa es incorrecto, debe ser D-M-Y')
+        print('El formato de fecha ingresa es incorrecto, debe ser D-M-Y')
         return False
 
 
@@ -124,8 +127,9 @@ def validarnombre(nombre):
     nombre = str(nombre)
     
     try:
-         if len(nombre) == 0 or (nombre.isalpha() or nombre.count(' ')>=0) == False:
-              raise ValueError("El nombre propio es incorrecto, intente de nuevo")
+        for letra in nombre:
+            if letra not in letras_habilitadas:
+                raise ValueError("El nombre propio es incorrecto, intente de nuevo")
          
     except ValueError as error:
             print(f"Error: {error}")
@@ -152,7 +156,7 @@ def validarcontraseña(contraseña):
     contraseña = str(contraseña)
     
     try:
-         if len(contraseña) == 0:
+         if len(contraseña) < 5 or len(contraseña) > 20:
               raise ValueError("La contraseña ingresada es incorrecta, intente de nuevo")
          
     except ValueError as error:

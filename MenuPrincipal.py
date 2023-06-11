@@ -2,29 +2,26 @@ from datetime import datetime
 from claseEmpresa import Empresa
 import validaciones as val
 import funcionescsv as funcsv
-import string
 from ClasePersonas import Personas
 from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
 
-diccPersonas=funcsv.leerCsv('Personas.csv',Personas)
-diccAlquileres=funcsv.leerCsv('Alquileres.csv',Alquiler)
-diccReservas=funcsv.leerCsv('Reservas.csv',Reserva)
-diccVehiculos=funcsv.leerCsv('Vehiculos.csv',Vehiculos)
+diccPersonas = funcsv.leerCsv('Personas.csv', Personas)
+diccAlquileres = funcsv.leerCsv('Alquileres.csv', Alquiler)
+diccReservas = funcsv.leerCsv('Reservas.csv', Reserva)
+diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
 
 for k in diccReservas.keys():
     if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():
         Alquiler.aggAlquiler(k,diccReservas,diccAlquileres)
 
 
-letras = string.ascii_letters
-
-
 seguir_operando = "SI"
 
 
 while seguir_operando == "SI":
+    
     print('Operaciones que puede realizar:')
     print('')
     print('1. Registrarse')
@@ -32,67 +29,59 @@ while seguir_operando == "SI":
     print('')
     print('3. Salir')
     print('')
+    
+
     opcion_elegida = input('Ingrese el número de operación que desea realizar ')
 
     while opcion_elegida not in ['1','2','3']: 
         opcion_elegida = input("ingrese nuevamente la opcion: ")
         
 
-    if opcion_elegida == "1":
+    if opcion_elegida == "1":                               #REGISTRO del Usuario (Persona)
+        
         dni = input("Ingrese su dni (sólo números) ")
-
         while val.validardni(dni) == False:              
-            print('Ingrese un dni válido')
             dni = input("Ingrese su dni (sólo números) ")
-
         while Personas.validarexistenciaDNI(dni)==True:
             print('el usuario ya esta registrado')
             dni = input("Ingrese su dni (sólo números) ")
                 
-        nombre = input("Ingrese su nombre ")
-
+        nombre = input("Ingrese su nombre (el apellido se lo solicitaremos a continuación) ")
         while val.validarnombre(nombre) == False:
-            print('Ingrese un nombre válido')
             nombre = input("Ingrese su nombre ")
 
         apellido = input("Ingrese su apellido ")
-
         while val.validarnombre(apellido) == False:
-            print('Ingrese un apellido válido')
             apellido = input("Ingrese su apellido ")
 
         fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
-
         while val.validarFechaNac(fecnac) == False:
-            print('Ingrese una fecha válida')
             fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
         fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
                 
-        usuario= input("Ingrese su nombre de usuario (mínimo 5 caracteres, máximo 20)")
-
+        usuario= input("Ingrese su nombre de usuario (mínimo 5 caracteres, máximo 20) ")
         while val.validarusuario(usuario) == False:
-            print('Ingrese un usuario válido')
-            usuario= input('Ingrese un nombre de usuario')
+            usuario= input('Ingrese un nombre de usuario ')
 
         email = input("Ingrese su email ")
-
         while val.validaremail(email) == False:
-            print('Ingrese un email válido')
             email = input("Ingrese su email ")
 
-        contraseña = input('Ingrese su contraseña ')
+        contraseña = input('Ingrese su contraseña (mínimo 5 caracteres, máximo 20) ')
         confirmar_contraseña = input('Confirmar contraseña ingresada ')
-
         while (val.validarcontraseña(contraseña) == False) or (contraseña != confirmar_contraseña):
-            print('Ingrese una contraseña válida')
             contraseña = input("Ingrese su contraseña ")
             confirmar_contraseña = input('Confirmar contraseña ingresada ')
 
+        Personas.aggCliente(dni, nombre, apellido, fecnac, email, contraseña, diccPersonas)    
 
-        Personas.aggCliente(dni, nombre, apellido, fecnac, email, contraseña, diccPersonas)       
+        print("Se ha registrado la siguiente información:")
+        print(diccPersonas [dni])    
             
     
-    elif opcion_elegida == "2":
+
+    elif opcion_elegida == "2":                             #INGRESO del Usuario (Persona)
+        
         validado = False
         volver_a_ingresar = "SI"
 
@@ -100,7 +89,7 @@ while seguir_operando == "SI":
 
             dnix = input("Ingrese su dni ")
             contraseñax = input("Ingrese su contraseña ")
-            validado = Personas.validarexistenciaPersona(dnix,contraseñax,diccPersonas)
+            validado = Personas.validarexistenciaPersona(dnix, contraseñax, diccPersonas)
             
             if not validado:
                 print("Su dni o contraseña son incorrectos")
@@ -108,24 +97,20 @@ while seguir_operando == "SI":
                 
             else:
                 
-                print("Si desea realizar una reserva ingrese 1")
-                print("Si desea cambiar una fecha de reserva ingrese 2")
-                print("Si desea cancelar una reserva ingrese 3")
-                print("Si desea cambiar alguno de sus datos ingrese 5")
-                print("Si desea salir ingrese 6")
+                print('Operaciones que puede realizar:')
+                print('')
+                print('1. Realizar una reserva')
+                print('2. Cambiar una fecha de reserva')
+                print('3. Cancelar una reserva')
+                print('4. Cambiar un dato de su usuario')
+                print('')
+                print('5. Salir')
 
-                operacion = int(input("ingrese opcion"))
+                operacion = input("Ingrese el número de operación que desea realizar")
 
-                while operacion not in [1,2,3,4,5]:
-                    print('ingrese opcion valida')
-                    operacion = int(input("ingrese opcion"))
-
-
-                if operacion == 1:
+                if operacion == "1":                        #Realizar una reserva
                         
-                    fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY')
-                    
-
+                    fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticiáción mínima de 5 días)')
                     while val.validarAgregarFechaInicio(fechainicio) == False:
                         print('Ingrese una fecha válida')
                         fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
@@ -146,26 +131,24 @@ while seguir_operando == "SI":
                     if auto == None:
                         print('no hay auto disponible')
                     else: 
-                            Reserva.aggReserva(dnix, auto, fechainicio, fechafin, diccReservas) ##funciona 
+                        Reserva.aggReserva(dnix, auto, fechainicio, fechafin, diccres) 
                             
                             
+                elif operacion == "2":                     #Cambiar una fecha de reserva
 
-                elif operacion == 2:
-                    print("si desea cambiar el inicio de su alquiler ingrese 1")
-                    print("si desea cambiar la fecha de fin de su alquiler ingrese 2")
-                    print("si desea cambiar ambos ingrese 3")
-
-                    cambio = int(input("ingrese su operacion a realizar ").strip()) 
-                        
-                    while cambio not in [1,2,3]: #Valido que elija una operacion permitida
-                        print('ingrese opcion valida')
-                        cambio = int(input("ingrese su operacion a realizar "))
+                    print('Operaciones que puede realizar:')
+                    print('')
+                    print('1. Cambiar el inicio de su alquiler')
+                    print('2. Cambiar la fecha de fin de su alquiler')
+                    print('3. Cambiar ambos')
+                    print('')
+                    print('4. Salir')
                     
                     validado = False
                             
                     while validado == False:
-                        idres = input("ingrese el id de su reserva ")
-                        validado= funcsv.validarReserva(idres)
+                        idres = input("Ingrese el id de su reserva ")
+                        validado = funcsv.validarReserva(idres)
 
 
                     if cambio == 1:
@@ -184,14 +167,15 @@ while seguir_operando == "SI":
                         Reserva.cambiarfechaExpiracionAlquiler(idres,diccReservas)
 
                             
-                elif operacion == 3:
+                elif operacion == "3":
                     validado = False
                     while validado == False:
                         idres = input("ingrese el id de su reserva")
                         validado = funcsv.validarReserva(idres)
                     Reserva.cancelarreserva(idres,diccReservas)
 
-                elif operacion == 4:
+                
+                elif operacion == "4":
                     validado = False
                             
                     while validado == False:
@@ -199,11 +183,14 @@ while seguir_operando == "SI":
                         validado = funcsv.validarReserva(idres)
                     Empresa.aggAlquiler(idres)
 
-                elif operacion == 5:
+                
+                elif operacion == "5":
                     per.cambiar_dato()
                     
+                
                 elif operacion==6:
                     pass
+
 
 
     elif opcion_elegida == 3:

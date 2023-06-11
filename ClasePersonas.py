@@ -1,34 +1,25 @@
 import hashlib
+from ClaseReservas import Reserva
 class Personas:
     setdnis=set()
-    def __init__(self, dni, nombre, apellido, fecnac, email, contraseña,cantreservas=0):
+    def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
         self.dni = dni
         self.nombre = nombre
         self.apellido = apellido
         self.fecnac = fecnac
         self.email = email
         self.contraseña = contraseña
-        self.cantreservas = cantreservas
-        Personas.setdnis.add(self.dni)  
+         
 
     def __str__(self):
         return f"""{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, su contraseña es {self.contraseña}, y realizó {self.cantreservas} reservas"""
 
-    def contador_reservas(self):
-        self.cantreservas += 1
-    
     def objeto_a_lista(self):
         obj_list = []
         for attr, value in self.__dict__.items():
             obj_list.append(value)
-        return obj_list
+        return obj_list 
     
-    def aggCliente(dni, nombre, apellido, fecnac, email, contraseña,diccPersonas):  
-        contraseña = contraseña.encode('utf-8')
-        hash_object = hashlib.sha256(contraseña)
-        hashed_password = hash_object.hexdigest()
-
-        diccPersonas[dni]= Personas(dni, nombre, apellido, fecnac, email, hashed_password)
 
     def validarexistenciaDNI(dni):
 
@@ -87,9 +78,30 @@ class Personas:
             print("Su contraseña ha sido modificada exitosamente de: ",dato_viejo," a: ",dato_nuevo)
 
 
+class Usuarios(Personas):
+    def __init__(self,dni,username, nombre, apellido, fecnac, email, contraseña, cantreservas=0):
+        super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
+        username = username
+        cantreservas = cantreservas
+        Usuarios.setdnis.add(self.dni) 
+    def agregarCliente(dni,username, nombre, apellido, fecnac, email, contraseña,diccPersonas):  
+        contraseña = contraseña.encode('utf-8')
+        hash_object = hashlib.sha256(contraseña)
+        hashed_password = hash_object.hexdigest()
+        diccPersonas[dni]= Personas(dni,username, nombre, apellido, fecnac, email, hashed_password)
+
+class Administrador(Personas):
+    def __init__(self,dni,legajo, nombre, apellido, fecnac, email, contraseña):
+        super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
+        legajo=legajo        
+        Administrador.setdnis.add(self.dni)
+
+    
+    
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    Per1 = Personas(44788302, "Juan Cruz", "Varela", "28-04-2023", "jvarela@itba.eduar", "juancin",2)
-    print(Per1.objeto_a_lista())
+    Per1 = Usuarios(44788302,"user1", "Juan Cruz", "Varela", "28-04-2023", "jvarela@itba.eduar", "juancin",2)
+    print(Per1.__dict__.items())
+    
     
 

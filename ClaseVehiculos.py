@@ -43,6 +43,6 @@ class Vehiculos():
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-   pass
+   print(Vehiculos.asignar_precio('deportivo','alta'))
     
 

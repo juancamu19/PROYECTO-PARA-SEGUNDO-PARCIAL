@@ -2,7 +2,7 @@ from datetime import datetime
 from claseEmpresa import Empresa
 import validaciones as val
 import funcionescsv as funcsv
-from ClasePersonas import Usuarios,Administrador
+from ClasePersonas import Administrador, Usuarios, Personas
 from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
@@ -81,10 +81,10 @@ while seguir_operando == "SI":
             contraseña = input("Ingrese su contraseña ")
             confirmar_contraseña = input('Confirmar contraseña ingresada ')
 
-        Personas.aggCliente(dni, nombre, apellido, fecnac, email, contraseña, diccPersonas)    
+        Personas.aggCliente(dni, nombre, apellido, fecnac, email, contraseña, diccUsuarios)    
 
         print("Se ha registrado la siguiente información:")
-        print(diccPersonas [dni])    
+        print(diccUsuarios [dni])    
             
     
 
@@ -97,7 +97,7 @@ while seguir_operando == "SI":
 
             dnix = input("Ingrese su dni ")
             contraseñax = input("Ingrese su contraseña ")
-            validado = Personas.validarexistenciaPersona(dnix, contraseñax, diccPersonas)
+            validado = val.validarexistenciaPersona(dnix, contraseñax, diccUsuarios)
             
             if not validado:
                 print("Su dni o contraseña son incorrectos")
@@ -139,7 +139,7 @@ while seguir_operando == "SI":
                     if auto == None:
                         print('no hay auto disponible')
                     else: 
-                        Reserva.aggReserva(dnix, auto, fechainicio, fechafin, diccres) 
+                        Reserva.aggReserva(dnix, auto, fechainicio, fechafin, diccReservas) 
                             
                             
                 elif operacion == "2":                     #Cambiar una fecha de reserva
@@ -158,7 +158,8 @@ while seguir_operando == "SI":
                         idres = input("Ingrese el id de su reserva ")
                         validado = funcsv.validarReserva(idres)
 
-
+                    cambio = input("Ingrese el número de operación que desea realizar")
+                
                     if cambio == 1:
                                 
                         Reserva.cambiarfechaInicioAlquiler(idres,diccReservas)
@@ -193,7 +194,7 @@ while seguir_operando == "SI":
 
                 
                 elif operacion == "5":
-                    per.cambiar_dato()
+                    Personas.cambiar_dato()
                     
                 
                 elif operacion==6:
@@ -261,7 +262,7 @@ while seguir_operando == "SI":
         
     seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
     if seguir_operando=='NO':
-        funcsv.escribirCsv('Personas.csv',diccPersonas)
+        funcsv.escribirCsv('Personas.csv',diccUsuarios)
         funcsv.escribirCsv('Alquileres.csv',diccAlquileres)
         funcsv.escribirCsv('Reservas.csv',diccReservas)
         funcsv.escribirCsv('Vehiculos.csv',diccVehiculos)

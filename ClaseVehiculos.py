@@ -1,6 +1,7 @@
 from datetime import datetime
 import pandas as pd
-import funcionescsv as funcsv
+import random
+# import funcionescsv as funcsv
 class Vehiculos():
     diccionario=dict()
     cantVehiculos = 0
@@ -24,8 +25,7 @@ class Vehiculos():
         match atributo:
             case 'patente':
                 patentenueva=input('ingrese patente nueva')
-                self.patente=patentenueva
-                #####Y ASI CON EL RESTO DE ATRIBUTOS ################################# 
+                self.patente=patentenueva 
             case 'modelo' :
                 modelonuevo=input('ingrese modelo nuevo')
                 self.modelo=modelonuevo 
@@ -58,14 +58,31 @@ class Vehiculos():
             obj_list.append(value)
         return obj_list
         
+    def asignarauto(fecinicio, fecfin, tipo, gama, diccreservas, diccVehiculos):
+    
+        setvehiculosdisponibles=Vehiculos.setVehiculos
+        for k in diccreservas.keys():
+            if diccVehiculos[diccreservas[k].patente_auto].tipo==tipo and diccVehiculos[diccreservas[k].patente_auto].gama==gama:
+                if (fecinicio >= diccreservas[k].fechaInicio and fecinicio <= diccreservas[k].fechaFin) or ( fecfin <= diccreservas[k].fechaFin and fecfin >= diccreservas[k].fechaIncio) or (fecinicio<=diccreservas[k].fechaInicio and fecfin >= diccreservas[k].fechaFin):
+                
+                    setvehiculosdisponibles.remove(diccreservas[k].patente_auto)  
+
+        if len(setvehiculosdisponibles)==0:
+            return None
+        else:
+            return random.choice(list(setvehiculosdisponibles))
+
 
 
     def __str__(self):     #Sería como una consulta general sobre el estado de un vehículo
         return(f"""El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precio}, ...""") 
     
+
+# diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
+
 # Pruebas de Funcionamiento
 #creo un falcon de pruebas
-TESTER=Vehiculos('abc500','Falcon','Ford',2023,'deportivo','alta',60000,True)
+TESTER=Vehiculos('abc500','Falcon','Ford',2023,'deportivo','alta')
 
 if __name__ == "__main__":
    print(Vehiculos.asignarPrecio(TESTER))

@@ -1,6 +1,6 @@
 import validaciones as val
 from datetime import datetime
-
+# import funcionescsv as funcsv
 class Reserva():
     cantReservas = 0  
     setReservas = set()
@@ -59,6 +59,7 @@ class Reserva():
     def __str__(self):
         return f"La reserva de id {self.id}, hecha por el usuario de dni {self.dni} para el vehículo de patente {self.patente_auto}, inicia el {self.fechaInicio} y finaliza el {self.fechaFin}"
 
+# diccReservas = funcsv.leerCsv('Reservas.csv', Reserva)
 
 # Pruebas de Funcionamiento
 if __name__ == "__main__":

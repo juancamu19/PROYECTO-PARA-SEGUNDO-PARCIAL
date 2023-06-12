@@ -1,6 +1,7 @@
 from datetime import datetime
 from ClaseVehiculos import Vehiculos
 
+# import funcionescsv as funcsv
 
 class Alquiler():
     cantAlquileres = 0
@@ -30,6 +31,7 @@ class Alquiler():
     def __str__(self):
         return ('{}-{}-{}-{}-{}'.format(self.id, self.fecha, self.dni, self.auto))
    
+# diccAlquileres = funcsv.leerCsv('Alquileres.csv', Alquiler)
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
     pass

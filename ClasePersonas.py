@@ -14,19 +14,19 @@ class Personas:
         self.contraseña = contraseña     
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, y realizó {self.cantreservas} reservas hasta el momento"
-
-    def objeto_a_lista(self):
-        obj_list = []
-        for attr, value in self.__dict__.items():
-            obj_list.append(value)
-        return obj_list  
+        return f"{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, y realizó {self.cantreservas} reservas hasta el momento"  
 
     def validarexistenciaDNI(dni):
         if dni in Personas.setdnis:  
             return True          
         else:
             return False
+        
+    def objeto_a_lista(self):
+        obj_list = []
+        for attr, value in self.__dict__.items():
+            obj_list.append(value)
+        return obj_list
    
     def cambiar_dato(self):
         print("1.DNI, 2.Nombre, 3.Apellido, 4.Fecha de Nacimiento, 5.Email, 6.Contraseña")
@@ -68,10 +68,10 @@ class Personas:
 class Usuarios(Personas):
     def __init__(self,dni,username, nombre, apellido, fecnac, email, contraseña, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
-        username = username
-        cantreservas = cantreservas
+        self.username = username
+        self.cantreservas = cantreservas
         Usuarios.setdnis.add(self.dni) 
-    def agregarCliente(dni,username, nombre, apellido, fecnac, email, contraseña):  
+    def agregarUsuario(dni,username, nombre, apellido, fecnac, email, contraseña):  
         contraseña = contraseña.encode('utf-8')
         hash_object = hashlib.sha256(contraseña)
         hashed_password = hash_object.hexdigest()
@@ -89,11 +89,13 @@ class Usuarios(Personas):
     def modifFecFinReserva(self,idreserva,diccres):
         diccres[idreserva].cambiarfechaExpiracionAlquiler()
 
+# diccUsuarios = funcsv.leerCsv('Usuarios.csv', Usuarios)
+
 
 class Administrador(Personas):
     def __init__(self,dni,legajo, nombre, apellido, fecnac, email, contraseña):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
-        legajo=legajo        
+        self.legajo=legajo        
         Administrador.setdnis.add(self.dni)
     def agregarVehiculo(self,patente, modelo, marca, anio,tipo,gama,dicc):        
         dicc[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama)
@@ -108,12 +110,11 @@ class Administrador(Personas):
     def eliminarVehiculo(self,patente,diccVehi):
         diccVehi[patente].eliminar(diccVehi)
 
-    
+# diccEmpleados = funcsv.leerCsv('Empleados.csv', Administrador)
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    Per1 = Usuarios(44788302,"user1", "Juan Cruz", "Varela", "28-04-2023", "jvarela@itba.eduar", "juancin",2)
-    print(Per1.__dict__.items())
+    print(diccUsuarioos)
     
     
 

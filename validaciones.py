@@ -6,6 +6,9 @@ import hashlib
 
 letras_habilitadas = set(string.ascii_letters + " ")
 
+def validarReserva():
+     pass
+
 def validarexistenciaPersona(dni, contraseña_ingresada, dicc):
         for k in dicc.keys():
             if k == dni: 

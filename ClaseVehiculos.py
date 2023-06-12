@@ -1,9 +1,10 @@
 from datetime import datetime
 import pandas as pd
 import random
-# import funcionescsv as funcsv
+import funcionescsv as funcsv
+from ClaseReservas import diccReservas
 class Vehiculos():
-    diccionario=dict()
+    # diccionario=dict()
     cantVehiculos = 0
     setVehiculos=set()
     def __init__(self, patente, modelo, marca, anio,tipo,gama,precioxdia=None,disponible=True):
@@ -43,8 +44,6 @@ class Vehiculos():
                 gamanueva=input('ingrese nueva gama')
                 self.gama=gamanueva
             ##No se como se haria esto con el tema del precio xq esta el asignar precio, faltaria eso 
-    def eliminar(self,diccVehi):
-        del diccVehi[self.patente]
         
     def asignarPrecio(self):
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
@@ -58,14 +57,16 @@ class Vehiculos():
             obj_list.append(value)
         return obj_list
         
-    def asignarauto(fecinicio, fecfin, tipo, gama, diccreservas, diccVehiculos):
+    def asignarauto(fecinicio, fecfin, tipo, gama):
     
         setvehiculosdisponibles=Vehiculos.setVehiculos
-        for k in diccreservas.keys():
-            if diccVehiculos[diccreservas[k].patente_auto].tipo==tipo and diccVehiculos[diccreservas[k].patente_auto].gama==gama:
-                if (fecinicio >= diccreservas[k].fechaInicio and fecinicio <= diccreservas[k].fechaFin) or ( fecfin <= diccreservas[k].fechaFin and fecfin >= diccreservas[k].fechaIncio) or (fecinicio<=diccreservas[k].fechaInicio and fecfin >= diccreservas[k].fechaFin):
+        for k in diccReservas.keys():
+            fechaInicioReservak = datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()
+            fechaFinReservak = datetime.strptime(diccReservas[k].fechaFin,"%d-%m-%Y").date()
+            if diccVehiculos[diccReservas[k].patente_auto].tipo==tipo and diccVehiculos[diccReservas[k].patente_auto].gama==gama:
+                if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and diccReservas[k].fechaCancel==None:
                 
-                    setvehiculosdisponibles.remove(diccreservas[k].patente_auto)  
+                    setvehiculosdisponibles.remove(diccReservas[k].patente_auto)  
 
         if len(setvehiculosdisponibles)==0:
             return None
@@ -78,7 +79,7 @@ class Vehiculos():
         return(f"""El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precio}, ...""") 
     
 
-# diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
+diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
 
 # Pruebas de Funcionamiento
 #creo un falcon de pruebas

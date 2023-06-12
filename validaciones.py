@@ -6,8 +6,8 @@ import hashlib
 
 letras_habilitadas = set(string.ascii_letters + " ")
 
-def validarReserva():
-     pass
+def validarReserva(idres):
+     return True
 
 def validarexistenciaPersona(dni, contraseña_ingresada, dicc):
         for k in dicc.keys():
@@ -18,8 +18,8 @@ def validarexistenciaPersona(dni, contraseña_ingresada, dicc):
                 if dicc[k].contraseña == hashed_password:  
                     return True
        
-        else:
-            return False
+            else:
+                return False
 
 def validarFecha(fecha):
     try:
@@ -85,6 +85,7 @@ def validarModifFechaInicio(fechainicio, fechafin):
 
 def validarFechaFin(fechainicio, fechafin):
     try:
+        fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
         if fechafin >= fechainicio:
             return True
         else:

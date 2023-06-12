@@ -2,28 +2,10 @@ from datetime import datetime
 from claseEmpresa import Empresa
 import validaciones as val
 import funcionescsv as funcsv
-from ClasePersonas import Administrador, Usuarios, Personas
-from ClaseAlquileres import Alquiler
-from ClaseReservas import Reserva
-from ClaseVehiculos import Vehiculos
-
-diccEmpleados = funcsv.leerCsv('Empleados.csv', Administrador)
-diccUsuarios = funcsv.leerCsv('Usuarios.csv', Usuarios)
-diccAlquileres = funcsv.leerCsv('Alquileres.csv', Alquiler)
-diccReservas = funcsv.leerCsv('Reservas.csv', Reserva)
-diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
-
-Administrador.diccionario=diccEmpleados
-Usuarios.diccionario=diccUsuarios
-Alquiler.diccionario=diccAlquileres
-Reserva.diccionario=diccReservas
-Vehiculos.diccionario=diccVehiculos
-
-
-for k in diccReservas.keys():
-    if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():          
-        diccAlquileres[Alquiler.cantAlquileres+1]=Alquiler(k,diccReservas[k].dni,diccReservas[k].patente_auto,diccReservas[k].fechaInicio,diccReservas[k].fechaFin)
-        diccVehiculos[diccAlquileres[Alquiler.cantAlquileres].patente_auto].disponible=False
+from ClasePersonas import Administrador, Usuarios, Personas,diccEmpleados,diccUsuarios
+from ClaseAlquileres import Alquiler,diccAlquileres
+from ClaseReservas import Reserva,diccReservas
+from ClaseVehiculos import Vehiculos,diccVehiculos
 
 seguir_operando = "SI"
 
@@ -53,6 +35,7 @@ while seguir_operando == "SI":
         while Personas.validarexistenciaDNI(dni)==True:
             print('el usuario ya esta registrado')
             dni = input("Ingrese su dni (sólo números) ")
+        
                 
         nombre = input("Ingrese su nombre (el apellido se lo solicitaremos a continuación) ")
         while val.validarnombre(nombre) == False:
@@ -81,7 +64,7 @@ while seguir_operando == "SI":
             contraseña = input("Ingrese su contraseña ")
             confirmar_contraseña = input('Confirmar contraseña ingresada ')
 
-        Usuarios.agregarUsuario(dni, nombre, apellido, fecnac, email, contraseña)    
+        Usuarios.agregarUsuario(dni,usuario, nombre, apellido, fecnac, email, contraseña)    
 
         print("Se ha registrado la siguiente información:")
         print(diccUsuarios [dni])    
@@ -129,13 +112,16 @@ while seguir_operando == "SI":
                     while val.validarFechaFin(fechainicio,fechafin) == False: 
                         print('Ingrese una fecha válida')
                         fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
+
+                    tipo=input('Ingrese tipo de auto')
+                    gama=input('Ingrese gama de auto')
                     
-                    auto = Vehiculos.asignarauto()
+                    auto = Vehiculos.asignarauto(fechainicio,fechafin,tipo,gama)
                     
                     if auto == None:
                         print('no hay auto disponible')
                     else: 
-                        diccUsuarios[dnix].aggReserva(auto, fechainicio, fechafin, diccReservas) 
+                        diccUsuarios[dnix].agregarReserva(auto,fechainicio,fechafin) 
                             
                             
                 elif operacion == "2":                     #Cambiar una fecha de reserva
@@ -147,7 +133,7 @@ while seguir_operando == "SI":
                     print('')
                     
                     validado = False
-                            
+                       
                     while validado == False:
                         idres = input("Ingrese el id de su reserva ")
                         validado = val.validarReserva(idres)
@@ -156,12 +142,12 @@ while seguir_operando == "SI":
                 
                     if cambio == '1':
                                 
-                        diccUsuarios[dnix].modifFecInicioReserva(idres,diccReservas)
+                        diccUsuarios[dnix].modifFecInicioReserva(idres)
 
 
                     elif cambio == '2':
 
-                        Reserva.modifFecFinReserva(idres,diccReservas)
+                        diccUsuarios[dnix].modifFecFinReserva(idres)
 
                             
                 elif operacion == "3":
@@ -169,7 +155,7 @@ while seguir_operando == "SI":
                     while validado == False:
                         idres = input("ingrese el id de su reserva")
                         validado = val.validarReserva(idres)
-                    diccUsuarios[dnix].cancelarReserva(idres,diccReservas)
+                    diccUsuarios[dnix].cancelarReserva(idres)
 
                 
                 elif operacion == "4":
@@ -180,7 +166,8 @@ while seguir_operando == "SI":
         
     seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
     if seguir_operando=='NO':
-        funcsv.escribirCsv('Personas.csv',diccUsuarios)
+        funcsv.escribirCsv('Usuarios.csv',diccUsuarios)
+        funcsv.escribirCsv('Empleados.csv',diccEmpleados)
         funcsv.escribirCsv('Alquileres.csv',diccAlquileres)
         funcsv.escribirCsv('Reservas.csv',diccReservas)
         funcsv.escribirCsv('Vehiculos.csv',diccVehiculos)

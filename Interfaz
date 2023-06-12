@@ -1,13 +1,13 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget
+from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt 
 
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Login')
+        self.setWindowTitle('Inicio de Sesión')
         self.setMinimumSize(600, 600)
 
         # Create a central widget and a layout
@@ -25,8 +25,8 @@ class LoginWindow(QMainWindow):
         welcome_label.setAlignment(Qt.AlignCenter)
 
         # Create labels
-        label_user = QLabel('Username:', self)
-        label_password = QLabel('Password:', self)
+        label_user = QLabel('Nombre de Usuario:', self)
+        label_password = QLabel('Contraseña:', self)
 
         # Create input boxes
         input_user = QLineEdit(self)
@@ -34,7 +34,15 @@ class LoginWindow(QMainWindow):
         input_password.setEchoMode(QLineEdit.Password)
 
         # Create login button
-        button_login = QPushButton('Login', self)
+        self.button_login = QPushButton('Ingresar', self)
+        self.button_registro = QPushButton('No tenes cuenta? Registrate', self)
+        self.button_admin = QPushButton('Ingresar como Administrador',self)
+
+        self.button_login.clicked.connect(self.openMainWindow)
+
+        self.button_admin.clicked.connect(self.openAdminWindow)
+
+        self.button_registro.clicked.connect(self.openRegistroWindow)
 
         # Add widgets to the layout
         layout.addWidget(logo_label)
@@ -43,12 +51,14 @@ class LoginWindow(QMainWindow):
         layout.addWidget(input_user)
         layout.addWidget(label_password)
         layout.addWidget(input_password)
-        layout.addWidget(button_login)
+        layout.addWidget(self.button_login)
+        layout.addWidget(self.button_registro)
+        layout.addWidget(self.button_admin)
 
         # Set the central widget and apply the style sheet
         self.setCentralWidget(central_widget)
-        with open('Estilo.qss', 'r') as f:
-            style = f.read()
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
             self.setStyleSheet(style)
 
     def resizeEvent(self, event):
@@ -61,9 +71,463 @@ class LoginWindow(QMainWindow):
         central_widget = self.centralWidget()
         layout = central_widget.layout()
         layout.setAlignment(Qt.AlignCenter)
+    
+    def openMainWindow(self):
+        self.close()
+        self.window = MainWindow()
+        self.window.show()
+
+    def openAdminWindow(self):
+        self.close()
+        self.window = AdminWindow()
+        self.window.show()
+
+    def openRegistroWindow(self):
+        self.close()
+        self.window = RegistroWindow()
+        self.window.show()
+
+class AdminWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Gestión de Administrador')
+        self.setMinimumSize(600, 600)
+
+        # Create a central widget and a layout
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+        layout.setAlignment(Qt.AlignCenter)
+
+        # Create buttons
+        self.button1 = QPushButton('Agregar un auto', central_widget)
+        self.button1.setIcon(QIcon('icon1.png'))  # Replace with the path to your button icon
+        self.button1.clicked.connect(self.openAgregarAuto)
+
+        self.button2 = QPushButton('Modificar un auto existente', central_widget)
+        self.button2.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
+        self.button2.clicked.connect(self.openModificarAuto)
+
+        self.button3 = QPushButton('Eliminar un auto', central_widget)
+        self.button3.setIcon(QIcon('icon3.png'))  # Replace with the path to your button icon
+        self.button3.clicked.connect(self.openEliminarAuto)
+
+        # Add buttons to the layout
+        layout.addWidget(self.button1)
+        layout.addWidget(self.button2)
+        layout.addWidget(self.button3)
+
+        # Set the central widget and apply the style sheet
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)
+
+    def openAgregarAuto(self):
+        self.close()
+        self.window1 = AgregarAuto()
+        self.window1.show()
+
+    def openModificarAuto(self):
+        self.close()
+        self.window2 = ModificarAuto()
+        self.window2.show()
+
+    def openEliminarAuto(self):
+        self.close()
+        self.window3 = EliminarAuto()
+        self.window3.show()
+
+class AgregarAuto(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Cambiar datos personales')
+        self.setMinimumSize(600, 600)
+        self.initUI()
+
+    def initUI(self):
+        layout = QGridLayout()
+
+        # Labels
+        labels = ["Patente:", "Modelo:", "Marca:", "Año:", "Tipo de auto:", "Gama:", "Precio por dia:"]
+        for row, label_text in enumerate(labels):
+            label = QLabel(label_text)
+            layout.addWidget(label, row, 0)
+
+        # Input Boxes
+        input_boxes = [QLineEdit() for _ in range(7)]
+        for row, input_box in enumerate(input_boxes):
+            layout.addWidget(input_box, row, 1)
+
+        # Buttons
+        self.button = QPushButton("Agregar")
+        layout.addWidget(self.button, len(labels) + 1, 1)
+        self.button.clicked.connect(self.ClickAgregado)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def ClickAgregado(self):
+        self.close()
+        self.window = AdminWindow()
+        self.window.show()
+
+class ModificarAuto(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Modificar un auto")
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label = QLabel("Ingresa la patente del auto:")
+        layout.addWidget(label)
+
+        # Input Box
+        input_box = QLineEdit()
+        layout.addWidget(input_box)
+
+        # Button
+        self.button = QPushButton("Continuar")
+        self.button.clicked.connect(self.ClickContinuar)
+        layout.addWidget(self.button)
+
+        self.button2 = QPushButton("Volver")
+        self.button2.clicked.connect(self.Volver)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def ClickContinuar(self):
+        self.close()
+        self.window = ModificarDatosAuto()
+        self.window.show()
+    
+    def Volver(self):
+        self.close()
+        self.window = AdminWindow()
+        self.window.show()     
+
+class ModificarDatosAuto(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Modificar datos de un auto')
+        self.setMinimumSize(600, 600)
+        self.initUI()
+
+    def initUI(self):
+        layout = QGridLayout()
+
+        # Labels
+        labels = ["Patente:", "Modelo:", "Marca:", "Año:", "Tipo de auto:", "Gama:", "Precio por dia:"]
+        for row, label_text in enumerate(labels):
+            label = QLabel(label_text)
+            layout.addWidget(label, row, 0)
+
+        # Input Boxes
+        input_boxes = [QLineEdit() for _ in range(7)]
+        for row, input_box in enumerate(input_boxes):
+            layout.addWidget(input_box, row, 1)
+
+        # Buttons
+        self.button = QPushButton("Cambiar")
+        layout.addWidget(self.button, len(labels) + 1, 1)
+        self.button.clicked.connect(self.ClickCambiar)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def ClickCambiar(self):
+        self.close()
+        self.window = AdminWindow()
+        self.window.show()
+
+class EliminarAuto(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Eliminar un auto")
+        self.setMinimumSize(600,600)
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label = QLabel("Ingresa la patente del auto:")
+        layout.addWidget(label)
+
+        # Input Box
+        input_box = QLineEdit()
+        layout.addWidget(input_box)
+
+        # Button
+        self.button = QPushButton("Continuar")
+        self.button.clicked.connect(self.ClickContinuar)
+        layout.addWidget(self.button)
+
+        self.button2 = QPushButton("Volver")
+        self.button2.clicked.connect(self.Volver)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def ClickContinuar(self):
+        self.close()
+    # VER SI SE PUEDE AGREGAR UN MENSAJE EMERGENTE Y VOLVER
+
+    def Volver(self):
+        self.close()
+        self.window = AdminWindow()
+        self.window.show()     
+
+
+class RegistroWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Registrarse')
+        self.setMinimumSize(600, 600)
+        self.initUI()
+
+    def initUI(self):
+        layout = QGridLayout()
+
+        # Labels
+        labels = ["DNI:", "Nombre:", "Apellido:", "Fecha de nacimiento:", "Usuario:", "Email:", "Contraseña:", "Confirmar Contraseña:"]
+        for row, label_text in enumerate(labels):
+            label = QLabel(label_text)
+            layout.addWidget(label, row, 0)
+
+        # Input Boxes
+        input_boxes = [QLineEdit() for _ in range(8)]
+        for row, input_box in enumerate(input_boxes):
+            layout.addWidget(input_box, row, 1)
+
+        # Buttons
+        self.button2 = QPushButton("Confirmar")
+        layout.addWidget(self.button2, len(labels) + 1, 1)
+        self.button2.clicked.connect(self.ClickConfirmado)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def ClickConfirmado(self):
+        self.close()
+        self.window = MainWindow()
+        self.window.show()
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('NoVoyEnTren.com')
+        self.setMinimumSize(600, 600)
+
+        # Create a central widget and a layout
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+        layout.setAlignment(Qt.AlignCenter)
+
+        # Create buttons
+        self.button1 = QPushButton('Hacer una Reserva', central_widget)
+        self.button1.setIcon(QIcon('icon1.png'))  # Replace with the path to your button icon
+        self.button1.clicked.connect(self.openReserva)
+
+        self.button2 = QPushButton('Cancelar una Reserva existente', central_widget)
+        self.button2.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
+        self.button2.clicked.connect(self.openCancelacion)
+
+        self.button3 = QPushButton('Cambiar datos personales', central_widget)
+        self.button3.setIcon(QIcon('icon3.png'))  # Replace with the path to your button icon
+        self.button3.clicked.connect(self.openCambioDatos)
+
+        # Add buttons to the layout
+        layout.addWidget(self.button1)
+        layout.addWidget(self.button2)
+        layout.addWidget(self.button3)
+
+        # Set the central widget and apply the style sheet
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)
+
+    def openReserva(self):
+        self.close()
+        self.window1 = Reserva()
+        self.window1.show()
+
+    def openCancelacion(self):
+        self.close()
+        self.window2 = Cancelacion()
+        self.window2.show()
+
+    def openCambioDatos(self):
+        self.close()
+        self.window3 = CambioDatos()
+        self.window3.show()
+
+class Reserva(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Elegi tus fechas de alquiler")
+        self.setMinimumSize(600, 600)
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # First Calendar
+        label1 = QLabel("Fecha de Inicio")
+        layout.addWidget(label1)
+        calendar1 = QCalendarWidget()
+        layout.addWidget(calendar1)
+
+        # Second Calendar
+        label2 = QLabel("Fecha de Fin")
+        layout.addWidget(label2)
+        calendar2 = QCalendarWidget()
+        layout.addWidget(calendar2)
+
+        # Button
+        self.button1 = QPushButton("Confirmar")
+        layout.addWidget(self.button1)
+        self.button1.clicked.connect(self.ClickConfirmar)
+
+        self.button2 = QPushButton("Volver")
+        layout.addWidget(self.button1)
+        self.button2.clicked.connect(self.Volver)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def ClickConfirmar(self):
+        print("La reserva fue realizada exitosamente")
+
+    
+    def Volver(self):
+        self.close()
+        self.window = MainWindow()
+        self.window.show()            
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     window = MainWindow()
+#     sys.exit(app.exec_())
+
+class Cancelacion(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Cancelación de reservas")
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label = QLabel("Ingresa tu código de reserva:")
+        layout.addWidget(label)
+
+        # Input Box
+        input_box = QLineEdit()
+        layout.addWidget(input_box)
+
+        # Button
+        self.button = QPushButton("Confirmar")
+        self.button.clicked.connect(self.confirmButtonClicked)
+        layout.addWidget(self.button)
+
+        self.button2 = QPushButton("Volver")
+        self.button2.clicked.connect(self.Volver)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def confirmButtonClicked(self):
+        print("Cancelado exitosamente")
+    
+    def Volver(self):
+        self.close()
+        self.window = MainWindow()
+        self.window.show()     
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     window = MainWindow()
+#     sys.exit(app.exec_())
+
+class CambioDatos(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Cambiar datos personales')
+        self.setMinimumSize(600, 600)
+        self.initUI()
+
+    def initUI(self):
+        layout = QGridLayout()
+
+        # Labels
+        labels = ["DNI:", "Nombre:", "Apellido:", "Fecha de nacimiento:", "Usuario:", "Email:", "Contraseña:", "Confirmar Contraseña:"]
+        for row, label_text in enumerate(labels):
+            label = QLabel(label_text)
+            layout.addWidget(label, row, 0)
+
+        # Input Boxes
+        input_boxes = [QLineEdit() for _ in range(8)]
+        for row, input_box in enumerate(input_boxes):
+            layout.addWidget(input_box, row, 1)
+
+        # Buttons
+        self.button1 = QPushButton("Volver")
+        layout.addWidget(self.button1, len(labels) + 1, 0)
+        self.button1.clicked.connect(self.Volver)
+
+        self.button2 = QPushButton("Confirmar")
+        layout.addWidget(self.button2, len(labels) + 1, 1)
+        self.button2.clicked.connect(self.ClickConfirmado)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def Volver(self):
+        self.close()
+        self.window = MainWindow()
+        self.window.show()        
+
+    def ClickConfirmado(self):
+        print("Cambio de datos realizado exitosamente")
+        self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     login_window = LoginWindow()
     login_window.show()
+    sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
     sys.exit(app.exec_())

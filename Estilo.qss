@@ -1,45 +1,47 @@
-/* Styles for the login window */
-
-/* Window background gradient */
+/* Set the background color of the main window */
 QWidget {
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 128, 255, 255), stop:1 rgba(0, 255, 128, 255));
+    background-color: #333;
 }
 
-/* Label styles */
+/* Style for the labels */
 QLabel {
-    font-size: 14px;
-    color: #333333;
+    color: white;
+    font-size: 16px;
 }
 
-/* Input box styles */
+/* Style for the input boxes */
 QLineEdit {
-    padding: 8px;
-    border: 2px solid #CCCCCC;
-    border-radius: 4px;
+    background-color: white;
+    color: #333;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    padding: 4px;
     font-size: 14px;
 }
 
-/* Input box when focused */
-QLineEdit:focus {
-    border: 2px solid #4D90FE;
+/* Style for the calendar widget */
+QCalendarWidget {
+    background-color: white;
+    color: #ffffff;
+    font-size: 14px;
 }
 
-/* Push button styles */
+/* Style for the buttons */
 QPushButton {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 3px;
     padding: 8px 16px;
     font-size: 14px;
-    color: #FFFFFF;
-    background-color: #4D90FE;
-    border: none;
-    border-radius: 4px;
 }
 
-/* Push button when hovered */
+/* Style for the buttons when hovered */
 QPushButton:hover {
-    background-color: #307BFF;
+    background-color: #0056b3;
 }
 
-/* Push button when pressed */
+/* Style for the buttons when pressed */
 QPushButton:pressed {
-    background-color: #0046AE;
+    background-color: #002D5A;
 }

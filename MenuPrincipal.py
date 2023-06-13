@@ -12,162 +12,339 @@ seguir_operando = "SI"
 
 while seguir_operando == "SI":
     
-    print('Operaciones que puede realizar:')
+    print('Elija como quiere ingresar')
     print('')
-    print('1. Registrarse')
-    print('2. Ingresar')
+    print('1. Ingresar como usuario')
     print('')
-    print('3. Salir')
-    print('')
-    
-
+    print('2. Ingresar como empleado')
     opcion_elegida = input('Ingrese el número de operación que desea realizar ')
-
-    while opcion_elegida not in ['1','2','3']: 
+    while opcion_elegida not in ['1','2']: 
         opcion_elegida = input("ingrese nuevamente la opcion: ")
+
+    if opcion_elegida=='1':    
+        print('Operaciones que puede realizar:')
+        print('')
+        print('1. Registrarse')
+        print('')
+        print('2. Ingresar')
+        print('')
+        print('3. Salir')
+        print('')
         
 
-    if opcion_elegida == "1":                               #REGISTRO del Usuario (Persona)
-        
-        dni = input("Ingrese su dni (sólo números) ")
-        while val.validardni(dni) == False:              
-            dni = input("Ingrese su dni (sólo números) ")
-        while Personas.validarexistenciaDNI(dni)==True:
-            print('el usuario ya esta registrado')
-            dni = input("Ingrese su dni (sólo números) ")
-        
-                
-        nombre = input("Ingrese su nombre (el apellido se lo solicitaremos a continuación) ")
-        while val.validarnombre(nombre) == False:
-            nombre = input("Ingrese su nombre ")
+        opcion_elegida = input('Ingrese el número de operación que desea realizar ')
 
-        apellido = input("Ingrese su apellido ")
-        while val.validarnombre(apellido) == False:
+        while opcion_elegida not in ['1','2','3']: 
+            opcion_elegida = input("ingrese nuevamente la opcion: ")
+            
+
+        if opcion_elegida == "1":                               #REGISTRO del Usuario (Persona)
+            
+            dni = input("Ingrese su dni (sólo números) ")
+            while val.validardni(dni) == False:              
+                dni = input("Ingrese su dni (sólo números) ")
+            while Personas.validarexistenciaDNI(dni)==True:
+                print('el usuario ya esta registrado')
+                dni = input("Ingrese su dni (sólo números) ")
+            
+                    
+            nombre = input("Ingrese su nombre (el apellido se lo solicitaremos a continuación) ")
+            while val.validarnombre(nombre) == False:
+                nombre = input("Ingrese su nombre ")
+
             apellido = input("Ingrese su apellido ")
+            while val.validarnombre(apellido) == False:
+                apellido = input("Ingrese su apellido ")
 
-        fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
-        while val.validarFechaNac(fecnac) == False:
             fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
-        fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
-                
-        usuario= input("Ingrese su nombre de usuario (mínimo 5 caracteres, máximo 20) ")
-        while val.validarusuario(usuario) == False:
-            usuario= input('Ingrese un nombre de usuario ')
+            while val.validarFechaNac(fecnac) == False:
+                fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
+            fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
+                    
+            usuario= input("Ingrese su nombre de usuario (mínimo 5 caracteres, máximo 20) ")
+            while val.validarusuario(usuario) == False:
+                usuario= input('Ingrese un nombre de usuario ')
 
-        email = input("Ingrese su email ")
-        while val.validaremail(email) == False:
             email = input("Ingrese su email ")
+            while val.validaremail(email) == False:
+                email = input("Ingrese su email ")
 
-        contraseña = input('Ingrese su contraseña (mínimo 5 caracteres, máximo 20) ')
-        confirmar_contraseña = input('Confirmar contraseña ingresada ')
-        while (val.validarcontraseña(contraseña) == False) or (contraseña != confirmar_contraseña):
-            contraseña = input("Ingrese su contraseña ")
+            contraseña = input('Ingrese su contraseña (mínimo 5 caracteres, máximo 20) ')
             confirmar_contraseña = input('Confirmar contraseña ingresada ')
+            while (val.validarcontraseña(contraseña) == False) or (contraseña != confirmar_contraseña):
+                contraseña = input("Ingrese su contraseña ")
+                confirmar_contraseña = input('Confirmar contraseña ingresada ')
 
-        Usuarios.agregarUsuario(dni,usuario, nombre, apellido, fecnac, email, contraseña)    
+            Usuarios.agregarUsuario(dni,usuario, nombre, apellido, fecnac, email, contraseña)    
 
-        print("Se ha registrado la siguiente información:")
-        print(diccUsuarios [dni])    
-            
-    
-
-    elif opcion_elegida == "2":                             #INGRESO del Usuario (Persona)
+            print("Se ha registrado la siguiente información:")
+            print(diccUsuarios [dni])    
+                
         
-        validado = False
-        volver_a_ingresar = "SI"
 
-        while not validado and volver_a_ingresar == "SI":
-
-            dnix = input("Ingrese su dni ")
-            contraseñax = input("Ingrese su contraseña ")
-            validado = val.validarexistenciaPersona(dnix, contraseñax, diccUsuarios)
+        elif opcion_elegida == "2":                             #INGRESO del Usuario (Persona)
             
-            if not validado:
-                print("Su dni o contraseña son incorrectos")
-                volver_a_ingresar = input("Desea volver a ingresar sus datos (SI o NO)? ").strip().upper()
+            validado = False
+            volver_a_ingresar = "SI"
+
+            while not validado and volver_a_ingresar == "SI":
+
+                dnix = input("Ingrese su dni ")
+                contraseñax = input("Ingrese su contraseña ")
+                validado = val.validarexistenciaPersona(dnix, contraseñax, diccUsuarios)
                 
-            else:
-                
-                print('Operaciones que puede realizar:')
-                print('')
-                print('1. Realizar una reserva')
-                print('2. Cambiar una fecha de reserva')
-                print('3. Cancelar una reserva')
-                print('4. Cambiar un dato de su usuario')
-                print('')
-                print('5. Salir')
-
-                operacion = input("Ingrese el número de operación que desea realizar")
-
-                if operacion == "1":                        #Realizar una reserva
-                        
-                    fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticiáción mínima de 5 días)')
-                    while val.validarAgregarFechaInicio(fechainicio) == False:
-                        print('Ingrese una fecha válida')
-                        fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
-                    fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
-
-                    fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
-
-                    while val.validarFechaFin(fechainicio,fechafin) == False: 
-                        print('Ingrese una fecha válida')
-                        fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
-
-                    tipo=input('Ingrese tipo de auto')
-                    gama=input('Ingrese gama de auto')
+                if not validado:
+                    print("Su dni o contraseña son incorrectos")
+                    volver_a_ingresar = input("Desea volver a ingresar sus datos (SI o NO)? ").strip().upper()
                     
-                    auto = Vehiculos.asignarauto(fechainicio,fechafin,tipo,gama)
+                else:
                     
-                    if auto == None:
-                        print('no hay auto disponible')
-                    else: 
-                        diccUsuarios[dnix].agregarReserva(auto,fechainicio,fechafin) 
-                            
-                            
-                elif operacion == "2":                     #Cambiar una fecha de reserva
-
                     print('Operaciones que puede realizar:')
                     print('')
-                    print('1. Cambiar el inicio de su alquiler')
-                    print('2. Cambiar la fecha de fin de su alquiler')
+                    print('1. Realizar una reserva')
+                    print('2. Cambiar una fecha de reserva')
+                    print('3. Cancelar una reserva')
+                    print('4. Cambiar un dato de su usuario')
                     print('')
-                    
-                    validado = False
-                       
-                    while validado == False:
-                        idres = input("Ingrese el id de su reserva ")
-                        validado = val.validarReserva(idres)
+                    print('5. Salir')
 
-                    cambio = input("Ingrese el número de operación que desea realizar")
-                
-                    if cambio == '1':
-                                
-                        diccUsuarios[dnix].modifFecInicioReserva(idres)
+                    operacion = input("Ingrese el número de operación que desea realizar")
 
+                    while opcion_elegida not in ['1','2','3','4','5']: 
+                        opcion_elegida = input("ingrese nuevamente la opcion: ")
 
-                    elif cambio == '2':
-
-                        diccUsuarios[dnix].modifFecFinReserva(idres)
-
+                    if operacion == "1":                        #Realizar una reserva
                             
-                elif operacion == "3":
-                    validado = False
-                    while validado == False:
-                        idres = input("ingrese el id de su reserva")
-                        validado = val.validarReserva(idres)
-                    diccUsuarios[dnix].cancelarReserva(idres)
+                        fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticiáción mínima de 5 días)')
+                        while val.validarAgregarFechaInicio(fechainicio) == False:
+                            print('Ingrese una fecha válida')
+                            fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
+                        fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
 
+                        fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
+
+                        while val.validarFechaFin(fechainicio,fechafin) == False: 
+                            print('Ingrese una fecha válida')
+                            fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
+
+                        tipo=input('Ingrese tipo de auto')
+                        gama=input('Ingrese gama de auto')
+                        
+                        auto = Vehiculos.asignarauto(fechainicio,fechafin,tipo,gama)
+                        
+                        if auto == None:
+                            print('no hay auto disponible')
+                        else: 
+                            diccUsuarios[dnix].agregarReserva(auto,fechainicio,fechafin) 
+                                
+                                
+                    elif operacion == "2":                     #Cambiar una fecha de reserva
+
+                        print('Operaciones que puede realizar:')
+                        print('')
+                        print('1. Cambiar el inicio de su alquiler')
+                        print('2. Cambiar la fecha de fin de su alquiler')
+                        print('')
+
+                        while opcion_elegida not in ['1','2']: 
+                            opcion_elegida = input("ingrese nuevamente la opcion: ")
+                        
+                        validado = False
+                        
+                        while validado == False:
+                            idres = input("Ingrese el id de su reserva ")
+                            validado = val.validarReserva(idres)
+
+                        cambio = input("Ingrese el número de operación que desea realizar")
+                    
+                        if cambio == '1':
+                                    
+                            diccUsuarios[dnix].modifFecInicioReserva(idres)
+
+
+                        elif cambio == '2':
+
+                            diccUsuarios[dnix].modifFecFinReserva(idres)
+
+                                
+                    elif operacion == "3":
+                        validado = False
+                        while validado == False:
+                            idres = input("ingrese el id de su reserva")
+                            validado = val.validarReserva(idres)
+                        diccUsuarios[dnix].cancelarReserva(idres)
+
+                    
+                    elif operacion == "4":
+                        Usuarios.cambiar_dato()
+
+        elif opcion_elegida=='3':
+            pass
+            
+        seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
+        if seguir_operando=='NO':
+            funcsv.escribirCsv('Usuarios.csv',diccUsuarios)
+            funcsv.escribirCsv('Empleados.csv',diccEmpleados)
+            funcsv.escribirCsv('Alquileres.csv',diccAlquileres)
+            funcsv.escribirCsv('Reservas.csv',diccReservas)
+            funcsv.escribirCsv('Vehiculos.csv',diccVehiculos)
+    
+    elif opcion_elegida =='2':
+        print('Operaciones que puede realizar:')
+        print('')
+        print('1. Registrar un empleado nuevo')
+        print('')
+        print('2. Ingresar como empleado')
+        print('')
+        print('3. Salir')
+        print('')
+
+        opcion_elegida = input('Ingrese el número de operación que desea realizar ')
+
+        while opcion_elegida not in ['1','2','3']: 
+            opcion_elegida = input("ingrese nuevamente la opcion: ")
+            
+
+        if opcion_elegida == "1":   
+
+            legajo=input('Ingrese su legajo')
+            contraseña=input('Ingrese su contraseña')
+            while val.validarEmpleado(legajo,contraseña) == False:              
+                legajo = input("Ingrese su legajo ")
+                contraseña=input('Ingrese su contraseña')
+
+            print('Empleado verificado, a continuación ingrese los datos del nuevo empleado')
+            
+            dni = input("Ingrese el dni del nuevo empleado(sólo números) ")
+            while val.validardni(dni) == False:              
+                dni = input("Ingrese el dni del nuevo empleado(sólo números) ")
+            while Personas.validarexistenciaDNI(dni)==True:
+                print('el empleado ya esta registrado')
+                dni = input("Ingrese el dni del nuevo empleado(sólo números) ")            
+                    
+            nombre = input("Ingrese el nombre del nuevo empleado(el apellido se lo solicitaremos a continuación) ")
+            while val.validarnombre(nombre) == False:
+                nombre = input("Ingrese el nombre del nuevo empleado")
+
+            apellido = input("Ingrese el apellido del nuevo empleado")
+            while val.validarnombre(apellido) == False:
+                apellido = input("Ingrese el apellido del nuevo empleado")
+
+            fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
+            while val.validarFechaNac(fecnac) == False:
+                fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
+            fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
+
+            email = input("Ingrese su email ")
+            while val.validaremail(email) == False:
+                email = input("Ingrese su email ")
+
+            contraseña = input('Ingrese su contraseña (mínimo 5 caracteres, máximo 20) ')
+            confirmar_contraseña = input('Confirmar contraseña ingresada ')
+            while (val.validarcontraseña(contraseña) == False) or (contraseña != confirmar_contraseña):
+                contraseña = input("Ingrese su contraseña ")
+                confirmar_contraseña = input('Confirmar contraseña ingresada ')
+
+            diccEmpleados[legajo].agregarEmpleado(dni, nombre, apellido, fecnac, email, contraseña)      
                 
-                elif operacion == "4":
-                    Usuarios.cambiar_dato()
+        elif opcion_elegida == "2":                        
+            
+            validado = False
+            volver_a_ingresar = "SI"
 
-    elif opcion_elegida=='3':
-        pass
-        
-    seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
-    if seguir_operando=='NO':
-        funcsv.escribirCsv('Usuarios.csv',diccUsuarios)
-        funcsv.escribirCsv('Empleados.csv',diccEmpleados)
-        funcsv.escribirCsv('Alquileres.csv',diccAlquileres)
-        funcsv.escribirCsv('Reservas.csv',diccReservas)
-        funcsv.escribirCsv('Vehiculos.csv',diccVehiculos)
+            while not validado and volver_a_ingresar == "SI":
+
+                legajo = input("Ingrese su legajo ")
+                contraseñax = input("Ingrese su contraseña ")
+                validado = val.validarEmpleado(legajo, contraseñax, diccEmpleados)
+                
+                if not validado:
+                    print("Su dni o contraseña son incorrectos")
+                    volver_a_ingresar = input("Desea volver a ingresar sus datos (SI o NO)? ").strip().upper()
+                    
+                else:
+                    
+                    print('Operaciones que puede realizar:')
+                    print('')
+                    print('1. Agregar un vehiculo')
+                    print('2. Modificar un vehiculo')
+                    print('3. Eliminar un vehiculo')
+                    print('4. Finalizar un alquiler(reportar auto devuelto)')
+                    print('')
+                    print('5. Salir')
+
+                    operacion = input("Ingrese el número de operación que desea realizar")
+
+                    while opcion_elegida not in ['1','2','3','4','5']: 
+                        opcion_elegida = input("ingrese nuevamente la opcion: ")
+
+                    if operacion == "1":    ###### A PARTIR DE ACA NO MODIFIQUE NADA MAS, SOLO ESTA COPIADO LO DEL MENU PARA USUARIOS PARA MANTENER LA MISMA ESTRUCTURA                    
+                            
+                        fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticiáción mínima de 5 días)')
+                        while val.validarAgregarFechaInicio(fechainicio) == False:
+                            print('Ingrese una fecha válida')
+                            fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
+                        fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
+
+                        fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
+
+                        while val.validarFechaFin(fechainicio,fechafin) == False: 
+                            print('Ingrese una fecha válida')
+                            fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
+
+                        tipo=input('Ingrese tipo de auto')
+                        gama=input('Ingrese gama de auto')
+                        
+                        auto = Vehiculos.asignarauto(fechainicio,fechafin,tipo,gama)
+                        
+                        if auto == None:
+                            print('no hay auto disponible')
+                        else: 
+                            diccUsuarios[dnix].agregarReserva(auto,fechainicio,fechafin) 
+                                
+                                
+                    elif operacion == "2":                     #Cambiar una fecha de reserva
+
+                        print('Operaciones que puede realizar:')
+                        print('')
+                        print('1. Cambiar el inicio de su alquiler')
+                        print('2. Cambiar la fecha de fin de su alquiler')
+                        print('')
+
+                        while opcion_elegida not in ['1','2']: 
+                            opcion_elegida = input("ingrese nuevamente la opcion: ")
+                        
+                        validado = False
+                        
+                        while validado == False:
+                            idres = input("Ingrese el id de su reserva ")
+                            validado = val.validarReserva(idres)
+
+                        cambio = input("Ingrese el número de operación que desea realizar")
+                    
+                        if cambio == '1':
+                                    
+                            diccUsuarios[dnix].modifFecInicioReserva(idres)
+
+
+                        elif cambio == '2':
+
+                            diccUsuarios[dnix].modifFecFinReserva(idres)
+
+                                
+                    elif operacion == "3":
+                        validado = False
+                        while validado == False:
+                            idres = input("ingrese el id de su reserva")
+                            validado = val.validarReserva(idres)
+                        diccUsuarios[dnix].cancelarReserva(idres)
+
+                    
+                    elif operacion == "4":
+                        Usuarios.cambiar_dato()
+
+        elif opcion_elegida=='3':
+            pass
+            
+        seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
+

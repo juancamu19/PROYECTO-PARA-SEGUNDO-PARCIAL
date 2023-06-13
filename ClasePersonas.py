@@ -1,9 +1,11 @@
 import hashlib
-from ClaseReservas import Reserva
-from ClaseVehiculos import Vehiculos
+from ClaseReservas import Reserva,diccReservas
+from ClaseVehiculos import Vehiculos,diccVehiculos 
+from ClaseAlquileres import diccAlquileres
+import funcionescsv as funcsv
 
 class Personas:
-    diccionario=dict()
+    # diccionario=dict()
     setdnis=set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
         self.dni = dni
@@ -66,7 +68,7 @@ class Personas:
 
 
 class Usuarios(Personas):
-    def __init__(self,dni,username, nombre, apellido, fecnac, email, contraseña, cantreservas=0):
+    def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
         self.cantreservas = cantreservas
@@ -75,46 +77,52 @@ class Usuarios(Personas):
         contraseña = contraseña.encode('utf-8')
         hash_object = hashlib.sha256(contraseña)
         hashed_password = hash_object.hexdigest()
-        Usuarios.diccionario[dni]= Personas(dni,username, nombre, apellido, fecnac, email, hashed_password)
-    def agregarReserva(self,patente_auto, fechaInicio, fechaFin, diccres):
-        diccres[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, self.dni, patente_auto, fechaInicio, fechaFin)  
+        diccUsuarios[dni]= Usuarios(dni,username, nombre, apellido, fecnac, email, hashed_password)
+    def agregarReserva(self,patente_auto, fechaInicio, fechaFin):
+        diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, self.dni, patente_auto, fechaInicio, fechaFin)
+        self.cantreservas+=1  
         return f'La reserva de id {Reserva.cantReservas} , hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}'
         
-    def cancelarReserva(self,idreserva,diccres):
-        diccres[idreserva].cancelarreserva()
+    def cancelarReserva(self,idreserva):
+        diccReservas[idreserva].cancelarreserva()
 
-    def modifFecInicioReserva(self,idreserva,diccres):
-        diccres[idreserva].cambiarfechaInicioAlquiler()
+    def modifFecInicioReserva(self,idreserva):
+        diccReservas[idreserva].cambiarfechaInicioAlquiler()
 
-    def modifFecFinReserva(self,idreserva,diccres):
-        diccres[idreserva].cambiarfechaExpiracionAlquiler()
+    def modifFecFinReserva(self,idreserva):
+        diccReservas[idreserva].cambiarfechaExpiracionAlquiler()
 
-# diccUsuarios = funcsv.leerCsv('Usuarios.csv', Usuarios)
+diccUsuarios = funcsv.leerCsv('Usuarios.csv', Usuarios)
 
 
 class Administrador(Personas):
+    cantempleados=0 ###ESTO DEBERÍA IR EN EMPRESA
     def __init__(self,dni,legajo, nombre, apellido, fecnac, email, contraseña):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
-        self.legajo=legajo        
+        self.legajo= Administrador.cantempleados
+        Administrador.cantempleados+=1       
         Administrador.setdnis.add(self.dni)
-    def agregarVehiculo(self,patente, modelo, marca, anio,tipo,gama,dicc):        
-        dicc[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama)
 
-    def modificarVehiculo(self,patente,atributo,diccVehi):
-        diccVehi[patente].modificar(atributo)
+    def agregarEmpleado(self,dni, nombre, apellido, fecnac, email, contraseña):
+        Administrador(dni, nombre, apellido, fecnac, email, contraseña)
+    def agregarVehiculo(self,patente, modelo, marca, anio,tipo,gama):        
+        diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama)
 
-    def finalizarAlquiler(self,idalquiler,diccalq,diccVehi):
-        diccalq[idalquiler].finalizar()
-        diccVehi[diccalq[idalquiler].patente_auto].devolver()
+    def modificarVehiculo(self,patente,atributo):
+        diccVehiculos[patente].modificar(atributo)
 
-    def eliminarVehiculo(self,patente,diccVehi):
-        diccVehi[patente].eliminar(diccVehi)
+    def finalizarAlquiler(self,idalquiler):
+        diccAlquileres[idalquiler].finalizar()
+        diccVehiculos[diccAlquileres[idalquiler].patente_auto].devolver()
 
-# diccEmpleados = funcsv.leerCsv('Empleados.csv', Administrador)
+    def eliminarVehiculo(self,patente):         ####ESTE NO PUSIMOS EN CLASE VEHICULOS PORQUE NO TIENE SENTIDO, SERÍA REPETIR CODIGO
+        diccVehiculos[patente].eliminar(diccVehiculos)
+
+diccEmpleados = funcsv.leerCsv('Empleados.csv', Administrador)
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    print(diccUsuarioos)
+    pass
     
     
 

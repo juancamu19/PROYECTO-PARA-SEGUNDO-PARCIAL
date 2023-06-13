@@ -8,10 +8,12 @@ letras_habilitadas = set(string.ascii_letters + " ")
 
 def validarReserva(idres):
      return True
+def validarEmpleado(legajo,contraseña):
+     return True
 
-def validarexistenciaPersona(dni, contraseña_ingresada, dicc):
+def validarexistenciaPersona(identificador, contraseña_ingresada, dicc):
         for k in dicc.keys():
-            if k == dni: 
+            if k == identificador: 
                 contraseña_ingresada = contraseña_ingresada.encode('utf-8')
                 hash_object = hashlib.sha256(contraseña_ingresada)
                 hashed_password = hash_object.hexdigest()

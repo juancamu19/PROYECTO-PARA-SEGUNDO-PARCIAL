@@ -14,10 +14,7 @@ class Personas:
         self.apellido = apellido
         self.fecnac = fecnac
         self.email = email
-        contraseña = contraseña.encode('utf-8')
-        objetoHash = hashlib.sha256(contraseña)
-        contraHasheada = objetoHash.hexdigest()
-        self.contraseña=contraHasheada    
+        self.contraseña=contraseña   
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, y realizó {self.cantreservas} reservas hasta el momento"  
@@ -101,8 +98,11 @@ class Usuarios(Personas):
         self.username = username
         self.cantreservas = cantreservas
         Usuarios.setdnis.add(self.dni) 
-    def agregarUsuario(dni,username, nombre, apellido, fecnac, email, contraseña):  
-        diccUsuarios[dni]= Usuarios(dni,username, nombre, apellido, fecnac, email, contraseña)
+    def agregarUsuario(dni,username, nombre, apellido, fecnac, email, contraseña):
+        contraseña = contraseña.encode('utf-8')
+        objetoHash = hashlib.sha256(contraseña)
+        contraHasheada = objetoHash.hexdigest()  
+        diccUsuarios[dni]= Usuarios(dni,username, nombre, apellido, fecnac, email, contraHasheada)
     def agregarReserva(self,patente_auto, fechaInicio, fechaFin):
         diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
@@ -129,7 +129,10 @@ class Administrador(Personas):
         Administrador.setdnis.add(self.dni)
 
     def agregarEmpleado(self,dni, nombre, apellido, fecnac, email, contraseña):
-        diccEmpleados[Administrador.cantempleados]=Administrador(dni, nombre, apellido, fecnac, email, contraseña)
+        contraseña = contraseña.encode('utf-8')
+        objetoHash = hashlib.sha256(contraseña)
+        contraHasheada = objetoHash.hexdigest()
+        diccEmpleados[Administrador.cantempleados]=Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
     def agregarVehiculo(self,patente, modelo, marca, anio,tipo,gama):        
         diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama)
 

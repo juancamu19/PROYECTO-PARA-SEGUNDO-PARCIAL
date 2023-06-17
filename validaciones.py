@@ -1,4 +1,3 @@
-#ACA SE GENERAN TODAS LAS FUNCIONES DE VALIDACION
 from datetime import datetime
 from datetime import date
 import hashlib
@@ -283,9 +282,12 @@ def validarpatente(patente):
     
     return True
 
-
+import Utilities as util
 if __name__=="__main__":
-    print(validarnombre('juan'))
+    contraseña_ingresada='j123'
+    contraseña_ingresada = contraseña_ingresada.encode('utf-8')
+    hash_object = hashlib.sha256(contraseña_ingresada)
+    hashed_password = hash_object.hexdigest()
 
 
 

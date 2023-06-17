@@ -79,9 +79,10 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, dicc):
                 hashed_password = hash_object.hexdigest()
                 if dicc[k].contraseña == hashed_password:  
                     return True
-       
-            else:
-                return False
+                else:
+                    return False
+        return False
+
 
 def validarFecha(fecha): 
     try:

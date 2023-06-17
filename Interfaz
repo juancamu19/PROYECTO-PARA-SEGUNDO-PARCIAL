@@ -4,6 +4,15 @@ from PyQt5.QtGui import QPixmap, QIcon
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt 
 
+from datetime import datetime
+from claseEmpresa import Empresa
+import validaciones as val
+import Utilities as util
+from ClasePersonas import Administrador, Usuarios, Personas,diccEmpleados,diccUsuarios
+from ClaseAlquileres import Alquiler,diccAlquileres
+from ClaseReservas import Reserva,diccReservas
+from ClaseVehiculos import Vehiculos,diccVehiculos
+
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -30,7 +39,9 @@ class LoginWindow(QMainWindow):
 
         # Create input boxes
         input_user = QLineEdit(self)
+        self.input_user = input_user
         input_password = QLineEdit(self)
+        self.input_password = input_password
         input_password.setEchoMode(QLineEdit.Password)
 
         # Create login button
@@ -73,6 +84,13 @@ class LoginWindow(QMainWindow):
         layout.setAlignment(Qt.AlignCenter)
     
     def openMainWindow(self):
+        
+        usuario = self.input_user.text() 
+        contrasena = self.input_password.text()
+        validado = val.validarexistenciaPersona(usuario, contrasena, diccUsuarios)
+        print(validado)
+
+        print(usuario, " ", contrasena)
         self.close()
         self.window = MainWindow()
         self.window.show()

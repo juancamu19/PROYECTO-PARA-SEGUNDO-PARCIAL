@@ -96,13 +96,13 @@ class Usuarios(Personas):
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
-        self.cantreservas = cantreservas
+        self.cantreservas = int(cantreservas)
         Usuarios.setdnis.add(self.dni) 
     def agregarUsuario(dni,username, nombre, apellido, fecnac, email, contraseña):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()  
-        diccUsuarios[dni]= Usuarios(dni,username, nombre, apellido, fecnac, email, contraHasheada)
+        diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada,username)
     def agregarReserva(self,patente_auto, fechaInicio, fechaFin):
         diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  

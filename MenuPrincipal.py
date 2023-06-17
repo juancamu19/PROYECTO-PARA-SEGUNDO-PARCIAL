@@ -126,6 +126,8 @@ while seguir_operando == "SI":
                         while val.validarFechaFin(fechainicio,fechafin) == False: 
                             print('Ingrese una fecha válida')
                             fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
+                        
+                        fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
 
                         tipo=input('Ingrese tipo de auto')
                         while val.validartipo(tipo) == False: 
@@ -378,10 +380,8 @@ while seguir_operando == "SI":
             pass
             
         seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
-print(diccEmpleados)
-print(seguir_operando)  
+ 
 if seguir_operando=='NO':
-    print(diccEmpleados)
     util.escribirCsv('Empleados.csv',diccEmpleados)
     util.escribirCsv('Usuarios.csv',diccUsuarios)
     util.escribirCsv('Empleados.csv',diccEmpleados)

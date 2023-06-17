@@ -4,12 +4,60 @@ from datetime import date
 import string
 import hashlib
 
-letras_habilitadas = set(string.ascii_letters + " ")
+def validarprecio(precio):
+    try:
+        if int(precio)<0:
+            print('Precio debe ser positivo')
+            return False
+    
+    except ValueError:
+        print('ingrese un precio numérico')
+        return False 
 
-def validarReserva(idres):
-     return True
-def validarEmpleado(legajo,contraseña):
-     return True
+def validartipo(tipo):
+    if tipo.strip().lower() not in ['sedan','pick-up','suv','deportivo']:
+        return False
+    else:
+        return True
+
+def validargama(gama):
+    if gama.strip().lower() not in ['baja','media','alta']:
+        return False
+    else:
+        return True
+def validarmarca(marca):
+     letrasYNumeros = set(string.ascii_letters + string.digits)
+     if marca not in letrasYNumeros:
+          return False
+     else:
+          return True
+def validaranio(anio):
+    try:
+        if int(anio)<date.today().year:
+            return True
+        else:
+            print('no hemos alcanzado ese año aún, registra el auto cuando llegue su momento')
+            return False
+    
+    except ValueError:
+        print('ingrese un año numérico')
+        return False 
+def validarmodelo(modelo):
+    if modelo in string.ascii_letters:
+        return True
+    else:
+        return False
+def validaratributo(modelo):
+    if modelo.strip().lower() not in ['patente','modelo','marca','año','tipo','gama']:
+        return False
+    else:
+        return True
+def validarexistenciaclave(clave,dicc):
+     if clave in dicc.keys():
+          return True
+     else:
+          return False         
+     
 
 def validarexistenciaPersona(identificador, contraseña_ingresada, dicc):
         for k in dicc.keys():
@@ -23,7 +71,7 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, dicc):
             else:
                 return False
 
-def validarFecha(fecha):
+def validarFecha(fecha): ##dar nombre mas significativo
     try:
         fecha = datetime.strptime(fecha,"%d-%m-%Y").date()
         if fecha.year > datetime.today().year:
@@ -99,7 +147,7 @@ def validarFechaFin(fechainicio, fechafin):
         return False
 
 
-def validato(tipodato, validando):
+def validato(tipodato, validando):  ##este lo usamos??
     try:
         if type(validando)!= tipodato:
            raise TypeError("El tipo de dato es incorrecto")
@@ -142,13 +190,10 @@ def validardni(dni):
     return True
 
 
-def validarnombre(nombre):
-    nombre = str(nombre)
-    
+def validarnombre(nombre):    
     try:
-        for letra in nombre:
-            if letra not in letras_habilitadas:
-                raise ValueError("El nombre propio es incorrecto, intente de nuevo")
+        if nombre not in string.ascii_letters():
+            print('Nombre inválido')
          
     except ValueError as error:
             print(f"Error: {error}")
@@ -158,11 +203,10 @@ def validarnombre(nombre):
 
 
 def validaremail(mail):
-    mail = str(mail)
     
     try:
          if len(mail) == 0 or mail.count("@") == 0:
-              raise ValueError("El mail ingresado es incorrecto, intente de nuevo")
+            print("El mail ingresado es incorrecto, intente de nuevo")
          
     except ValueError as error:
             print(f"Error: {error}")
@@ -185,22 +229,8 @@ def validarcontraseña(contraseña):
     return True 
 
 
-def valinumerospositivos(monto):
-    monto = int(monto)
-    
-    try:
-        if monto <= 0:
-            raise ValueError("El monto ingresado es incorrecto, intente de nuevo")
-    
-    except ValueError as error:
-            print(f"Error: {error}")
-            return False
-    
-    return True
-
-
 #fechas en datetime ojo
-def validiffechas(fecha1,fecha2):
+def validiffechas(fecha1,fecha2): ## este lo usamos?
     try:  
         if fecha2>fecha1:
             raise ValueError("La fecha ingresada es incorrecta, intente de nuevo")
@@ -212,32 +242,22 @@ def validiffechas(fecha1,fecha2):
     return True   
                    
 
-def valipatente(patente):
+def validarpatente(patente):
     patente = str(patente)
     
     try:
         if len(patente)==6:
             letras=patente[0:3]
             numeros=patente[3:]
-            if letras in string.ascii_letters:  
-                if numeros in string.digits:
-                    pass
-                else:
-                    raise ValueError("La patente ingresada es incorrecta, intente de nuevo")
-            else:
-                    raise ValueError("La patente ingresada es incorrecta, intente de nuevo")    
+            if (not letras.isalpha()) or (not numeros.isdigit()):
+                    raise ValueError("La patente ingresada es incorrecta, intente de nuevo")  
         
         elif len(patente)==7:
             letras1 = patente[0:2]
             letras2 = patente[5:]
             numeros1 = patente[2:5]
-            if letras1 and letras2 in string.ascii_letters:
-                if numeros1 in string.digits:
-                    pass
-                else:
+            if (not letras1.isalpha()) or (not letras2.isalpha()) or (not numeros1.isdigit()):
                     raise ValueError("La patente ingresada es incorrecta, intente de nuevo")
-            else:
-                    raise ValueError("La patente ingresada es incorrecta, intente de nuevo") 
         
         else:
             raise ValueError("La patente ingresada es incorrecta, intente de nuevo")

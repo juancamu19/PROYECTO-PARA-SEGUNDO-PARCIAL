@@ -1,13 +1,11 @@
 from datetime import datetime
 from ClaseVehiculos import Vehiculos
-import funcionescsv as funcsv
+import Utilities as util
 from ClaseReservas import diccReservas
 from ClaseVehiculos import diccVehiculos
 
 class Alquiler():
-    cantAlquileres = 0
-    # diccionario=dict()
-    ################################################################obs: en todas las clases estoy poniendo valores por default en el consructor asi cuando leo el csv me pasa todos los parametros, si no va a haber paraetros de mas o de menos. EN ESTE CLASE EN PARTICULAR, EL ID LO TENGO QUE PASAR POR DEFAULT
+    cantAlquileres = 0   
     def __init__(self,id=cantAlquileres+1,idReserva=None,dni=None,patente_auto=None,fechaInicioAlq=None,fechaExpiracionAlq=None,fechadev=None,monto=None):
         self.id = id 
         self.idReserva = idReserva  
@@ -33,7 +31,7 @@ class Alquiler():
     def __str__(self):
         return ('{}-{}-{}-{}-{}'.format(self.id, self.fecha, self.dni, self.auto))
    
-diccAlquileres = funcsv.leerCsv('Alquileres.csv', Alquiler)
+diccAlquileres = util.leerCsv('Alquileres.csv', Alquiler)
 
 for k in diccReservas.keys():
     if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():

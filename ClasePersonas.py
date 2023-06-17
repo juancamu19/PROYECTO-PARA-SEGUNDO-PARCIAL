@@ -2,10 +2,12 @@ import hashlib
 from ClaseReservas import Reserva,diccReservas
 from ClaseVehiculos import Vehiculos,diccVehiculos 
 from ClaseAlquileres import diccAlquileres
-import funcionescsv as funcsv
+import validaciones as val
+import pandas as pd
+import Utilities as util
+import csv
 
 class Personas:
-    # diccionario=dict()
     setdnis=set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
         self.dni = dni
@@ -13,7 +15,10 @@ class Personas:
         self.apellido = apellido
         self.fecnac = fecnac
         self.email = email
-        self.contraseña = contraseña     
+        contraseña = contraseña.encode('utf-8')
+        objetoHash = hashlib.sha256(contraseña)
+        contraHasheada = objetoHash.hexdigest()
+        self.contraseña=contraHasheada    
 
     def __str__(self):
         return f"{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, y realizó {self.cantreservas} reservas hasta el momento"  
@@ -30,41 +35,65 @@ class Personas:
             obj_list.append(value)
         return obj_list
    
-    def cambiar_dato(self):
-        print("1.DNI, 2.Nombre, 3.Apellido, 4.Fecha de Nacimiento, 5.Email, 6.Contraseña")
-        opcion = input("Elija el número que se encuentra junto al dato que desea modificar: ")
-        dato_nuevo = input("Ingrese su nuevo dato: ")
-        dato_viejo = None
+    def cambiar_dato(self,atributo):
+        match atributo:
 
-        if opcion == "1":
-            dato_viejo = self.dni
-            self.dni = dato_nuevo
-            print("Su DNI ha sido modificado exitosamente de: ", dato_viejo," a: ", dato_nuevo)
+            case 'dni':
+                dniviejo=self.dni
+                dninuevo=input('ingrese dni nuevo')
+                while validado == False:
+                    dninuevo=input('ingrese dni nuevo')
+                    validado = val.validardni(dninuevo)
+                self.dni=dninuevo
+                print("Su DNI ha sido modificado exitosamente de: ", dniviejo," a: ", dninuevo)
 
-        elif opcion == "2":
-            dato_viejo = self.nombre
-            self.nombre = dato_nuevo
-            print("Su Nombre ha sido modificado exitosamente de: ", dato_viejo," a: ", dato_nuevo)
+            case 'nombre':
+                nombreviejo=self.nombre
+                nombrenuevo=input('ingrese nombre nuevo')
+                while validado == False:
+                    nombrenuevo=input('ingrese nombre nuevo')
+                    validado = val.validarnombre(nombrenuevo)
+                self.nombre=nombrenuevo
+                print("Su Nombre ha sido modificado exitosamente de: ", nombreviejo," a: ", nombrenuevo)
 
-        elif opcion == "3":
-            dato_viejo = self.apellido
-            self.apellido = dato_nuevo
-            print("Su Apellido ha sido modificado exitosamente de: ", dato_viejo," a: ", dato_nuevo)
+            case 'apellido':
+                apellidoviejo=self.apellido
+                apellidonuevo=input('ingrese apellido nuevo')
+                while validado == False:
+                    apellidonuevo=input('ingrese apellido nuevo')
+                    validado = val.validarnombre(apellidonuevo)
+                self.apellido=apellidonuevo
+                print("Su Apellido ha sido modificado exitosamente de: ",apellidoviejo," a: ", apellidonuevo)
 
-        elif opcion == "4":
-            dato_viejo = self.fecnac
-            self.fecnac = dato_nuevo
-            print("Su fecha de nacimiento ha sido modificado exitosamente de: ", dato_viejo," a: ", dato_nuevo)
+            case 'fecnac':
+                fecnacviejo=self.fecnac
+                fecnacnuevo=input('ingrese fecnac nuevo')
+                while validado == False:
+                    fecnacnuevo=input('ingrese fecnac nuevo')
+                    validado = val.validarFechaNac(fecnacnuevo)
+                self.fecnac=fecnacnuevo
+                print("Su fecha de nacimiento ha sido modificado exitosamente de: ", fecnacviejo," a: ", fecnacnuevo)
 
-        elif opcion == "5":
-            dato_viejo = self.email
-            self.email = dato_nuevo
-            print("Su email ha sido modificado exitosamente de: ", dato_viejo," a: ", dato_nuevo)
+            case 'email':
+                emailviejo=self.email
+                emailnuevo=input('ingrese email nuevo')
+                while validado == False:
+                    emailnuevo=input('ingrese email nuevo')
+                    validado = val.validaremail(emailnuevo)
+                self.email=emailnuevo
+                print("Su email ha sido modificado exitosamente de: ", emailviejo," a: ", emailnuevo)
 
-        elif opcion == "6":
-            dato_viejo = self.dni
-            self.contraseña = dato_nuevo
-            print("Su contraseña ha sido modificada exitosamente de: ", dato_viejo," a: ", dato_nuevo)
+            case 'contraseña':
+                
+                contraseñanuevo=input('ingrese contraseña nuevo')
+                while validado == False:
+                    contraseñanuevo=input('ingrese contraseña nueva')
+                    validado = val.validarcontraseña(contraseñanuevo)
+                contraseñanuevo = contraseñanuevo.encode('utf-8')
+                objetoHash = hashlib.sha256(contraseñanuevo)
+                contraHasheada = objetoHash.hexdigest()
+                self.contraseña=contraHasheada
+                
 
 
 class Usuarios(Personas):
@@ -74,10 +103,7 @@ class Usuarios(Personas):
         self.cantreservas = cantreservas
         Usuarios.setdnis.add(self.dni) 
     def agregarUsuario(dni,username, nombre, apellido, fecnac, email, contraseña):  
-        contraseña = contraseña.encode('utf-8')
-        hash_object = hashlib.sha256(contraseña)
-        hashed_password = hash_object.hexdigest()
-        diccUsuarios[dni]= Usuarios(dni,username, nombre, apellido, fecnac, email, hashed_password)
+        diccUsuarios[dni]= Usuarios(dni,username, nombre, apellido, fecnac, email, contraseña)
     def agregarReserva(self,patente_auto, fechaInicio, fechaFin):
         diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
@@ -92,12 +118,12 @@ class Usuarios(Personas):
     def modifFecFinReserva(self,idreserva):
         diccReservas[idreserva].cambiarfechaExpiracionAlquiler()
 
-diccUsuarios = funcsv.leerCsv('Usuarios.csv', Usuarios)
+diccUsuarios = util.leerCsv('Usuarios.csv', Usuarios)
 
 
 class Administrador(Personas):
-    cantempleados=0 ###ESTO DEBERÍA IR EN EMPRESA
-    def __init__(self,dni,legajo, nombre, apellido, fecnac, email, contraseña):
+    cantempleados=0
+    def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,legajo=None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleados
         Administrador.cantempleados+=1       
@@ -115,14 +141,21 @@ class Administrador(Personas):
         diccAlquileres[idalquiler].finalizar()
         diccVehiculos[diccAlquileres[idalquiler].patente_auto].devolver()
 
-    def eliminarVehiculo(self,patente):         ####ESTE NO PUSIMOS EN CLASE VEHICULOS PORQUE NO TIENE SENTIDO, SERÍA REPETIR CODIGO
+    def eliminarVehiculo(self,patente):         
         diccVehiculos[patente].eliminar(diccVehiculos)
 
-diccEmpleados = funcsv.leerCsv('Empleados.csv', Administrador)
+    def modifPreciosAutos(self,tipo,gama,precionuevo):
+        df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
+        df.at[gama, tipo] = precionuevo
+        df.to_csv('PreciosVehiculos.csv')
+
+
+diccEmpleados = util.leerCsv('Empleados.csv', Administrador)
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
     pass
+
     
     
 

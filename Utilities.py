@@ -12,8 +12,12 @@ def leerCsv(archivo, clase):
     with open(archivo) as file:
         lector = csv.reader(file)
         for row in lector:
-            clave = row[0]
-            dic1[clave] = clase(*row[:])
+            if archivo=='Empleados.csv':
+                clave = row[6]
+                dic1[clave] = clase(*row[:])
+            else:
+                clave = row[0]
+                dic1[clave] = clase(*row[:])
     return dic1
 
 # Pruebas de Funcionamiento

@@ -1,7 +1,8 @@
 from datetime import datetime
 import pandas as pd
 import random
-import funcionescsv as funcsv
+import Utilities as util
+import validaciones as val
 from ClaseReservas import diccReservas
 class Vehiculos():
     # diccionario=dict()
@@ -26,24 +27,40 @@ class Vehiculos():
         match atributo:
             case 'patente':
                 patentenueva=input('ingrese patente nueva')
+                while validado == False:
+                    patentenueva=input('ingrese patente nueva')
+                    validado = val.validarpatente(patentenueva)
                 self.patente=patentenueva 
             case 'modelo' :
                 modelonuevo=input('ingrese modelo nuevo')
+                while validado == False:
+                    modelonuevo=input('ingrese modelo nuevo')
+                    validado = val.validarmodelo(modelonuevo)
                 self.modelo=modelonuevo 
             case 'marca' :
                 marcanueva=input('ingrese marca nueva')
+                while validado == False:
+                    marcanueva=input('ingrese marca nueva')
+                    validado = val.validarmodelo(marcanueva)
                 self.marca=marcanueva
-            case 'anio':
+            case 'año':
                 anionuevo=input('ingrese año nuevo')
+                while validado == False:
+                    anionuevo=input('ingrese año nuevo')
+                    validado = val.validarmodelo(anionuevo)
                 self.anio=anionuevo
-                #validamos que el año sea menor que el año actual? 
             case 'tipo' :
                 tiponuevo=input ('ingrese nuevo tipo')
+                while validado == False:
+                    tiponuevo=input ('ingrese nuevo tipo')
+                    validado = val.validarmodelo(tiponuevo)
                 self.tipo=tiponuevo
             case 'gama':
                 gamanueva=input('ingrese nueva gama')
-                self.gama=gamanueva
-            ##No se como se haria esto con el tema del precio xq esta el asignar precio, faltaria eso 
+                while validado == False:
+                    gamanueva=input('ingrese nueva gama')
+                    validado = val.validarmodelo(gamanueva)
+                self.gama=gamanueva 
         
     def asignarPrecio(self):
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
@@ -79,7 +96,7 @@ class Vehiculos():
         return(f"""El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precio}, ...""") 
     
 
-diccVehiculos = funcsv.leerCsv('Vehiculos.csv', Vehiculos)
+diccVehiculos = util.leerCsv('Vehiculos.csv', Vehiculos)
 
 # Pruebas de Funcionamiento
 #creo un falcon de pruebas

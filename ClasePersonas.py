@@ -5,7 +5,6 @@ from ClaseAlquileres import diccAlquileres
 import validaciones as val
 import pandas as pd
 import Utilities as util
-import csv
 
 class Personas:
     setdnis=set()
@@ -130,7 +129,7 @@ class Administrador(Personas):
         Administrador.setdnis.add(self.dni)
 
     def agregarEmpleado(self,dni, nombre, apellido, fecnac, email, contraseña):
-        Administrador(dni, nombre, apellido, fecnac, email, contraseña)
+        diccEmpleados[Administrador.cantempleados]=Administrador(dni, nombre, apellido, fecnac, email, contraseña)
     def agregarVehiculo(self,patente, modelo, marca, anio,tipo,gama):        
         diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama)
 

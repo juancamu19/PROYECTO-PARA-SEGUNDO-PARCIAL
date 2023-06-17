@@ -196,12 +196,7 @@ while seguir_operando == "SI":
             pass
             
         seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
-        if seguir_operando=='NO':
-            util.escribirCsv('Usuarios.csv',diccUsuarios)
-            util.escribirCsv('Empleados.csv',diccEmpleados)
-            util.escribirCsv('Alquileres.csv',diccAlquileres)
-            util.escribirCsv('Reservas.csv',diccReservas)
-            util.escribirCsv('Vehiculos.csv',diccVehiculos)
+        
     
     elif opcion_elegida =='2':
         print('Operaciones que puede realizar:')
@@ -223,9 +218,10 @@ while seguir_operando == "SI":
 
             legajo=input('Ingrese su legajo')
             contraseña=input('Ingrese su contraseña')
-            while val.validarEmpleado(legajo,contraseña) == False:              
+            while val.validarexistenciaPersona(legajo,contraseña,diccEmpleados) == False: 
+                print('contraseña o legajo no válidos')             
                 legajo = input("Ingrese su legajo ")
-                contraseña=input('Ingrese su contraseña')
+                contraseña=input('Ingrese una contraseña válida')
 
             print('Empleado verificado, a continuación ingrese los datos del nuevo empleado')
             
@@ -382,8 +378,14 @@ while seguir_operando == "SI":
             pass
             
         seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
-        if seguir_operando=='NO':
-            util.escribirCsv('Empleados.csv',diccEmpleados)
-            util.escribirCsv('Alquileres.csv',diccAlquileres)
-            util.escribirCsv('Vehiculos.csv',diccVehiculos)
+print(diccEmpleados)
+print(seguir_operando)  
+if seguir_operando=='NO':
+    print(diccEmpleados)
+    util.escribirCsv('Empleados.csv',diccEmpleados)
+    util.escribirCsv('Usuarios.csv',diccUsuarios)
+    util.escribirCsv('Empleados.csv',diccEmpleados)
+    util.escribirCsv('Alquileres.csv',diccAlquileres)
+    util.escribirCsv('Reservas.csv',diccReservas)
+    util.escribirCsv('Vehiculos.csv',diccVehiculos)
 

@@ -1,7 +1,7 @@
 import csv
 
 def escribirCsv(archivo, dicc):
-    with open(archivo, "w", newline="") as fileEscAlq:  
+    with open(archivo, "w", newline="",encoding='utf-8') as fileEscAlq:  
         escritorAlquiler = csv.writer(fileEscAlq)
 
         for idPersona in dicc.keys():

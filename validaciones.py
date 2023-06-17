@@ -1,7 +1,6 @@
 #ACA SE GENERAN TODAS LAS FUNCIONES DE VALIDACION
 from datetime import datetime
 from datetime import date
-import string
 import hashlib
 
 def validarprecio(precio):
@@ -26,11 +25,17 @@ def validargama(gama):
     else:
         return True
 def validarmarca(marca):
-     letrasYNumeros = set(string.ascii_letters + string.digits)
-     if marca not in letrasYNumeros:
-          return False
-     else:
-          return True
+    try:
+        marca = marca.replace(' ','')
+        if not marca.isalpha():
+            print('Nombre inválido')
+            return False
+         
+    except ValueError as error:
+            print(f"Error: {error}")
+            return False
+    
+    return True
 def validaranio(anio):
     try:
         if int(anio)<date.today().year:
@@ -43,10 +48,17 @@ def validaranio(anio):
         print('ingrese un año numérico')
         return False 
 def validarmodelo(modelo):
-    if modelo in string.ascii_letters:
-        return True
-    else:
-        return False
+    try:
+        modelo = modelo.replace(' ','')
+        if not modelo.isalnum():
+            print('Nombre inválido')
+            return False
+         
+    except ValueError as error:
+            print(f"Error: {error}")
+            return False
+    
+    return True
 def validaratributo(modelo):
     if modelo.strip().lower() not in ['patente','modelo','marca','año','tipo','gama']:
         return False
@@ -71,7 +83,7 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, dicc):
             else:
                 return False
 
-def validarFecha(fecha): ##dar nombre mas significativo
+def validarFecha(fecha): 
     try:
         fecha = datetime.strptime(fecha,"%d-%m-%Y").date()
         if fecha.year > datetime.today().year:
@@ -122,7 +134,7 @@ def validarModifFechaInicio(fechainicio, fechafin):
     try:
         fecha_ing = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_fin = datetime.strptime(fechafin,"%d-%m-%Y").date()
-        if fecha_ing >= date.today() and fecha_ing <= fecha_fin:  ##aca verifico ademas que la fecha de inicio sea menor que la de fin
+        if fecha_ing >= date.today() and fecha_ing <= fecha_fin:  
              return True
         else:
              print('la fecha ingresada ya paso o es posterior a la fecha pactada de fin de alquiler')
@@ -192,8 +204,10 @@ def validardni(dni):
 
 def validarnombre(nombre):    
     try:
-        if nombre not in string.ascii_letters():
+        nombre = nombre.replace(' ','')
+        if not nombre.isalpha():
             print('Nombre inválido')
+            return False
          
     except ValueError as error:
             print(f"Error: {error}")
@@ -269,6 +283,8 @@ def validarpatente(patente):
     return True
 
 
+if __name__=="__main__":
+    print(validarnombre('juan'))
 
 
 

@@ -84,115 +84,117 @@ while seguir_operando == "SI":
 
         elif opcion_elegida == "2":                             #INGRESO del Usuario (Persona)
             
-            validado = False
-            volver_a_ingresar = "SI"
+            dnix = input("Ingrese su dni ")
+            contraseñax = input("Ingrese su contraseña ")
 
-            while volver_a_ingresar == "SI":
+            while val.validarexistenciaPersona(dnix, contraseñax, diccUsuarios)==False:
 
                 dnix = input("Ingrese su dni ")
                 contraseñax = input("Ingrese su contraseña ")
-                validado = val.validarexistenciaPersona(dnix, contraseñax, diccUsuarios)
                 
-                if not validado:
-                    print("Su dni o contraseña son incorrectos")
-                    volver_a_ingresar = input("Desea volver a ingresar sus datos (SI o NO)? ").strip().upper()
+            print('Operaciones que puede realizar:')
+            print('')
+            print('1. Realizar una reserva')
+            print('2. Cambiar una fecha de reserva')
+            print('3. Cancelar una reserva')
+            print('4. Cambiar un dato de su usuario')
+            print('')
+            print('5. Salir')
+
+            operacion = input("Ingrese el número de operación que desea realizar")
+
+            while opcion_elegida not in ['1','2','3','4','5']: 
+                opcion_elegida = input("ingrese nuevamente la opcion: ")
+
+            if operacion == "1":                        #Realizar una reserva
                     
-                else:
+                fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticipación mínima de 5 días)')
+                while val.validarAgregarFechaInicio(fechainicio) == False:
+                    print('Ingrese una fecha válida')
+                    fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
+                fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
+
+                fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
+
+                while val.validarFechaFin(fechainicio,fechafin) == False: 
+                    print('Ingrese una fecha válida')
+                    fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
+                
+                fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
+
+                tipo=input('Ingrese tipo de auto(sedan,pick-up,suv,deportivo)')
+                while val.validartipo(tipo) == False: 
+                    print('Ingrese un tipo válido(sedan,pick-up,suv,deportivo)')
                     
-                    print('Operaciones que puede realizar:')
-                    print('')
-                    print('1. Realizar una reserva')
-                    print('2. Cambiar una fecha de reserva')
-                    print('3. Cancelar una reserva')
-                    print('4. Cambiar un dato de su usuario')
-                    print('')
-                    print('5. Salir')
+                gama=input('Ingrese gama de auto(baja,media,alta)')
+                while val.validargama(gama) == False: 
+                    print('Ingrese una gama válida(baja,media,alta)')
+                
+                auto = Vehiculos.asignarauto(fechainicio,fechafin,tipo,gama)
+                
+                if auto == None:
+                    print('no hay auto disponible')
+                else: 
+                    diccUsuarios[dnix].agregarReserva(auto,fechainicio,fechafin) 
+                
+                
+                        
+                        
+            elif operacion == "2":                     #Cambiar una fecha de reserva
 
-                    operacion = input("Ingrese el número de operación que desea realizar")
+                print('Operaciones que puede realizar:')
+                print('')
+                print('1. Cambiar el inicio de su alquiler')
+                print('2. Cambiar la fecha de fin de su alquiler')
+                print('')
+                cambio = input("Ingrese el número de operación que desea realizar")
 
-                    while opcion_elegida not in ['1','2','3','4','5']: 
-                        opcion_elegida = input("ingrese nuevamente la opcion: ")
+                while cambio not in ['1','2']: 
+                    opcion_elegida = input("ingrese nuevamente la opcion: ")
+                
+                
+                idres = input("Ingrese el id de su reserva ")
+                while val.validarexistenciaId(idres,diccReservas) == False:
+                    idres = input("Ingrese el id de su reserva ")
+            
 
-                    if operacion == "1":                        #Realizar una reserva
+                
+            
+                if cambio == '1':
                             
-                        fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticipación mínima de 5 días)')
-                        while val.validarAgregarFechaInicio(fechainicio) == False:
-                            print('Ingrese una fecha válida')
-                            fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
-                        fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
+                    diccUsuarios[dnix].modifFecInicioReserva(idres)
 
-                        fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
+                    
 
-                        while val.validarFechaFin(fechainicio,fechafin) == False: 
-                            print('Ingrese una fecha válida')
-                            fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
-                        
-                        fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
 
-                        tipo=input('Ingrese tipo de auto(sedan,pick-up,suv,deportivo)')
-                        while val.validartipo(tipo) == False: 
-                            print('Ingrese un tipo válido(sedan,pick-up,suv,deportivo)')
+                elif cambio == '2':
+
+                    diccUsuarios[dnix].modifFecFinReserva(idres)
+
+                    
+
                             
-                        gama=input('Ingrese gama de auto(baja,media,alta)')
-                        while val.validargama(gama) == False: 
-                            print('Ingrese una gama válida(baja,media,alta)')
-                        
-                        auto = Vehiculos.asignarauto(fechainicio,fechafin,tipo,gama)
-                        
-                        if auto == None:
-                            print('no hay auto disponible')
-                        else: 
-                            diccUsuarios[dnix].agregarReserva(auto,fechainicio,fechafin) 
-                                
-                                
-                    elif operacion == "2":                     #Cambiar una fecha de reserva
-
-                        print('Operaciones que puede realizar:')
-                        print('')
-                        print('1. Cambiar el inicio de su alquiler')
-                        print('2. Cambiar la fecha de fin de su alquiler')
-                        print('')
-                        cambio = input("Ingrese el número de operación que desea realizar")
-
-                        while cambio not in ['1','2']: 
-                            opcion_elegida = input("ingrese nuevamente la opcion: ")
-                        
-                        
-                        idres = input("Ingrese el id de su reserva ")
-                        while val.validarexistenciaId(idres,diccReservas) == False:
-                            idres = input("Ingrese el id de su reserva ")
-                    
-
-                        
-                    
-                        if cambio == '1':
-                                    
-                            diccUsuarios[dnix].modifFecInicioReserva(idres)
-
-
-                        elif cambio == '2':
-
-                            diccUsuarios[dnix].modifFecFinReserva(idres)
-
-                                
-                    elif operacion == "3":
-                        validado = False
+                elif operacion == "3":
+                    validado = False
+                    idres = input("ingrese el id de su reserva")
+                    while val.validarReserva(idres) == False:
                         idres = input("ingrese el id de su reserva")
-                        while val.validarReserva(idres) == False:
-                            idres = input("ingrese el id de su reserva")
-                            
-                        diccUsuarios[dnix].cancelarReserva(idres)
+                        
+                    diccUsuarios[dnix].cancelarReserva(idres)
 
                     
-                    elif operacion == "4":
-                        atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
-                        while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','constraseña']:
-                            print('escriba denuevo el atributo')
-                            atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
-                        diccUsuarios[dnix].cambiar_dato(atributo)
 
-                    elif operacion == "5":
-                        pass
+                
+                elif operacion == "4":
+                    atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
+                    while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','constraseña']:
+                        print('escriba denuevo el atributo')
+                        atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
+                    diccUsuarios[dnix].cambiar_dato(atributo)
+
+                    
+                elif operacion == "5":
+                    pass
 
         elif opcion_elegida=='3':
             pass

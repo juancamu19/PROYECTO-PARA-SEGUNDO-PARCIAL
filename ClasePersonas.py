@@ -7,7 +7,8 @@ import pandas as pd
 import Utilities as util
 
 class Personas:
-    setdnis=set()
+    setdnis = set()
+
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
         self.dni = dni
         self.nombre = nombre
@@ -17,8 +18,8 @@ class Personas:
         self.contraseña=contraseña   
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} de dni {self.dni}, nació en la fecha {self.fecnac}, su email es {self.email}, y realizó {self.cantreservas} reservas hasta el momento"  
-
+        return f"Nombre: {self.nombre} {self.apellido}, DNI: {self.dni}, Fecha de nacimiento: {self.fecnac}, Email: {self.email}, Cantidad de reservas realizadas hasta el momento: {self.cantreservas}"
+    
     def validarexistenciaDNI(dni):
         if dni in Personas.setdnis:  
             return True          
@@ -31,65 +32,65 @@ class Personas:
     #         obj_list.append(value)
     #     return obj_list
    
-    def cambiar_dato(self,atributo):
+    def cambiar_dato(self, atributo):
         match atributo:
 
             case 'dni':
-                dniviejo=self.dni
-                dninuevo=input('ingrese dni nuevo')
+                dniviejo = self.dni
+                dninuevo = input('Ingrese su nuevo dni ')
                 while validado == False:
-                    dninuevo=input('ingrese dni nuevo')
+                    dninuevo = input('Ingrese su nuevo dni ')
                     validado = val.validardni(dninuevo)
-                self.dni=dninuevo
+                self.dni = dninuevo
                 print("Su DNI ha sido modificado exitosamente de: ", dniviejo," a: ", dninuevo)
 
             case 'nombre':
-                nombreviejo=self.nombre
-                nombrenuevo=input('ingrese nombre nuevo')
+                nombreviejo = self.nombre
+                nombrenuevo = input('Ingrese su nombre nuevo ')
                 while validado == False:
-                    nombrenuevo=input('ingrese nombre nuevo')
+                    nombrenuevo = input('Ingrese su nombre nuevo ')
                     validado = val.validarnombre(nombrenuevo)
-                self.nombre=nombrenuevo
+                self.nombre = nombrenuevo
                 print("Su Nombre ha sido modificado exitosamente de: ", nombreviejo," a: ", nombrenuevo)
 
             case 'apellido':
-                apellidoviejo=self.apellido
-                apellidonuevo=input('ingrese apellido nuevo')
+                apellidoviejo = self.apellido
+                apellidonuevo = input('Ingrese su apellido nuevo ')
                 while validado == False:
-                    apellidonuevo=input('ingrese apellido nuevo')
+                    apellidonuevo=input('Ingrese su apellido nuevo ')
                     validado = val.validarnombre(apellidonuevo)
                 self.apellido=apellidonuevo
-                print("Su Apellido ha sido modificado exitosamente de: ",apellidoviejo," a: ", apellidonuevo)
+                print("Su Apellido ha sido modificado exitosamente de: ", apellidoviejo," a: ", apellidonuevo)
 
             case 'fecnac':
-                fecnacviejo=self.fecnac
-                fecnacnuevo=input('ingrese fecnac nuevo')
+                fecnacviejo = self.fecnac
+                fecnacnuevo = input('Ingrese su nueva fecha de nacimiento ')
                 while validado == False:
-                    fecnacnuevo=input('ingrese fecnac nuevo')
-                    validado = val.validarFechaNac(fecnacnuevo)
-                self.fecnac=fecnacnuevo
+                    fecnacnuevo = input('Ingrese su nueva fecha de nacimiento ')
+                    validado = val.validarFecha(fecnacnuevo)
+                self.fecnac = fecnacnuevo
                 print("Su fecha de nacimiento ha sido modificado exitosamente de: ", fecnacviejo," a: ", fecnacnuevo)
 
             case 'email':
                 emailviejo=self.email
-                emailnuevo=input('ingrese email nuevo')
+                emailnuevo=input('Ingrese su email nuevo ')
                 while validado == False:
-                    emailnuevo=input('ingrese email nuevo')
+                    emailnuevo=input('Ingrese su email nuevo ')
                     validado = val.validaremail(emailnuevo)
-                self.email=emailnuevo
+                self.email = emailnuevo
                 print("Su email ha sido modificado exitosamente de: ", emailviejo," a: ", emailnuevo)
 
             case 'contraseña':
-                
-                contraseñanuevo=input('ingrese contraseña nuevo')
+                contraseñanuevo = input('Ingrese su contraseña nueva ')
                 while validado == False:
-                    contraseñanuevo=input('ingrese contraseña nueva')
+                    contraseñanuevo = input('Ingrese su contraseña nueva ')
                     validado = val.validarcontraseña(contraseñanuevo)
                 contraseñanuevo = contraseñanuevo.encode('utf-8')
                 objetoHash = hashlib.sha256(contraseñanuevo)
                 contraHasheada = objetoHash.hexdigest()
-                self.contraseña=contraHasheada
+                self.contraseña = contraHasheada
                 
+
 
 
 class Usuarios(Personas):
@@ -98,13 +99,15 @@ class Usuarios(Personas):
         self.username = username
         self.cantreservas = int(cantreservas)
         Usuarios.setdnis.add(self.dni) 
-    def agregarUsuario(dni,username, nombre, apellido, fecnac, email, contraseña):
+    
+    def agregarUsuario(dni, username, nombre, apellido, fecnac, email, contraseña):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()  
-        diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada,username)
+        diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
+    
     def agregarReserva(self,patente_auto, fechaInicio, fechaFin):
-        diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas + 1, self.dni, patente_auto, fechaInicio, fechaFin)
+        diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
         return f'La reserva de id {Reserva.cantReservas} , hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}'
         
@@ -117,12 +120,18 @@ class Usuarios(Personas):
     def modifFecFinReserva(self,idreserva):
         diccReservas[idreserva].cambiarfechaExpiracionAlquiler()
 
+
+
+
 diccUsuarios = util.leerCsv('Usuarios.csv', Usuarios)
 
 
+
+
 class Administrador(Personas):
-    cantempleados=0
-    def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,legajo=None):
+    cantempleados = 0
+    
+    def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleados
         Administrador.cantempleados+=1       
@@ -132,18 +141,19 @@ class Administrador(Personas):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()
-        diccEmpleados[Administrador.cantempleados]=Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
-    def agregarVehiculo(self,patente, modelo, marca, anio,tipo,gama):        
-        diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo,gama)
+        diccEmpleados [Administrador.cantempleados] = Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
+    
+    def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        
+        diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo, gama)
 
-    def modificarVehiculo(self,patente,atributo):
+    def modificarVehiculo(self, patente, atributo):
         diccVehiculos[patente].modificar(atributo)
 
-    def finalizarAlquiler(self,idalquiler):
+    def finalizarAlquiler(self, idalquiler):
         diccAlquileres[idalquiler].finalizar()
         diccVehiculos[diccAlquileres[idalquiler].patente_auto].devolver()
 
-    def eliminarVehiculo(self,patente):         
+    def eliminarVehiculo(self, patente):         
         diccVehiculos[patente].eliminar(diccVehiculos)
 
     def modifPreciosAutos(self,tipo,gama,precionuevo):

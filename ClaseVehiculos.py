@@ -4,63 +4,72 @@ import random
 import Utilities as util
 import validaciones as val
 from ClaseReservas import diccReservas
+
 class Vehiculos():
     # diccionario=dict()
     cantVehiculos = 0
     setVehiculos=set()
-    def __init__(self, patente, modelo, marca, anio,tipo,gama,precioxdia=None,disponible=True):
+    
+    def __init__(self, patente, modelo, marca, anio, tipo, gama, precioxdia = None ,disponible = True):
         self.patente = patente
         self.modelo = modelo
         self.marca = marca
         self.anio = anio
         self.tipo = tipo
         self.gama = gama
-        self.precioxdia = self.asignarPrecio()
-        self.disponible = True   
+        self.disponible = True
+        self.precioxdia = self.asignarPrecio()   
+        
         Vehiculos.cantVehiculos+=1
         Vehiculos.setVehiculos.add(self.patente)
     
     def devolver(self):
-        self.disponible=True
+        self.disponible = True
     
-    def modificar(self,atributo):
+    def modificar(self, atributo):
         match atributo:
+            
             case 'patente':
-                patentenueva=input('ingrese patente nueva')
+                patentenueva = input('Ingrese la patente nueva ')
                 while validado == False:
-                    patentenueva=input('ingrese patente nueva')
+                    patentenueva=input('Ingrese patente nueva ')
                     validado = val.validarpatente(patentenueva)
-                self.patente=patentenueva 
+                self.patente = patentenueva 
+            
             case 'modelo' :
-                modelonuevo=input('ingrese modelo nuevo')
+                modelonuevo = input('Ingrese el modelo nuevo ')
                 while validado == False:
-                    modelonuevo=input('ingrese modelo nuevo')
+                    modelonuevo=input('Ingrese el modelo nuevo ')
                     validado = val.validarmodelo(modelonuevo)
-                self.modelo=modelonuevo 
+                self.modelo = modelonuevo 
+            
             case 'marca' :
-                marcanueva=input('ingrese marca nueva')
+                marcanueva = input('Ingrese la marca nueva ')
                 while validado == False:
-                    marcanueva=input('ingrese marca nueva')
+                    marcanueva = input('Ingrese la marca nueva ')
                     validado = val.validarmodelo(marcanueva)
-                self.marca=marcanueva
+                self.marca = marcanueva
+            
             case 'año':
-                anionuevo=input('ingrese año nuevo')
+                anionuevo = input('Ingrese el año nuevo ')
                 while validado == False:
-                    anionuevo=input('ingrese año nuevo')
+                    anionuevo=input('Ingrese el año nuevo ')
                     validado = val.validarmodelo(anionuevo)
-                self.anio=anionuevo
+                self.anio = anionuevo
+            
             case 'tipo' :
-                tiponuevo=input ('ingrese nuevo tipo')
+                tiponuevo = input('Ingrese el nuevo tipo ')
                 while validado == False:
-                    tiponuevo=input ('ingrese nuevo tipo')
+                    tiponuevo = input('Ingrese el nuevo tipo ')
                     validado = val.validarmodelo(tiponuevo)
-                self.tipo=tiponuevo
+                self.tipo = tiponuevo
+            
             case 'gama':
-                gamanueva=input('ingrese nueva gama')
+                gamanueva = input('Ingrese la nueva gama ')
                 while validado == False:
-                    gamanueva=input('ingrese nueva gama')
+                    gamanueva=input('Ingrese la nueva gama ')
                     validado = val.validarmodelo(gamanueva)
-                self.gama=gamanueva 
+                self.gama = gamanueva 
         
     def asignarPrecio(self):
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
@@ -78,6 +87,7 @@ class Vehiculos():
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
         fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()    
         setvehiculosdisponibles=Vehiculos.setVehiculos
+        
         for k in diccReservas.keys():
             fechaInicioReservak = datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()
             fechaFinReservak = datetime.strptime(diccReservas[k].fechaFin,"%d-%m-%Y").date()
@@ -86,15 +96,13 @@ class Vehiculos():
                 
                     setvehiculosdisponibles.remove(diccReservas[k].patente_auto)  
 
-        if len(setvehiculosdisponibles)==0:
+        if len(setvehiculosdisponibles) == 0:
             return None
         else:
             return random.choice(list(setvehiculosdisponibles))
 
-
-
     def __str__(self):     #Sería como una consulta general sobre el estado de un vehículo
-        return(f"""El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precio}, ...""") 
+        return(f"El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precioxdia}, es de tipo {self.tipo} y gama {self.gama}")
     
 
 diccVehiculos = util.leerCsv('Vehiculos.csv', Vehiculos)

@@ -1,13 +1,14 @@
 import csv
 
-def escribirCsv(archivo, dicc):
+def escribirCsv(archivo, dicc):                    #Escribo un archivo csv para almacenar la información en el tiempo
     with open(archivo, "w", newline="",encoding='utf-8') as fileEscAlq:  
-        escritorAlquiler = csv.writer(fileEscAlq)
+        escritor = csv.writer(fileEscAlq)
 
-        for idPersona in dicc.keys():
-            escritorAlquiler.writerow(objeto_a_lista(dicc[idPersona]))
+        for clave_de_clase in dicc.keys():
+            escritor.writerow(objeto_a_lista(dicc[clave_de_clase]))
 
-def leerCsv(archivo, clase):
+
+def leerCsv(archivo, clase):                        #Leo el archivo csv e instancio su contenido en un diccionario para facilitar el manejo de la información
     dic1 = dict()
     with open(archivo) as file:
         lector = csv.reader(file)
@@ -19,6 +20,8 @@ def leerCsv(archivo, clase):
                 clave = row[0]
                 dic1[clave] = clase(*row[:])
     return dic1
+
+
 def objeto_a_lista(objeto):
         obj_list = []
         for attr, value in objeto.__dict__.items():

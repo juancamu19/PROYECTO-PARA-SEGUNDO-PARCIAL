@@ -20,8 +20,5 @@ def leerCsv(archivo, clase):
                 dic1[clave] = clase(*row[:])
     return dic1
 
-# Pruebas de Funcionamiento
-if __name__ == "__main__":
-    pass
 
     

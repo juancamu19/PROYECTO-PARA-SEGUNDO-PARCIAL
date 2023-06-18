@@ -115,7 +115,7 @@ while seguir_operando == "SI":
 
                     if operacion == "1":                        #Realizar una reserva
                             
-                        fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticiáción mínima de 5 días)')
+                        fechainicio = input('ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticipación mínima de 5 días)')
                         while val.validarAgregarFechaInicio(fechainicio) == False:
                             print('Ingrese una fecha válida')
                             fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
@@ -129,11 +129,11 @@ while seguir_operando == "SI":
                         
                         fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
 
-                        tipo=input('Ingrese tipo de auto')
+                        tipo=input('Ingrese tipo de auto(sedan,pick-up,suv,deportivo)')
                         while val.validartipo(tipo) == False: 
                             print('Ingrese un tipo válido(sedan,pick-up,suv,deportivo)')
                             
-                        gama=input('Ingrese gama de auto')
+                        gama=input('Ingrese gama de auto(baja,media,alta)')
                         while val.validargama(gama) == False: 
                             print('Ingrese una gama válida(baja,media,alta)')
                         

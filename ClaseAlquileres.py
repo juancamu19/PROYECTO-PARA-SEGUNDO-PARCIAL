@@ -18,11 +18,11 @@ class Alquiler():
 
         Alquiler.cantAlquileres += 1
 
-    def objeto_a_lista(self):
-        obj_list = []
-        for attr, value in self.__dict__.items():
-            obj_list.append(value)
-        return obj_list
+    # def objeto_a_lista(self):
+    #     obj_list = []
+    #     for attr, value in self.__dict__.items():
+    #         obj_list.append(value)
+    #     return obj_list
     
     def finalizar(self):
         self.fechadev=datetime.now()

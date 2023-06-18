@@ -17,11 +17,11 @@ class Reserva():
         Reserva.cantReservas += 1
         Reserva.setReservas.add(self.id)
     
-    def objeto_a_lista(self):
-        obj_list = []
-        for attr, value in self.__dict__.items():
-            obj_list.append(value)
-        return obj_list
+    # def objeto_a_lista(self):
+    #     obj_list = []
+    #     for attr, value in self.__dict__.items():
+    #         obj_list.append(value)
+    #     return obj_list
     
     
     def cancelarreserva(self):

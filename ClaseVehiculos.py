@@ -68,14 +68,15 @@ class Vehiculos():
             precio = df.loc[self.gama, self.tipo]
         return precio
     
-    def objeto_a_lista(self):
-        obj_list = []
-        for attr, value in self.__dict__.items():
-            obj_list.append(value)
-        return obj_list
+    # def objeto_a_lista(self):
+    #     obj_list = []
+    #     for attr, value in self.__dict__.items():
+    #         obj_list.append(value)
+    #     return obj_list
         
     def asignarauto(fecinicio, fecfin, tipo, gama):
-    
+        fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
+        fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()    
         setvehiculosdisponibles=Vehiculos.setVehiculos
         for k in diccReservas.keys():
             fechaInicioReservak = datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()

@@ -147,6 +147,7 @@ def validarModifFechaInicio(fechainicio, fechafin):
 
 def validarFechaFin(fechainicio, fechafin):
     try:
+        fechainicio=datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
         if fechafin >= fechainicio:
             return True
@@ -284,10 +285,9 @@ def validarpatente(patente):
 
 import Utilities as util
 if __name__=="__main__":
-    contraseña_ingresada='j123'
-    contraseña_ingresada = contraseña_ingresada.encode('utf-8')
-    hash_object = hashlib.sha256(contraseña_ingresada)
-    hashed_password = hash_object.hexdigest()
+    print(validarAgregarFechaInicio('12-12-2023'))
+    fechainicio = datetime.strptime('12-12-2023',"%d-%m-%Y").date().strftime('%d-%m-%Y')
+    print(fechainicio)
 
 
 

@@ -5,7 +5,7 @@ def escribirCsv(archivo, dicc):
         escritorAlquiler = csv.writer(fileEscAlq)
 
         for idPersona in dicc.keys():
-            escritorAlquiler.writerow(dicc[idPersona].objeto_a_lista())
+            escritorAlquiler.writerow(objeto_a_lista(dicc[idPersona]))
 
 def leerCsv(archivo, clase):
     dic1 = dict()
@@ -19,6 +19,10 @@ def leerCsv(archivo, clase):
                 clave = row[0]
                 dic1[clave] = clase(*row[:])
     return dic1
-
+def objeto_a_lista(objeto):
+        obj_list = []
+        for attr, value in objeto.__dict__.items():
+            obj_list.append(value)
+        return obj_list
 
     

@@ -112,15 +112,12 @@ while seguir_operando == "SI":
                 while val.validarAgregarFechaInicio(fechainicio) == False:
                     print('Ingrese una fecha válida')
                     fechainicio = input('Ingrese fecha de inicio de alquiler de la forma D-M-YYYY ')
-                fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
 
                 fechafin = input('ingrese fecha fin del alquiler de la forma D-M-YYYY')
 
                 while val.validarFechaFin(fechainicio,fechafin) == False: 
                     print('Ingrese una fecha válida')
                     fechafin = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
-                
-                fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
 
                 tipo=input('Ingrese tipo de auto(sedan,pick-up,suv,deportivo)')
                 while val.validartipo(tipo) == False: 
@@ -174,27 +171,27 @@ while seguir_operando == "SI":
                     
 
                             
-                elif operacion == "3":
-                    validado = False
+            elif operacion == "3":
+                validado = False
+                idres = input("ingrese el id de su reserva")
+                while val.validarReserva(idres) == False:
                     idres = input("ingrese el id de su reserva")
-                    while val.validarReserva(idres) == False:
-                        idres = input("ingrese el id de su reserva")
-                        
-                    diccUsuarios[dnix].cancelarReserva(idres)
+                    
+                diccUsuarios[dnix].cancelarReserva(idres)
 
                     
 
                 
-                elif operacion == "4":
+            elif operacion == "4":
+                atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
+                while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','constraseña']:
+                    print('escriba denuevo el atributo')
                     atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
-                    while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','constraseña']:
-                        print('escriba denuevo el atributo')
-                        atributo=input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
-                    diccUsuarios[dnix].cambiar_dato(atributo)
+                diccUsuarios[dnix].cambiar_dato(atributo)
 
                     
-                elif operacion == "5":
-                    pass
+            elif operacion == "5":
+                pass
 
         elif opcion_elegida=='3':
             pass
@@ -382,6 +379,8 @@ while seguir_operando == "SI":
             pass
             
         seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
+        while seguir_operando not in ['SI','NO']: 
+            seguir_operando = input("Desea seguir operando (SI o NO)? ")
  
 if seguir_operando=='NO':
     util.escribirCsv('Empleados.csv',diccEmpleados)

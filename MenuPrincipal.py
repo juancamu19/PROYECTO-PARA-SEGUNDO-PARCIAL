@@ -1,12 +1,11 @@
 from datetime import datetime
-from claseEmpresa import Empresa
 import validaciones as val
 import Utilities as util
 from ClasePersonas import Administrador, Usuarios, Personas,diccEmpleados,diccUsuarios
 from ClaseAlquileres import Alquiler,diccAlquileres
 from ClaseReservas import Reserva,diccReservas
 from ClaseVehiculos import Vehiculos,diccVehiculos
-
+#from claseEmpresa import Empresa
 seguir_operando = "SI"
 
 

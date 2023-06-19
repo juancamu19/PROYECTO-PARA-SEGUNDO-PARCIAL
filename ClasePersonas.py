@@ -33,14 +33,13 @@ class Personas:
     #     return obj_list
    
    #MODIFICO CAMBIAR DATO PARA INGRESAR UN PARAMETRO
- def cambiar_dato(self, atributo, valor):
+    def cambiar_dato(self, atributo, valor):
         validado= True
         match atributo:
 
             case 'dni':
                 if val.validardni(valor)==False:
-
-                self.dni = valor
+                    self.dni = valor
 
             case 'nombre':
                 self.nombre = valor

@@ -1,0 +1,271 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget
+from PyQt5.QtGui import QPixmap, QIcon, QPalette, QColor
+from PyQt5 import QtCore
+from PyQt5.QtCore import Qt 
+
+from datetime import datetime
+import validaciones as val
+import Utilities as util
+from ClasePersonas import Administrador, Usuarios, Personas,diccEmpleados,diccUsuarios
+from ClaseAlquileres import Alquiler,diccAlquileres
+from ClaseReservas import Reserva,diccReservas
+from ClaseVehiculos import Vehiculos,diccVehiculos
+
+
+class RegistroWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Registro de usuario')
+        self.setMinimumSize(700,700)
+
+        # Create a central widget and a layout
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('logo.png')  # Adjust the path to your logo image file
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+
+        # Create a welcome label
+        welcome_label = QLabel('Registrese en nuestra plataforma', self)
+        welcome_label.setAlignment(Qt.AlignCenter)
+
+        # Create labels and input boxes
+        label_dni = QLabel("DNI:", central_widget)
+        self.input_dni = QLineEdit(central_widget)
+
+        label_nombre = QLabel("Nombre:", central_widget)
+        self.input_nombre = QLineEdit(central_widget)
+
+        label_apellido = QLabel("Apellido:", central_widget)
+        self.input_apellido = QLineEdit(central_widget)
+
+        label_fecnac = QLabel("Fecha de nacimiento:", central_widget)
+        self.input_fecnac = QLineEdit(central_widget)
+
+        label_usuario = QLabel("Usuario:", central_widget)
+        self.input_usuario = QLineEdit(central_widget)
+
+        label_email = QLabel("Email:", central_widget)   
+        self.input_email = QLineEdit(central_widget)
+
+        label_contraseña = QLabel("Contraseña:", central_widget)
+        self.input_contraseña = QLineEdit(central_widget)
+
+        label_confirmarcontraseña = QLabel("Confirmar contraseña:", central_widget)
+        self.input_confirmarcontraseña = QLineEdit(central_widget)
+
+        #Creo un label que informa cuando se agregó un auto exitosamente. Está escondido por defecto, se muestra al pasar la validación de los datos
+        self.confirmado_label = QLabel("Usted ha sido registrado exitosamente!.", central_widget)
+        self.confirmado_label.setStyleSheet("color: green")
+        self.confirmado_label.hide()
+
+
+        layout.addWidget(logo_label)
+        layout.addWidget(welcome_label)
+        layout.addWidget(label_dni)
+        layout.addWidget(self.input_dni)
+        layout.addWidget(label_nombre)
+        layout.addWidget(self.input_nombre)
+        layout.addWidget(label_apellido)
+        layout.addWidget(self.input_apellido)
+        layout.addWidget(label_fecnac)
+        layout.addWidget(self.input_fecnac)
+        layout.addWidget(label_usuario)
+        layout.addWidget(self.input_usuario)
+        layout.addWidget(label_email)
+        layout.addWidget(self.input_email)
+        layout.addWidget(label_contraseña)
+        layout.addWidget(self.input_contraseña)
+        layout.addWidget(label_confirmarcontraseña)
+        layout.addWidget(self.input_confirmarcontraseña)
+        layout.addWidget(self.confirmado_label)
+
+        # Create the register button
+        register_button = QPushButton('Registrarse', central_widget)
+        register_button.clicked.connect(self.validacionRegistro)
+        layout.addWidget(register_button)
+
+        # Set the central widget
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)
+
+
+        # Set the central widget and apply the style sheet
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)
+
+
+
+    def show_Confirmado(self):
+        self.confirmado_label.show()
+    
+    # def clear_inputs(self):
+    #     self.input_user.clear()
+    #     self.input_password.clear()
+    
+    def validacionRegistro(self):
+        dni= self.input_dni.text()
+        nombre= self.input_nombre.text()
+        apellido= self.input_apellido.text()
+        fecnac= self.input_fecnac.text()
+        usuario=self.input_usuario.text()
+        email=self.input_email.text()
+        contraseña= self.input_contraseña.text()
+        confcontraseña=self.input_confirmarcontraseña.text()
+
+        validado=True
+
+        if val.validardni(dni)==False:
+            validado=False
+
+            self.input_dni.clear()
+            self.input_dni.setPlaceholderText("Reingrese el dato de forma correcta")
+            # self.input_dni.textChanged.connect(self.clear_inputs)
+            palette = self.input_dni.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_dni.setPalette(palette)
+        
+        if val.validarnombre(nombre)==False:
+            validado=False
+
+            self.input_nombre.clear()
+            self.input_nombre.setPlaceholderText("Reingrese el dato de forma correcta")
+            # self.input_nombre.textChanged.connect(self.clear_inputs)
+            palette = self.input_nombre.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_nombre.setPalette(palette)
+        
+        if val.validarnombre(apellido)==False:
+            validado=False
+
+            self.input_apellido.clear()
+            self.input_apellido.setPlaceholderText("Reingrese el dato de forma correcta")
+            # self.input_apellido.textChanged.connect(self.clear_inputs)
+            palette = self.input_apellido.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_apellido.setPalette(palette)
+       
+        if val.validarusuario(usuario)==False:
+            validado=False
+
+            self.input_usuario.clear()
+            self.input_usuario.setPlaceholderText("Reingrese el dato de forma correcta")
+            # self.input_usuario.textChanged.connect(self.clear_inputs)
+            palette = self.input_usuario.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_usuario.setPalette(palette)
+        
+        if val.validarFecha(fecnac)==False:
+            validado=False
+
+            self.input_fecnac.clear()
+            self.input_fecnac.setPlaceholderText("Reingrese el dato de forma correcta")
+            # self.input_fecnac.textChanged.connect(self.clear_inputs)
+            palette = self.input_fecnac.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_fecnac.setPalette(palette)
+        
+        if val.validarcontraseña(contraseña)==False:
+            validado=False
+
+            self.input_contraseña.clear()
+            self.input_contraseña.setPlaceholderText("Ingrese una contraseña entre 6 y 20 caracteres")
+            # self.input_contraseña.textChanged.connect(self.clear_inputs)
+            palette = self.input_contraseña.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_contraseña.setPalette(palette)
+        
+        if contraseña != confcontraseña:
+            validado=False
+
+            self.input_confirmarcontraseña.clear()
+            self.input_confirmarcontraseña.setPlaceholderText("Las contraseñas deben coincidir")
+            # self.input_confirmarcontraseña.textChanged.connect(self.clear_inputs)
+            palette = self.input_confirmarcontraseña.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_confirmarcontraseña.setPalette(palette)
+        
+        if validado==True:
+            self.show_Confirmado() #VER SI SE PUEDE HACER UNA VENTANA EMERGENTE PARA VOLVER... NO SE SI LLEGAMOS. 
+            Usuarios.agregarUsuario(dni, usuario, nombre, apellido, fecnac, email, contraseña)
+            
+
+
+# class ModificarAuto(QWidget):
+#     def __init__(self):
+#         super().__init__()
+#         self.setWindowTitle("Modificar un auto")
+#         self.initUI()
+
+#     def initUI(self):
+#         layout = QVBoxLayout()
+
+#         # Label
+#         label_patente = QLabel("Ingresa la patente del auto:")
+#         layout.addWidget(label_patente)
+
+#         # Input Box
+#         self.input_patente = QLineEdit()
+#         layout.addWidget(self.input_patente)
+
+#         # Button
+#         self.button = QPushButton("Continuar")
+#         self.button.clicked.connect(self.ClickContinuar)
+#         layout.addWidget(self.button)
+
+#         self.button2 = QPushButton("Volver")
+#         self.button2.clicked.connect(self.Volver)
+
+#         # Set placeholder text
+#         self.input_patente.setPlaceholderText("Enter text...")
+
+
+#         self.setLayout(layout)
+#         with open('Estilo.qss', 'r') as est:
+#             style = est.read()
+#             self.setStyleSheet(style)        
+#         self.show()
+
+#     def clear_inputs(self): 
+#         if self.input_patente.cursorPosition() == 0:
+#             self.input_patente.clear()
+
+#     def ClickContinuar(self):
+#         patente = self.input_patente.text()
+#         if val.validarpatente(patente) == False:
+#             self.input_patente.clear()
+#             self.input_patente.setPlaceholderText("Reingrese el dato de forma correcta")
+#             self.input_patente.textChanged.connect(self.clear_inputs)
+#             palette = self.input_patente.palette()
+#             placeholder_color = QColor(255, 0, 0)  # Red color
+#             palette.setColor(QPalette.PlaceholderText, placeholder_color)
+#             self.input_patente.setPalette(palette)
+#         else:
+#             self.close()
+        
+    
+#     def Volver(self):
+#         self.close()
+#         self.window = AdminWindow()
+#         self.window.show()     
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main_window = RegistroWindow()
+    main_window.show()
+    sys.exit(app.exec_())

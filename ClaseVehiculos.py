@@ -26,15 +26,11 @@ class Vehiculos():
     def devolver(self):
         self.disponible = True
     
-    def modificar(self, atributo):
+    def modificar(self, atributo, valor):
         match atributo:
             
             case 'patente':
-                patentenueva = input('Ingrese la patente nueva ')
-                while validado == False:
-                    patentenueva=input('Ingrese patente nueva ')
-                    validado = val.validarpatente(patentenueva)
-                self.patente = patentenueva 
+                self.patente = valor 
             
             case 'modelo' :
                 modelonuevo = input('Ingrese el modelo nuevo ')

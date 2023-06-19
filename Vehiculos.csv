@@ -1,4 +1,4 @@
-abc123,ka,ford,2020,sedan,baja,12000,True
-abc124,ka,ford,2020,sedan,baja,12000,True
-abc125,ka,ford,2020,sedan,baja,12000,True
-ghf345,1500,dodge,2013,pick-up,alta,40000,True
+abc123,focus,ford,2022,sedan,media,True,15000
+abc124,ka,ford,2020,sedan,baja,True,12000
+abc125,ka,ford,2020,sedan,baja,True,12000
+ghf345,1500,dodge,2013,pick-up,alta,True,40000

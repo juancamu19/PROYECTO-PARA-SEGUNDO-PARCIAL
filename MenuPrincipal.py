@@ -9,6 +9,7 @@ from ClaseVehiculos import Vehiculos,diccVehiculos
 seguir_operando = "SI"
 
 
+
 while seguir_operando == "SI":
     
 
@@ -90,7 +91,7 @@ while seguir_operando == "SI":
             dnix = input("Ingrese su dni ")
             contraseñax = input("Ingrese su contraseña ")
 
-            while val.validarexistenciaPersona(dnix, contraseñax, diccUsuarios) == False:
+            while val.validarexistenciaPersona(dnix, contraseñax, Usuarios) == False:
                 dnix = input("Ingrese su dni ")
                 contraseñax = input("Ingrese su contraseña ")
 
@@ -157,16 +158,23 @@ while seguir_operando == "SI":
                 
                 
                 idres = input("Ingrese el id de su reserva ")
-                while val.validarexistenciaclave(idres, diccReservas) == False:
+                while val.validarexistenciaclave(idres, Reserva.setReservas) == False:
                     idres = input("Ingrese el id de su reserva ")
             
 
                 if cambio == '1':                 #Cambiar el incicio de la reserva
-                    diccUsuarios[dnix].modifFecInicioReserva(idres)
+                    fechanueva = input('ingrese fecha de Inicio de alquiler de la forma D-M-YYYY')
+                    while val.validarModifFechaInicio(fechanueva,diccReservas[idres].fechaFin) == False:
+                        fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')
+                    diccUsuarios[dnix].modifFecInicioReserva(idres,fechanueva)
 
                     
                 elif cambio == '2':               #Cambiar el fin de la reserva
-                    diccUsuarios[dnix].modifFecFinReserva(idres)
+                    fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')
+                    while val.validarFechaFin(diccReservas[idres].fechaInicio,fechanueva) == False:                    
+                        fechanueva = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
+
+                    diccUsuarios[dnix].modifFecFinReserva(idres,fechanueva)
 
                 
                             
@@ -181,11 +189,17 @@ while seguir_operando == "SI":
                     
                  
             elif operacion == "4":                      #Cambiar un dato del usuario
-                atributo = input('Ingrese el atributo a cambiar (dni, nombre, apellido, fecnac, email, constraseña)')
-                while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','constraseña']:
+                atributo = input('Ingrese el atributo a cambiar (dni, nombre, apellido, fecnac, email, contraseña)')
+                while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
                     print('Escriba correctamente el atributo a modificar')
                     atributo = input('Ingrese el atributo a cambiar(dni, nombre, apellido, fecnac, email, constraseña)')
-                diccUsuarios[dnix].cambiar_dato(atributo)
+
+                valor=input('Ingrese el nuevo valor para el atributo a cambiar')
+                
+                while val.validarCambiarDatosPersona(atributo,valor)==False:
+                    valor=input('Ingrese el nuevo valor para el atributo a cambiar')
+                        
+                diccUsuarios[dnix].cambiar_dato(dnix,atributo,valor)
 
                     
             elif operacion == "5":                      #Salir
@@ -211,7 +225,7 @@ while seguir_operando == "SI":
 
             legajo = input("Ingrese su legajo ")
             contraseñax = input("Ingrese su contraseña ")
-            validado = val.validarexistenciaPersona(legajo, contraseñax, diccEmpleados)
+            validado = val.validarexistenciaPersona(legajo, contraseñax, Administrador)
             
             if not validado:
                 print("Su legajo o contraseña son incorrectos")
@@ -236,7 +250,7 @@ while seguir_operando == "SI":
 
                 opcion_elegida = input('Ingrese el número de operación que desea realizar ')
 
-                while opcion_elegida not in ['1','2','3']: 
+                while opcion_elegida not in ['1','2','3','4','5','6','7','8']: 
                     opcion_elegida = input("Ingrese nuevamente la opcion ")
                 
                 
@@ -305,21 +319,27 @@ while seguir_operando == "SI":
 
                 if opcion_elegida == "3":                       #Modificar un vehículo
                     patente=input('Ingrese patente')
-                    while  val.validarpatente(patente) == False:
+                    while  val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
                         patente=input('Ingrese patente')
                             
 
                     atributo=input('Ingrese atributo a cambiar')
+
                     while  val.validaratributo(atributo) == False:
                         atributo=input('Ingrese atributo a cambiar')
+
+                    valor=input('Ingrese el valor del atributo a cambiar')
+
+                    while val.validarCambiarDatosVehiculo(atributo,valor)==False:
+                        valor=input('Ingrese el valor del atributo a cambiar')
                             
-                    diccEmpleados[legajo].modificarVehiculo(patente,atributo) 
+                    diccEmpleados[legajo].modificarVehiculo(patente,atributo,valor) 
                 
                 
                 if opcion_elegida == "4":                       #Eliminar un vehículo
-                    patente = input('Ingrese patente')
-                    while  val.validarpatente(patente) == False:
-                        patente = input('Ingrese patente existente ')
+                    patente=input('Ingrese patente')
+                    while  val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
+                        patente=input('Ingrese patente')
                         
                     diccEmpleados[legajo].eliminarVehiculo(patente)                 
 
@@ -333,11 +353,17 @@ while seguir_operando == "SI":
 
 
                 if opcion_elegida == "6":                        #Cambiar un dato suyo
-                    atributo = input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
-                    while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','constraseña']:
+                    atributo = input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,contraseña)')
+                    while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
                         print('Escriba correctamente el atributo a modificar')
                         atributo = input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
-                    diccEmpleados[legajo].cambiar_dato(atributo)
+                    
+                    valor=input('Ingrese el nuevo valor para el atributo a cambiar')
+                
+                    while val.validarCambiarDatosPersona(atributo,valor)==False:
+                        valor=input('Ingrese el nuevo valor para el atributo a cambiar')
+
+                    diccEmpleados[legajo].cambiar_dato(legajo,atributo,valor)
 
 
                 if opcion_elegida == "7":                        #Modificar precio por dia de un vehiculo       
@@ -351,7 +377,9 @@ while seguir_operando == "SI":
                         
                     precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ')
                     while  val.validarprecio(precio) == False:
-                        precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ')     
+                        precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ') 
+
+                    diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)    
 
 
                 if opcion_elegida == "8":                        #Salir

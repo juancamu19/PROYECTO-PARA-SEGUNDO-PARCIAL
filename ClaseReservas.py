@@ -1,4 +1,3 @@
-import validaciones as val
 from datetime import datetime
 import Utilities as util
 
@@ -35,27 +34,11 @@ class Reserva():
             self.fechaCancel=datetime.now()                
         
     #no habria que cambiar ALQUILER ahi? o el nombre de la funcion o el lugar
-    def cambiarfechaExpiracionAlquiler(self):
-        fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')
-        while val.validarFechaFin(self.fechaInicio,fechanueva) == False:
-                    
-            fechanueva = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
-        
+    def cambiarfechaExpiracionAlquiler(self,fechanueva):     
         self.fechaFin = fechanueva 
-
     
-    def cambiarfechaInicioAlquiler(self):
-        fechanueva = input('ingrese fecha de Inicio de alquiler de la forma D-M-YYYY')
-        while val.validarModifFechaInicio(fechanueva,self.fechaFin) == False:
-            fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')      
+    def cambiarfechaInicioAlquiler(self,fechanueva):
         self.fechaInicio = fechanueva 
-
-    #funcion para validar una reserva
-    def validarReserva(id):
-        if id in Reserva.setReservas:  
-            return True          
-        else:
-            return False
 
     #método str para clase reserva
     def __str__(self):

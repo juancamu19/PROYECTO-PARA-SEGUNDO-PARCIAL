@@ -2,7 +2,6 @@ import hashlib
 from ClaseReservas import Reserva,diccReservas
 from ClaseVehiculos import Vehiculos,diccVehiculos 
 from ClaseAlquileres import diccAlquileres
-import validaciones as val
 import pandas as pd
 import Utilities as util
 
@@ -22,12 +21,6 @@ class Personas:
     def __str__(self):
         return f"Nombre: {self.nombre} {self.apellido}, DNI: {self.dni}, Fecha de nacimiento: {self.fecnac}, Email: {self.email}, Cantidad de reservas realizadas hasta el momento: {self.cantreservas}"
 
-#funcion de validacion de dni  
-    def validarexistenciaDNI(dni):
-        if dni in Personas.setdnis:  
-            return True          
-        else:
-            return False
         
     # def objeto_a_lista(self):
     #     obj_list = []
@@ -36,13 +29,16 @@ class Personas:
     #     return obj_list
    
    #MODIFICO CAMBIAR DATO PARA INGRESAR UN PARAMETRO
-    def cambiar_dato(self, atributo, valor):
-        validado= True
+    def cambiar_dato(self, identificador,atributo, valor):
         match atributo:
 
             case 'dni':
-                if val.validardni(valor)==False:
-                    self.dni = valor
+                dniviejo=self.dni
+                self.dni = valor
+                for elem in type(self).setdnis:
+                    if elem[0]==dniviejo:
+                        type(self).setdnis.discard(elem)
+                        type(self).setdnis.add((self.dni,self.contraseña))
 
             case 'nombre':
                 self.nombre = valor
@@ -62,6 +58,11 @@ class Personas:
                 objetoHash = hashlib.sha256(contraseñanuevo)
                 contraHasheada = objetoHash.hexdigest()
                 self.contraseña = contraHasheada
+                for elem in type(self).setdnis:
+                    if elem[0]==identificador:
+                        type(self).setdnis.discard(elem)
+                        type(self).setdnis.add((elem[0],self.contraseña))
+                
 
     # def cambiar_dato(self, atributo):
     #     match atributo:
@@ -125,11 +126,12 @@ class Personas:
 
 #se crea un hijo de la clase personas: usuarios
 class Usuarios(Personas):
+    setdnis = set()
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
         self.cantreservas = int(cantreservas)
-        Usuarios.setdnis.add(self.dni) 
+        Usuarios.setdnis.add((self.dni,self.contraseña)) 
     
     #funcion para agregar usuario a diccionario para cargar a csv
     def agregarUsuario(dni, username, nombre, apellido, fecnac, email, contraseña):
@@ -149,11 +151,11 @@ class Usuarios(Personas):
         diccReservas[idreserva].cancelarreserva()
 
     #funciones para modificar las fechas de la reserva
-    def modifFecInicioReserva(self,idreserva):
-        diccReservas[idreserva].cambiarfechaInicioAlquiler()
+    def modifFecInicioReserva(self,idreserva,fechanueva):
+        diccReservas[idreserva].cambiarfechaInicioAlquiler(fechanueva)
 
-    def modifFecFinReserva(self,idreserva):
-        diccReservas[idreserva].cambiarfechaExpiracionAlquiler()
+    def modifFecFinReserva(self,idreserva,fechanueva):
+        diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
 
 
 
@@ -165,12 +167,12 @@ diccUsuarios = util.leerCsv('Usuarios.csv', Usuarios)
 #se crea otro hijo de la clase persona: Administrador
 class Administrador(Personas):
     cantempleados = 0
-    
+    setdnis = set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleados
         Administrador.cantempleados+=1       
-        Administrador.setdnis.add(self.dni)
+        Administrador.setdnis.add((str(self.legajo),self.contraseña))
 
     #funcion para agregar empleado a diccionario para su carga a csv de empleados
     def agregarEmpleado(self,dni, nombre, apellido, fecnac, email, contraseña):
@@ -184,8 +186,8 @@ class Administrador(Personas):
         diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo, gama)
 
     #funcion para modificar un atributo de un vehiculo
-    def modificarVehiculo(self, patente, atributo):
-        diccVehiculos[patente].modificar(atributo)
+    def modificarVehiculo(self, patente, atributo,valor):
+        diccVehiculos[patente].modificar(atributo,valor)
 
     #funcion para dar por finalizado un alquiler
     def finalizarAlquiler(self, idalquiler):

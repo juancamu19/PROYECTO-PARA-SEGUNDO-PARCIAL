@@ -1,5 +1,8 @@
 from datetime import datetime
 from datetime import date
+from ClasePersonas import Usuarios,Administrador
+from ClaseReservas import Reserva
+from ClaseVehiculos import Vehiculos
 import hashlib
 
 def validarprecio(precio):        #Valido que el precio ingresado sea positivo
@@ -75,41 +78,23 @@ def validaratributo(atributo_vehiculo):     #Valido que el atributo que se quier
         return True
 
 
-def validarexistenciaclave(clave, dicc):        #Valido que la clave de un diccionario exista en el mismo
-     if clave in dicc.keys():
+def validarexistenciaclave(clave, set):        #Valido que la clave de un diccionario exista en el mismo
+     if clave in set:
           return True
      else:
           return False         
      
 
-def validarexistenciaPersona(identificador, contraseña_ingresada, dicc):     #Valido que la persona se encuentre registrada
-        for k in dicc.keys():
-            if k == identificador: 
-                contraseña_ingresada = contraseña_ingresada.encode('utf-8')
-                hash_object = hashlib.sha256(contraseña_ingresada)
-                hashed_password = hash_object.hexdigest()
-                if dicc[k].contraseña == hashed_password:  
-                    return True
-                else:
-                    return False
+def validarexistenciaPersona(identificador, contraseña_ingresada, clase):     #Valido que la persona se encuentre registrada 
+    contraseña_ingresada = contraseña_ingresada.encode('utf-8')
+    objetoHash = hashlib.sha256(contraseña_ingresada)
+    contraHasheada = objetoHash.hexdigest()
+    if (identificador, contraHasheada) in clase.setdnis:  
+        return True
+    else:
         return False
+    
 
-
-# def validarFecha(fecha):      #Valido que la fecha sea previa a la fecha del presente
-#     try:
-#         fecha = datetime.strptime(fecha,"%d-%m-%Y").date()
-#         if fecha.year > datetime.today().year:
-#             raise ValueError("El año ingresado es inválido, no hemos alcanzado ese año aún!")
-#         if fecha.year == datetime.today().year and fecha.month > datetime.today().month:
-#              raise ValueError("El mes ingresado es inválido, no hemos alcanzado esa fecha!")
-#         if fecha.year == datetime.today().year and fecha.month == datetime.today().month and fecha.day > datetime.today().day:
-#              raise ValueError("El día ingresado es inválido, no hemos alcanzado esa fecha!")
-        
-#     except ValueError as error:
-#         print(f"Error: {error}")
-#         return False
-
-#     return True
 
 
 def validarFecha(fecha):              #Valido que la fecha de nacmiento de una persona sea previa a la del presente
@@ -203,6 +188,7 @@ def validardni(dni):         #Valido que el dni tenga entre 7 y 8 dígitos
     try:
         if len(dni) < 7 or len(dni) > 8 or dni.isdigit() == False:
             raise ValueError("El dni ingresado es incorrecto, intente de nuevo")
+            
          
     except ValueError as error:
         print(f"Error: {error}")
@@ -293,12 +279,51 @@ def validarpatente(patente):      #Valido que la patente pueda ser una de las pe
     
     return True
 
+def validarCambiarDatosPersona(atributo,valor):
+     match atributo:
 
-import Utilities as util
+        case 'dni':
+            return validardni(valor)
+
+        case 'nombre':
+            return validarnombre(valor)
+
+        case 'apellido':
+            return validarnombre(valor)
+
+        case 'fecnac':
+            return validarFecha(valor)
+
+        case 'email':
+            return validaremail(valor)
+        
+        case 'contraseña':
+            return validarcontraseña(valor)  
+         
+def validarCambiarDatosVehiculo(atributo,valor):
+    match atributo:
+            
+        case 'patente':
+            return validarpatente(valor) 
+        
+        case 'modelo' :
+            return validarmodelo(valor) 
+        
+        case 'marca' :
+            return validarmarca(valor)
+        
+        case 'año':
+            return validaranio(valor)
+        
+        case 'tipo' :
+            return validartipo(valor)
+        
+        case 'gama':
+            return validargama(valor)
+        
 if __name__=="__main__":
-    print(validarAgregarFechaInicio('12-12-2023'))
-    fechainicio = datetime.strptime('12-12-2023',"%d-%m-%Y").date().strftime('%d-%m-%Y')
-    print(fechainicio)
+    print(validarCambiarDatosVehiculo('gama','44998438'))
+    print(validarCambiarDatosVehiculo('patente','4499843h'))
 
 
 

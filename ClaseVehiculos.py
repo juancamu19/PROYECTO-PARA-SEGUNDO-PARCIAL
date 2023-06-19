@@ -2,7 +2,6 @@ from datetime import datetime
 import pandas as pd
 import random
 import Utilities as util
-import validaciones as val
 from ClaseReservas import diccReservas
 
 
@@ -37,39 +36,19 @@ class Vehiculos():
                 self.patente = valor 
             
             case 'modelo' :
-                modelonuevo = input('Ingrese el modelo nuevo ')
-                while validado == False:
-                    modelonuevo=input('Ingrese el modelo nuevo ')
-                    validado = val.validarmodelo(modelonuevo)
-                self.modelo = modelonuevo 
+                self.modelo = valor 
             
             case 'marca' :
-                marcanueva = input('Ingrese la marca nueva ')
-                while validado == False:
-                    marcanueva = input('Ingrese la marca nueva ')
-                    validado = val.validarmodelo(marcanueva)
-                self.marca = marcanueva
+                self.marca = valor
             
             case 'año':
-                anionuevo = input('Ingrese el año nuevo ')
-                while validado == False:
-                    anionuevo=input('Ingrese el año nuevo ')
-                    validado = val.validarmodelo(anionuevo)
-                self.anio = anionuevo
+                self.anio = valor
             
             case 'tipo' :
-                tiponuevo = input('Ingrese el nuevo tipo ')
-                while validado == False:
-                    tiponuevo = input('Ingrese el nuevo tipo ')
-                    validado = val.validarmodelo(tiponuevo)
-                self.tipo = tiponuevo
+                self.tipo = valor
             
             case 'gama':
-                gamanueva = input('Ingrese la nueva gama ')
-                while validado == False:
-                    gamanueva=input('Ingrese la nueva gama ')
-                    validado = val.validarmodelo(gamanueva)
-                self.gama = gamanueva 
+                self.gama = valor 
 
 
     #funcion para asignar el precio estipulado en csv a un nuevo vehiculo    

@@ -1,6 +1,8 @@
 import validaciones as val
 from datetime import datetime
 import Utilities as util
+
+#se crea la clase reserva
 class Reserva():
     cantReservas = 0  
     setReservas = set()
@@ -23,7 +25,7 @@ class Reserva():
     #         obj_list.append(value)
     #     return obj_list
     
-    
+    #funcion para cancelar una reserva
     def cancelarreserva(self):
         fechainicio=datetime.strptime(self.fechaInicio,"%d-%m-%Y").date()
         fechaactual=datetime.now()
@@ -32,7 +34,7 @@ class Reserva():
         else:
             self.fechaCancel=datetime.now()                
         
-    
+    #no habria que cambiar ALQUILER ahi? o el nombre de la funcion o el lugar
     def cambiarfechaExpiracionAlquiler(self):
         fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')
         while val.validarFechaFin(self.fechaInicio,fechanueva) == False:
@@ -48,17 +50,19 @@ class Reserva():
             fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')      
         self.fechaInicio = fechanueva 
 
-    
+    #funcion para validar una reserva
     def validarReserva(id):
         if id in Reserva.setReservas:  
             return True          
         else:
             return False
 
-    
+    #método str para clase reserva
     def __str__(self):
         return f"La reserva de id {self.id}, hecha por el usuario de dni {self.dni} para el vehículo de patente {self.patente_auto}, inicia el {self.fechaInicio} y finaliza el {self.fechaFin}"
 
+
+#diccionario que contiene los registros nuevos de reservas
 diccReservas = util.leerCsv('Reservas.csv', Reserva)
 
 # Pruebas de Funcionamiento

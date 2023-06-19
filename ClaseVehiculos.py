@@ -5,6 +5,8 @@ import Utilities as util
 import validaciones as val
 from ClaseReservas import diccReservas
 
+
+#se crea la clase vehiculos
 class Vehiculos():
     # diccionario=dict()
     cantVehiculos = 0
@@ -23,9 +25,11 @@ class Vehiculos():
         Vehiculos.cantVehiculos+=1
         Vehiculos.setVehiculos.add(self.patente)
     
+    #funcion para cambiar estado de dispponibilidad de auto al devolverlo
     def devolver(self):
         self.disponible = True
     
+    #funcion para modificar un atributo de un auto
     def modificar(self, atributo, valor):
         match atributo:
             
@@ -66,7 +70,9 @@ class Vehiculos():
                     gamanueva=input('Ingrese la nueva gama ')
                     validado = val.validarmodelo(gamanueva)
                 self.gama = gamanueva 
-        
+
+
+    #funcion para asignar el precio estipulado en csv a un nuevo vehiculo    
     def asignarPrecio(self):
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
         if self.tipo in df.columns and self.gama in df.index:
@@ -79,6 +85,7 @@ class Vehiculos():
     #         obj_list.append(value)
     #     return obj_list
         
+    #funcion para designar el auto elegido por el usuario al realizar una reserva
     def asignarauto(fecinicio, fecfin, tipo, gama):
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
         fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()    
@@ -97,10 +104,11 @@ class Vehiculos():
         else:
             return random.choice(list(setvehiculosdisponibles))
 
-    def __str__(self):     #Sería como una consulta general sobre el estado de un vehículo
+    #método str para clase vehiculos
+    def __str__(self):    
         return(f"El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precioxdia}, es de tipo {self.tipo} y gama {self.gama}")
     
-
+#diccionario que contiene los registros nuevos de vehiculos
 diccVehiculos = util.leerCsv('Vehiculos.csv', Vehiculos)
 
 # Pruebas de Funcionamiento

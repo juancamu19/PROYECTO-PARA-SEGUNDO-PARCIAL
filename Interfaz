@@ -1,17 +1,18 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget, QComboBox
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QColor
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt 
 
 from datetime import datetime
-from claseEmpresa import Empresa
+# from claseEmpresa import Empresa
 import validaciones as val
 import Utilities as util
 from ClasePersonas import Administrador, Usuarios, Personas,diccEmpleados,diccUsuarios
 from ClaseAlquileres import Alquiler,diccAlquileres
 from ClaseReservas import Reserva,diccReservas
 from ClaseVehiculos import Vehiculos,diccVehiculos
+import hashlib
 
 class LoginWindow(QMainWindow):
     def __init__(self):
@@ -34,10 +35,13 @@ class LoginWindow(QMainWindow):
         welcome_label.setAlignment(Qt.AlignCenter)
 
         # Create labels
+        label_dni = QLabel('DNI del usuario:', self)
         label_user = QLabel('Nombre de Usuario:', self)
         label_password = QLabel('Contraseña:', self)
 
         # Create input boxes
+        input_dni = QLineEdit(self)
+        self.input_dni = input_dni
         input_user = QLineEdit(self)
         self.input_user = input_user
         input_password = QLineEdit(self)
@@ -63,6 +67,8 @@ class LoginWindow(QMainWindow):
         # Add widgets to the layout
         layout.addWidget(logo_label)
         layout.addWidget(welcome_label)
+        layout.addWidget(label_dni)
+        layout.addWidget(input_dni)
         layout.addWidget(label_user)
         layout.addWidget(input_user)
         layout.addWidget(label_password)
@@ -93,14 +99,15 @@ class LoginWindow(QMainWindow):
         self.error_label.show()
     
     def clear_inputs(self):
+        self.input_dni.clear()
         self.input_user.clear()
         self.input_password.clear()
     
     def openMainWindow(self):
-        
+        dni=self.input_dni.text()
         usuario = self.input_user.text() 
         contrasena = self.input_password.text()
-        validado = val.validarexistenciaPersona(usuario, contrasena, diccUsuarios)
+        validado = val.validarexistenciaPersona(dni, contrasena, diccUsuarios)
 
         if not validado:
             self.show_error()
@@ -108,7 +115,7 @@ class LoginWindow(QMainWindow):
                    
         else:
             self.close()
-            self.window = MainWindow()
+            self.window = MainWindow(dni, usuario, contrasena) 
             self.window.show()
 
     def openAdminWindow(self):
@@ -123,7 +130,7 @@ class LoginWindow(QMainWindow):
         else:
             #AGREGAR EL GUARDADO DEL LEGAJO
             self.close()
-            self.window = AdminWindow()
+            self.window = AdminWindow(legajo,contraseña)
             self.window.show()
 
     def openRegistroWindow(self):
@@ -132,10 +139,14 @@ class LoginWindow(QMainWindow):
         self.window.show()
 
 class AdminWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle('Gestión de Administrador')
         self.setMinimumSize(600, 600)
+
+        """Traigo los valores de legajo y contraseña desde Login window"""
+        self.legajo=legajo
+        self.contraseña=contraseña
 
         # Create a central widget and a layout
         central_widget = QWidget(self)
@@ -168,24 +179,27 @@ class AdminWindow(QMainWindow):
 
     def openAgregarAuto(self):
         self.close()
-        self.window1 = AgregarAuto()
+        self.window1 = AgregarAuto(self.legajo)
         self.window1.show()
 
     def openModificarAuto(self):
         self.close()
-        self.window2 = ModificarAuto()
+        self.window2 = ModificarAuto(self.legajo)
         self.window2.show()
 
-    def openEliminarAuto(self):
-        self.close()
-        self.window3 = EliminarAuto()
-        self.window3.show()
+    # def openEliminarAuto(self):
+    #     self.close()
+    #     self.window3 = EliminarAuto()
+    #     self.window3.show()
 
 class AgregarAuto(QMainWindow):
-    def __init__(self):
+    def __init__(self, legajo):
         super().__init__()
         self.setWindowTitle('Agregar un auto')
         self.setMinimumSize(600, 600)
+
+        """Traigo el valor de legajo desde Admin Window"""
+        self.legajo=legajo
 
         # Set window flags to make the window resizable
         self.setWindowFlags(Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowResizable)
@@ -254,11 +268,7 @@ class AgregarAuto(QMainWindow):
     def show_confirmado(self):
         self.confirmado_label.show()
 
-    def clear_inputs(self, input_box):   #NO SE SI TOMA BIEN LOS INPUT BOX COMO VARIABLE. 
-        if self.input_box.cursorPosition() == 0:
-            self.input_box.clear()
-
-    def validate_data(self):    #FALTA AGREGAR EL PLACEHOLDER TEXT A TODOS LOS DEMAS. VER SI FUNCA LA FUNCION DE CLEAR INPUTS. 
+    def validate_data(self):    
         patente = self.input_patente.text()
         marca = self.input_marca.text()
         modelo = self.input_modelo.text()
@@ -271,39 +281,72 @@ class AgregarAuto(QMainWindow):
 
         if val.validarpatente(patente) == False:
             valid_data = False
+            self.input_patente.clear()
             self.input_patente.setPlaceholderText("Dato erroneo")
-            self.input_patente.textChanged.connect(self.clear_inputs)
-            palette = self.line_edit.palette()
+            palette = self.input_patente.palette()
             placeholder_color = QColor(255, 0, 0)  # Red color
             palette.setColor(QPalette.PlaceholderText, placeholder_color)
-            self.line_edit.setPalette(palette)
+            self.input_patente.setPalette(palette)
 
         if val.validarmodelo(modelo) == False:
             valid_data = False
+            self.input_modelo.clear()
+            self.input_modelo.setPlaceholderText("Dato erroneo")
+            palette = self.input_modelo.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_modelo.setPalette(palette)
 
         if val.validarmarca(marca) == False:
             valid_data = False
+            self.input_marca.clear()
+            self.input_marca.setPlaceholderText("Dato erroneo")
+            palette = self.input_marca.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_marca.setPalette(palette)
 
         if val.validaranio(año) == False:
             valid_data = False
+            self.input_año.clear()
+            self.input_año.setPlaceholderText("Dato erroneo")
+            palette = self.input_año.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_año.setPalette(palette)
 
         if val.validartipo(tipo) == False:
             valid_data = False
+            self.input_tipo.clear()
+            self.input_tipo.setPlaceholderText("Dato erroneo")
+            palette = self.input_tipo.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_tipo.setPalette(palette)
 
         if val.validargama(gama) == False:
             valid_data = False
+            self.input_gama.clear()
+            self.input_gama.setPlaceholderText("Dato erroneo")
+            palette = self.input_gama.palette()
+            placeholder_color = QColor(255, 0, 0)  # Red color
+            palette.setColor(QPalette.PlaceholderText, placeholder_color)
+            self.input_gama.setPalette(palette)
 
-        if valid_data:
+        if valid_data== True:
             self.show_confirmado()
-            diccEmpleados[legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)   #ARREGLAR TEMA DE LOS LEGAJOS
+            diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)   #ARREGLAR TEMA DE LOS LEGAJOS
             
 
 class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR LA FUNCION MODIFICAR
-    def __init__(self):
+    def __init__(self, legajo):
         super().__init__()
         self.setWindowTitle("Modificar un auto")
         self.initUI()
 
+        """Traigo el valor de legajo desde AdminWindow"""
+        self.legajo=legajo
+    
     def initUI(self):
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
@@ -312,6 +355,9 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
         label_patente = QLabel("Ingrese la patente del auto:")
         label_atributo= QLabel("Ingrese el atributo a cambiar:")
         label_valor = QLabel("Ingrese el valor por el que desea modificar")
+        self.label_confirmado = QLabel("El dato ha sido cambiado satisfactoriamente", central_widget)
+        self.label_confirmado.setStyleSheet("color: green")
+        self.label_confirmado.hide()
         
         # Input Box
         self.input_patente = QLineEdit(central_widget)
@@ -324,6 +370,7 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
         layout.addWidget(self.input_atributo)
         layout.addWidget(label_valor)
         layout.addWidget(self.input_valor)
+        layout.addWidget(self.label_confirmado)
 
         # Button
         self.button = QPushButton("Continuar")
@@ -339,6 +386,10 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
             self.setStyleSheet(style)        
         self.show()
 
+    def show_confirmado(self):
+        self.label_confirmado.show()
+
+
     def ClickContinuar(self):
         patente = self.input_patente.text()
         atributo= self.input_atributo.text()
@@ -348,8 +399,8 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
         if val.validarpatente(patente) == False:
             validado= False
 
+            self.input_patente.clear()
             self.input_patente.setPlaceholderText("Dato erroneo")
-            self.input_patente.textChanged.connect(self.clear_inputs)
             palette = self.input_patente.palette()
             placeholder_color = QColor(255, 0, 0)  # Red color
             palette.setColor(QPalette.PlaceholderText, placeholder_color)
@@ -362,142 +413,91 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
 
                 case 'patente':
                     if val.validarpatente(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese una patente válida")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.patente = valor  #ESTO HAY QUE CAMBIARLO SI O SI, NECESITO LLEGAR A LOS OBJETOS EN USUARIOS.
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        self.show_confirmado()
 
                 case 'modelo':
                     if val.validarmodelo(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese un modelo válido")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.nombre = valor
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        self.show_confirmado()
 
                 case 'marca':
                     if val.validarmarca(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese una marca válida")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.apellido = valor
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        self.show_confirmado()
 
                 case 'año':  
                     if val.validaranio(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese un año válido")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.fecnac = valor
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        self.show_confirmado() 
 
                 case 'tipo':
                     if val.validartipo(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese un email correcto")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.email = valor
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        self.show_confirmado()
               
                 case 'gama':
                     if val.validargama(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese una gama de vehículo válida")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.gama= valor
-
-    
-    def Volver(self):
-        self.close()
-        self.window = AdminWindow()
-        self.window.show()     
-
-
-class ModificarDatosAuto(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle('Modificar datos de un auto')
-        self.setMinimumSize(600, 600)
-        self.initUI()
-
-    def initUI(self):
-        layout = QGridLayout()
-
-        # Buttons
-        self.button = QPushButton("Cambiar")
-        layout.addWidget(self.button, len(labels) + 1, 1)
-        self.button.clicked.connect(self.ClickCambiar)
-
-        self.setLayout(layout)
-        with open('Estilo.qss', 'r') as est:
-            style = est.read()
-            self.setStyleSheet(style)        
-        self.show()
-
-    def ClickCambiar(self):
-        self.close()
-        self.window = AdminWindow()
-        self.window.show()
-
-class EliminarAuto(QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Eliminar un auto")
-        self.setMinimumSize(600,600)
-        self.initUI()
-
-    def initUI(self):
-        layout = QVBoxLayout()
-
-        # Label
-        label_patente = QLabel("Ingresa la patente del auto:")
-        self.input_patente = QLineEdit()
-
-        layout.addWidget(label_patente)
-        layout.addWidget(self.input_patente)
-
-        # Button
-        self.button = QPushButton("Continuar")
-        self.button.clicked.connect(self.ClickContinuar)
-        layout.addWidget(self.button)
-
-        self.button2 = QPushButton("Volver")
-        self.button2.clicked.connect(self.Volver)
-
-        self.setLayout(layout)
-        with open('Estilo.qss', 'r') as est:
-            style = est.read()
-            self.setStyleSheet(style)        
-        self.show()
-
-    def ClickContinuar(self):
-
-        self.close()
-    # VER SI SE PUEDE AGREGAR UN MENSAJE EMERGENTE Y VOLVER
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        self.show_confirmado()
+                
+                case 'precioxdia':
+                    if val.validarprecio(valor)==False:
+                        self.input_valor.clear()
+                        self.input_valor.setPlaceholderText("Ingrese un precio válido")
+                        palette = self.input_valor.palette()
+                        placeholder_color = QColor(255, 0, 0)  # Red color
+                        palette.setColor(QPalette.PlaceholderText, placeholder_color)
+                        self.input_valor.setPalette(palette)
+                    else:
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        self.show_confirmado()
 
     def Volver(self):
         self.close()
-        self.window = AdminWindow()
+        self.window = AdminWindow(self.legajo)
         self.window.show()     
 
 
@@ -682,15 +682,24 @@ class RegistroWindow(QMainWindow):
             
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle('NoVoyEnTren.com')
-        self.setMinimumSize(600, 600)
+        self.setMinimumSize(700, 700)
+
+        """Traigo desde la ventana de inicio los datos de usuario y dni"""
+        self.dni=dni
+        self.usuario=usuario
+        self.contraseña=contraseña
 
         # Create a central widget and a layout
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
         layout.setAlignment(Qt.AlignCenter)
+
+        """Traigo a un QLabel los valores de dni y usuario desde la ventana de inicio de sesión"""
+        self.dnix=QLabel()
+        self.usuariox=QLabel(central_widget)
 
         # Create buttons
         self.button1 = QPushButton('Hacer una Reserva', central_widget)
@@ -718,42 +727,84 @@ class MainWindow(QMainWindow):
 
     def openReserva(self):
         self.close()
-        self.window1 = Reserva()
+        self.window1 = Reserva(self.dni)
         self.window1.show()
 
     def openCancelacion(self):
         self.close()
-        self.window2 = Cancelacion()
+        self.window2 = Cancelacion(self.dni)
         self.window2.show()
 
     def openCambioDatos(self):
         self.close()
-        self.window3 = CambioDatos()
+        self.window3 = CambioDatos(self.dni)
         self.window3.show()
 
 class Reserva(QWidget):
-    def __init__(self):
+    def __init__(self,dni):
         super().__init__()
         self.setWindowTitle("Elegi tus fechas de alquiler")
-        self.setMinimumSize(600, 600)
+        self.setMinimumSize(700, 700)
         self.initUI()
 
+        """Traigo desde MainWindow el valor de DNI"""
+        self.dni= dni
+
     def initUI(self):
-        layout = QVBoxLayout()
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
 
         # First Calendar
         label1 = QLabel("Fecha de Inicio")
         layout.addWidget(label1)
-        calendar1 = QCalendarWidget()
-        layout.addWidget(calendar1)
+        self.calendar1 = QCalendarWidget()
+        layout.addWidget(self.calendar1)
 
         # Second Calendar
         label2 = QLabel("Fecha de Fin")
         layout.addWidget(label2)
-        calendar2 = QCalendarWidget()
-        layout.addWidget(calendar2)
+        self.calendar2 = QCalendarWidget()
+        layout.addWidget(self.calendar2)
 
-        # Button
+        """Labels y combo boxes de tipo y gama de auto que se desea alquilar"""
+        label_comboTipo = QLabel("Seleccione el tipo de vehículo que desea alquilar")
+        label_comboGama = QLabel("Seleccione la gama de vehículo que desea alquilar")
+        self.comboTipo = QComboBox(self)
+        self.comboGama = QComboBox(self)
+
+        # Add options to combo boxes
+        self.comboTipo.addItem("Sedan")
+        self.comboTipo.addItem("Pick-up")
+        self.comboTipo.addItem("SUV")
+        self.comboTipo.addItem("Deportivo")
+
+        self.comboGama.addItem("Baja")
+        self.comboGama.addItem("Media")
+        self.comboGama.addItem("Alta")
+
+        """Se agregan los labels y combo boxes al layout"""
+        layout.addWidget(label_comboTipo)
+        layout.addWidget(self.comboTipo)
+        layout.addWidget(label_comboGama)
+        layout.addWidget(self.comboGama)
+
+        """Labels ocultos para la confirmación de la reserva y por si está mal la selección de fechas"""
+        self.confirmado_label= QLabel("La reserva fue realizada exitosamente")
+        self.confirmado_label.setStyleSheet("color: green")
+        self.confirmado_label.hide()
+        layout.addWidget(self.confirmado_label)
+
+        self.label_error=QLabel("Seleccione un par de fechas válidas")
+        self.label_error.setStyleSheet("color: red")
+        self.label_error.hide()
+        layout.addWidget(self.label_error)
+
+        self.label_auto=QLabel("Lo sentimos, no hay autos disponibles según lo pedido")
+        self.label_auto.setStyleSheet("color: red")
+        self.label_auto.hide()
+        layout.addWidget(self.label_error)
+
+        """Se crea boton de confirmar reserva y de volver a la página anterior"""
         self.button1 = QPushButton("Confirmar")
         layout.addWidget(self.button1)
         self.button1.clicked.connect(self.ClickConfirmar)
@@ -768,38 +819,81 @@ class Reserva(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def ClickConfirmar(self):
-        print("La reserva fue realizada exitosamente")
+    def showAuto(self):
+        self.label_auto.show()
 
+    def showConfirmado(self):
+        self.confirmado_label.show()
     
+    def showError(self):
+        self.label_error.show()
+
+    def ClickConfirmar(self):
+        tipo = self.comboTipo.currentText().lower()
+        gama = self.comboGama.currentText().lower()
+        fecha_inicio = self.calendar1.selectedDate().toString("dd-mm-yyyy")
+        fecha_fin = self.calendar2.selectedDate().toString("dd-mm-yyyy")
+        validado = True
+
+        if val.validarAgregarFechaInicio(fecha_inicio)==False:
+            self.showError()
+            validado = False
+        
+        if val.validarFechaFin(fecha_fin)==False:
+            self.showError()
+            validado = False
+        
+        if validado == True:
+            self.showConfirmado()
+            auto = Vehiculos.asignarauto(fecha_inicio,fecha_fin,tipo,gama)
+
+            if auto== None:
+                self.showAuto()
+            else:
+                diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
+                self.showConfirmado()
+
+# AGREGAR LA LLEGADA DEL DNI HASTA ACA DESDE EL INICIO
+
     def Volver(self):
         self.close()
-        self.window = MainWindow()
+        self.window = MainWindow(self.dni)
         self.window.show()            
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     window = MainWindow()
-#     sys.exit(app.exec_())
+
 
 class Cancelacion(QWidget):
-    def __init__(self):
+    def __init__(self, dni):
         super().__init__()
         self.setWindowTitle("Cancelación de reservas")
         self.initUI()
+
+        """Traigo desde MainWindow el valor de DNI"""
+        self.dni=dni
 
     def initUI(self):
         layout = QVBoxLayout()
 
         # Label
-        label = QLabel("Ingresa tu código de reserva:")
-        layout.addWidget(label)
+        label_idres = QLabel("Ingresa tu código de reserva:")
+        layout.addWidget(label_idres)
 
         # Input Box
-        input_box = QLineEdit()
-        layout.addWidget(input_box)
+        self.input_idres = QLineEdit()
+        layout.addWidget(self.input_idres)
+
+        """Se crea labels de confirmación y de error, ocultos por defecto."""
+        self.confirmado_label= QLabel("La reserva fue cancelada exitosamente")
+        self.confirmado_label.setStyleSheet("color: green")
+        self.confirmado_label.hide()
+        layout.addWidget(self.confirmado_label)
+
+        self.label_error=QLabel("Ingrese un id de reserva válido")
+        self.label_error.setStyleSheet("color: red")
+        self.label_error.hide()
+        layout.addWidget(self.label_error)
 
         # Button
-        self.button = QPushButton("Confirmar")
+        self.button = QPushButton("Continuar")
         self.button.clicked.connect(self.confirmButtonClicked)
         layout.addWidget(self.button)
 
@@ -812,68 +906,102 @@ class Cancelacion(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
+    def showConfirmado(self):
+        self.confirmado_label.show()
+    
+    def showError(self):
+        self.label_error.show()
+
     def confirmButtonClicked(self):
-        print("Cancelado exitosamente")
+        idres= self.input_idres.text().strip()
+        validado=True
+
+        if val.validarReserva(idres)==False:
+            validado=False
+            self.showError()
+        else:
+            self.showConfirmado()
+            diccUsuarios[self.dni].cancelarReserva(idres)
     
     def Volver(self):
         self.close()
-        self.window = MainWindow()
+        self.window = MainWindow(self.dni)
         self.window.show()     
 
 
 class CambioDatos(QWidget):
-    def __init__(self):
+    def __init__(self,dni):
         super().__init__()
         self.setWindowTitle('Cambiar datos personales')
         self.setMinimumSize(600, 600)
         self.initUI()
 
+        """Traigo el valor de DNI desde MainWindow"""
+        self.dni=dni
+
     def initUI(self):
-        layout = QGridLayout()
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
 
-        # Labels
-        labels = ["DNI:", "Nombre:", "Apellido:", "Fecha de nacimiento:", "Usuario:", "Email:", "Contraseña:", "Confirmar Contraseña:"]
-        for row, label_text in enumerate(labels):
-            label = QLabel(label_text)
-            layout.addWidget(label, row, 0)
+        # Label
+        
+        label_atributo= QLabel("Ingrese el atributo a cambiar:")
+        label_valor = QLabel("Ingrese el valor por el que desea modificar")
+        self.label_confirmado = QLabel("El dato ha sido cambiado satisfactoriamente", central_widget)
+        self.label_confirmado.setStyleSheet("color: green")
+        self.label_confirmado.hide()
+        
+        """Creacion de combo box con sus opciones e input box para el atributo y el valor a cambiar"""
+        self.combo_atributo = QComboBox(self)
+        self.input_valor = QLineEdit(central_widget)
 
-        # Input Boxes
-        input_boxes = [QLineEdit() for _ in range(8)]
-        for row, input_box in enumerate(input_boxes):
-            layout.addWidget(input_box, row, 1)
+        self.combo_atributo.addItem("DNI")
+        self.combo_atributo.addItem("Nombre")
+        self.combo_atributo.addItem("Apellido")
+        self.combo_atributo.addItem("Fecha de nacimiento")
+        self.combo_atributo.addItem("Email")
+        self.combo_atributo.addItem("Contraseña")
 
-        # Buttons
-        self.button1 = QPushButton("Volver")
-        layout.addWidget(self.button1, len(labels) + 1, 0)
-        self.button1.clicked.connect(self.Volver)
+        """Se agregan los widgets al layout"""
+        layout.addWidget(label_atributo)
+        layout.addWidget(self.combo_atributo)
+        layout.addWidget(label_valor)
+        layout.addWidget(self.input_valor)
+        layout.addWidget(self.label_confirmado)
 
-        self.button2 = QPushButton("Confirmar")
-        layout.addWidget(self.button2, len(labels) + 1, 1)
-        self.button2.clicked.connect(self.ClickConfirmado)
 
+        """Creacion de botones para continuar hacia validación y volver a pagina anterior"""
+        self.button = QPushButton("Continuar")
+        self.button.clicked.connect(self.ClickContinuar)
+        layout.addWidget(self.button)
+
+        self.button2 = QPushButton("Volver")
+        self.button2.clicked.connect(self.Volver)
+
+        """Se aplica el estilo a la ventana"""
         self.setLayout(layout)
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
 
-    def Volver(self):
-        self.close()
-        self.window = MainWindow()
-        self.window.show()        
 
-    def ClickConfirmado(self):
-        #SEGUIR ACA!!!
-        if val.validardni(dni)==False:
-            validado=False
+    def show_confirmado(self):
+        self.label_confirmado.show()
+
+
+    def ClickContinuar(self):
+        atributo= self.combo_atributo.currentText().strip().lower()
+        valor = self.input_valor.text()     
 
         if val.validaratributo(atributo)==False:
             validado= False
         else:
-            match atributo.strip().lower():
+            match atributo:
 
                 case 'dni':
                     if val.validardni(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Formato DNI erroneo")
                         self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
@@ -881,56 +1009,61 @@ class CambioDatos(QWidget):
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.dni = valor  #ESTO HAY QUE CAMBIARLO SI O SI, NECESITO LLEGAR A LOS OBJETOS EN USUARIOS.
+                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        self.show_confirmado()  
 
-                case 'dni':
+                case 'nombre':
                     if val.validarnombre(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese un nombre correcto")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.nombre = valor
+                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        self.show_confirmado()
 
                 case 'apellido':
                     if val.validarnombre(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese un apellido correcto")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.apellido = valor
+                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        self.show_confirmado()
 
-                case 'fecnac':  
+                case 'fecha de nacimiento':  
                     if val.validarFecha(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese una fecha correcta")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.fecnac = valor
+                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        self.show_confirmado()
 
                 case 'email':
                     if val.validaremail(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese un email correcto")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        self.email = valor
+                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        self.show_confirmado()
               
                 case 'contraseña':
                     if val.validarcontraseña(valor)==False:
+                        self.input_valor.clear()
                         self.input_valor.setPlaceholderText("Ingrese una contraseña de entre 6 y 20 caract.")
-                        self.input_valor.textChanged.connect(self.clear_inputs)
                         palette = self.input_valor.palette()
                         placeholder_color = QColor(255, 0, 0)  # Red color
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
@@ -940,8 +1073,8 @@ class CambioDatos(QWidget):
                         contraseñanuevo = contraseñanuevo.encode('utf-8')
                         objetoHash = hashlib.sha256(contraseñanuevo)
                         contraHasheada = objetoHash.hexdigest()
-                        self.contraseña = contraHasheada
-        self.close()
+                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,contraHasheada)
+                        self.show_confirmado()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

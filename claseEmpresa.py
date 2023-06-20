@@ -6,10 +6,3 @@
 # if __name__=='__main__':
 #     pass
     
-import string
-
-letras = string.ascii_letters + " "
-conjunto = set(letras)
-print(letras)
-print(conjunto)
-print(letras.isalpha())

@@ -1,8 +1,5 @@
 from datetime import datetime
 from datetime import date
-from ClasePersonas import Usuarios,Administrador
-from ClaseReservas import Reserva
-from ClaseVehiculos import Vehiculos
 import hashlib
 
 def validarprecio(precio):        #Valido que el precio ingresado sea positivo

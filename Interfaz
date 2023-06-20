@@ -107,7 +107,7 @@ class LoginWindow(QMainWindow):
         dni=self.input_dni.text()
         usuario = self.input_user.text() 
         contrasena = self.input_password.text()
-        validado = val.validarexistenciaPersona(dni, contrasena, diccUsuarios)
+        validado = val.validarexistenciaPersona(dni, contrasena, Usuarios)
 
         if not validado:
             self.show_error()
@@ -121,7 +121,7 @@ class LoginWindow(QMainWindow):
     def openAdminWindow(self):
         legajo = self.input_user.text()
         contraseña = self.input_password.text()
-        validado = val.validarexistenciaPersona(legajo, contraseña, diccEmpleados)
+        validado = val.validarexistenciaPersona(legajo, contraseña, Administrador)
                 
         if not validado:
             self.show_error()
@@ -164,7 +164,7 @@ class AdminWindow(QMainWindow):
 
         self.button3 = QPushButton('Eliminar un auto', central_widget)
         self.button3.setIcon(QIcon('icon3.png'))  # Replace with the path to your button icon
-        self.button3.clicked.connect(self.openEliminarAuto)
+        # self.button3.clicked.connect(self.openEliminarAuto)  
 
         # Add buttons to the layout
         layout.addWidget(self.button1)
@@ -335,10 +335,11 @@ class AgregarAuto(QMainWindow):
 
         if valid_data== True:
             self.show_confirmado()
-            diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)   #ARREGLAR TEMA DE LOS LEGAJOS
+            diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)  
+            util.escribirCsv('Vehiculos.csv', diccVehiculos)
             
 
-class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR LA FUNCION MODIFICAR
+class ModificarAuto(QWidget):   
     def __init__(self, legajo):
         super().__init__()
         self.setWindowTitle("Modificar un auto")
@@ -421,6 +422,7 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         self.input_valor.setPalette(palette)
                     else:
                         diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado()
 
                 case 'modelo':
@@ -432,7 +434,8 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado()
 
                 case 'marca':
@@ -445,6 +448,7 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         self.input_valor.setPalette(palette)
                     else:
                         diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado()
 
                 case 'año':  
@@ -457,6 +461,7 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         self.input_valor.setPalette(palette)
                     else:
                         diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado() 
 
                 case 'tipo':
@@ -469,6 +474,7 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         self.input_valor.setPalette(palette)
                     else:
                         diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado()
               
                 case 'gama':
@@ -480,7 +486,8 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         palette.setColor(QPalette.PlaceholderText, placeholder_color)
                         self.input_valor.setPalette(palette)
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado()
                 
                 case 'precioxdia':
@@ -493,6 +500,7 @@ class ModificarAuto(QWidget):    #NO TIENE MUCHO SENTIDO ESTO, HAY QUE MODIFICAR
                         self.input_valor.setPalette(palette)
                     else:
                         diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
                         self.show_confirmado()
 
     def Volver(self):
@@ -679,6 +687,7 @@ class RegistroWindow(QMainWindow):
         if validado==True:
             self.show_Confirmado() #VER SI SE PUEDE HACER UNA VENTANA EMERGENTE PARA VOLVER... NO SE SI LLEGAMOS. 
             Usuarios.agregarUsuario(dni, usuario, nombre, apellido, fecnac, email, contraseña)
+            util.escribirCsv('Usuarios.csv', diccUsuarios)
             
 
 class MainWindow(QMainWindow):
@@ -794,7 +803,7 @@ class Reserva(QWidget):
         self.confirmado_label.hide()
         layout.addWidget(self.confirmado_label)
 
-        self.label_error=QLabel("Seleccione un par de fechas válidas")
+        self.label_error=QLabel("Seleccione una fecha de inicio con más de 5 días de anticipación, y fecha de fin posterior.")
         self.label_error.setStyleSheet("color: red")
         self.label_error.hide()
         layout.addWidget(self.label_error)
@@ -829,17 +838,18 @@ class Reserva(QWidget):
         self.label_error.show()
 
     def ClickConfirmar(self):
+
         tipo = self.comboTipo.currentText().lower()
         gama = self.comboGama.currentText().lower()
-        fecha_inicio = self.calendar1.selectedDate().toString("dd-mm-yyyy")
-        fecha_fin = self.calendar2.selectedDate().toString("dd-mm-yyyy")
+        fecha_inicio = self.calendar1.selectedDate().toString("dd-MM-yyyy")
+        fecha_fin = self.calendar2.selectedDate().toString("dd-MM-yyyy")
         validado = True
 
         if val.validarAgregarFechaInicio(fecha_inicio)==False:
             self.showError()
             validado = False
         
-        if val.validarFechaFin(fecha_fin)==False:
+        if val.validarFechaFin(fecha_inicio, fecha_fin)==False:
             self.showError()
             validado = False
         
@@ -851,6 +861,7 @@ class Reserva(QWidget):
                 self.showAuto()
             else:
                 diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
+                util.escribirCsv('Reservas.csv', diccReservas)
                 self.showConfirmado()
 
 # AGREGAR LA LLEGADA DEL DNI HASTA ACA DESDE EL INICIO
@@ -922,6 +933,7 @@ class Cancelacion(QWidget):
         else:
             self.showConfirmado()
             diccUsuarios[self.dni].cancelarReserva(idres)
+            util.escribirCsv('Reservas.csv', diccReservas)
     
     def Volver(self):
         self.close()
@@ -1074,6 +1086,7 @@ class CambioDatos(QWidget):
                         objetoHash = hashlib.sha256(contraseñanuevo)
                         contraHasheada = objetoHash.hexdigest()
                         diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,contraHasheada)
+                        util.escribirCsv('Usuarios.csv', diccUsuarios)
                         self.show_confirmado()
 
 if __name__ == '__main__':

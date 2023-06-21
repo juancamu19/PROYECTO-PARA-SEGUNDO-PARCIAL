@@ -1,47 +1,69 @@
-/* Set the background color of the main window */
-QWidget {
-    background-color: #333;
-}
-
-/* Style for the labels */
-QLabel {
-    color: white;
-    font-size: 16px;
-}
-
-/* Style for the input boxes */
-QLineEdit {
+/* Global styles */
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
     background-color: white;
-    color: #333;
-    border: 1px solid #aaa;
+    color: navy;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Main window style */
+  QMainWindow {
+    background-color: white;
+  }
+  
+  /* Calendar style */
+  QCalendarWidget QTableView {
+    background-color: white;
+    color: navy;
+    selection-background-color: lightblue;
+    selection-color: white;
+  }
+  
+  /* Combo box style */
+  QComboBox {
+    background-color: white;
+    color: navy;
+    border: 1px solid navy;
+    padding: 3px;
     border-radius: 3px;
-    padding: 4px;
-    font-size: 14px;
-}
-
-/* Style for the calendar widget */
-QCalendarWidget {
-    background-color: white;
-    color: #ffffff;
-    font-size: 14px;
-}
-
-/* Style for the buttons */
-QPushButton {
-    background-color: #007BFF;
-    color: white;
+  }
+  
+  /* Button style */
+  QPushButton {
+    background-color: lightblue;
+    color: navy;
     border: none;
-    border-radius: 3px;
-    padding: 8px 16px;
-    font-size: 14px;
-}
-
-/* Style for the buttons when hovered */
-QPushButton:hover {
-    background-color: #0056b3;
-}
-
-/* Style for the buttons when pressed */
-QPushButton:pressed {
-    background-color: #002D5A;
-}
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  QPushButton:hover {
+    background-color: navy;
+    color: white;
+  }
+  
+  QPushButton:focus {
+    background-color: lightblue;
+    color: navy;
+    outline: none;
+  }
+  
+  QPushButton:pressed {
+    background-color: navy;
+    color: white;
+  }
+  
+  /* Label style */
+  QLabel {
+    color: navy;
+  }
+  
+  /* Second window style */
+  SecondWindow {
+    background-color: white;
+  }
+  

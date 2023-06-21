@@ -185,7 +185,7 @@ else:
                 elif operacion == "3":                     #Cancelar una reserva
                     validado = False
                     idres = input("ingrese el id de su reserva")
-                    while val.validarReserva(idres) == False:
+                    while val.validarexistenciaclave(idres,Reserva.setReservas) == False:
                         idres = input("ingrese el id de su reserva")
                         
                     diccUsuarios[dnix].cancelarReserva(idres)

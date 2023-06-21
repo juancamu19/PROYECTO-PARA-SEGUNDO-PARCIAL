@@ -61,6 +61,9 @@ class Personas:
                     if elem[0]==identificador:
                         type(self).setdnis.discard(elem)
                         type(self).setdnis.add((elem[0],self.contraseña))
+    def darDeBaja(self,indentificador,dicc):
+        dicc[indentificador].eliminar(dicc)
+
                 
 
 

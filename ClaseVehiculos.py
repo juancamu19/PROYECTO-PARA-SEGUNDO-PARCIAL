@@ -24,10 +24,12 @@ class Vehiculos():
         Vehiculos.cantVehiculos+=1
         Vehiculos.setVehiculos.add(self.patente)
     
+    
     #funcion para cambiar estado de dispponibilidad de auto al devolverlo
     def devolver(self):
         self.disponible = True
     
+
     #funcion para modificar un atributo de un auto
     def modificar(self, atributo, valor):
         match atributo:
@@ -57,7 +59,8 @@ class Vehiculos():
         if self.tipo in df.columns and self.gama in df.index:
             precio = df.loc[self.gama, self.tipo]
         return precio
-        
+
+
     #funcion para designar el auto elegido por el usuario al realizar una reserva
     def asignarauto(fecinicio, fecfin, tipo, gama):
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
@@ -67,7 +70,7 @@ class Vehiculos():
         for k in diccReservas.keys():
             fechaInicioReservak = datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()
             fechaFinReservak = datetime.strptime(diccReservas[k].fechaFin,"%d-%m-%Y").date()
-            if diccVehiculos[diccReservas[k].patente_auto].tipo==tipo and diccVehiculos[diccReservas[k].patente_auto].gama==gama:
+            if diccVehiculos[diccReservas[k].patente_auto].tipo == tipo and diccVehiculos[diccReservas[k].patente_auto].gama == gama:
                 if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and diccReservas[k].fechaCancel==None:
                 
                     setvehiculosdisponibles.remove(diccReservas[k].patente_auto)  
@@ -84,12 +87,16 @@ class Vehiculos():
 #diccionario que contiene los registros nuevos de vehiculos
 diccVehiculos = util.leerCsv('Vehiculos.csv', Vehiculos)
 
+
+
 # Pruebas de Funcionamiento
 #creo un falcon de pruebas
-TESTER=Vehiculos('abc500','Falcon','Ford',2023,'deportivo','alta')
+# TESTER=Vehiculos('abc500','Falcon','Ford',2023,'deportivo','alta')
 
-if __name__ == "__main__":
-   print(Vehiculos.asignarPrecio(TESTER))
-   print(Vehiculos.objeto_a_lista(TESTER))
-   print(Vehiculos.modificar(TESTER,'patente'))
+
+
+# if __name__ == "__main__":
+#    print(Vehiculos.asignarPrecio(TESTER))
+#    print(Vehiculos.objeto_a_lista(TESTER))
+#    print(Vehiculos.modificar(TESTER,'patente'))
 

@@ -61,8 +61,19 @@ class Personas:
                     if elem[0]==identificador:
                         type(self).setdnis.discard(elem)
                         type(self).setdnis.add((elem[0],self.contraseña))
+        
+        print(f"Su {atributo} se ha modficado correctamente a {valor}")
+   
+   
     def darDeBaja(self,indentificador,dicc):
-        dicc[indentificador].eliminar(dicc)
+        del(dicc[indentificador])
+
+        contraseñax = self.contraseña.encode('utf-8')
+        objetoHash = hashlib.sha256(contraseñax)
+        contraHasheada = objetoHash.hexdigest()
+        Usuarios.setdnis.remove((self.dni,contraHasheada))
+
+        print("Su usuario de ha eliminado correctamente")
 
                 
 
@@ -84,10 +95,10 @@ class Usuarios(Personas):
         diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
     
     #funcion para agregar reserva a diccionario
-    def agregarReserva(self,patente_auto, fechaInicio, fechaFin):
+    def agregarReserva(self, patente_auto, fechaInicio, fechaFin):
         diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
-        return f'La reserva de id {Reserva.cantReservas} , hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}'
+        print(f'La reserva de id {Reserva.cantReservas}, hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}')
 
     #funcion para quitar reserva del diccionario    
     def cancelarReserva(self,idreserva):
@@ -128,6 +139,7 @@ class Administrador(Personas):
     #funcion para agregar un vehiculo a diccionario para su carga a csv de vehiculos
     def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        
         diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo, gama)
+        print(f"Se ha agregado correctamente el vehículo de patente {patente}, modelo {modelo}, marca {marca}, anio {anio}, tipo {tipo}")
 
     #funcion para modificar un atributo de un vehiculo
     def modificarVehiculo(self, patente, atributo,valor):

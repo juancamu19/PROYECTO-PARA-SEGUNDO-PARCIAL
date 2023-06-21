@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import date
 import hashlib
 
+
 def validarprecio(precio):        #Valido que el precio ingresado sea positivo
     try:
         if int(precio)<0:
@@ -91,8 +92,6 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, set):     #Va
     else:
         return False
     
-
-
 
 def validarFecha(fecha):              #Valido que la fecha de nacmiento de una persona sea previa a la del presente
     try:
@@ -216,7 +215,7 @@ def validarcontraseña(contraseña):        #Valido que el largo de la contrase�
     
     try:
          if len(contraseña) < 5 or len(contraseña) > 20:
-              raise ValueError("La contraseña ingresada es incorrecta, intente de nuevo")
+            raise ValueError("La contraseña ingresada es incorrecta, intente de nuevo")
          
     except ValueError as error:
             print(f"Error: {error}")
@@ -233,15 +232,15 @@ def validarpatente(patente):      #Valido que la patente pueda ser una de las pe
             letras=patente[0:3]
             numeros=patente[3:]
             if (not letras.isalpha()) or (not numeros.isdigit()):
-                    raise ValueError("La patente ingresada es incorrecta, intente de nuevo")  
+                raise ValueError("La patente ingresada es incorrecta, intente de nuevo")  
         
         elif len(patente)==7:
             letras1 = patente[0:2]
             letras2 = patente[5:]
             numeros1 = patente[2:5]
             if (not letras1.isalpha()) or (not letras2.isalpha()) or (not numeros1.isdigit()):
-                    raise ValueError("La patente ingresada es incorrecta, intente de nuevo")
-        
+                raise ValueError("La patente ingresada es incorrecta, intente de nuevo")
+            
         else:
             raise ValueError("La patente ingresada es incorrecta, intente de nuevo")
     
@@ -250,6 +249,7 @@ def validarpatente(patente):      #Valido que la patente pueda ser una de las pe
         return False 
     
     return True
+
 
 def validarCambiarDatosPersona(atributo,valor):
      match atributo:
@@ -271,7 +271,8 @@ def validarCambiarDatosPersona(atributo,valor):
         
         case 'contraseña':
             return validarcontraseña(valor)  
-         
+
+
 def validarCambiarDatosVehiculo(atributo,valor):
     match atributo:
             
@@ -292,7 +293,10 @@ def validarCambiarDatosVehiculo(atributo,valor):
         
         case 'gama':
             return validargama(valor)
-        
+
+
+
+
 if __name__=="__main__":
     pass
 

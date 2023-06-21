@@ -1,8 +1,5 @@
 from datetime import datetime
 from datetime import date
-from ClasePersonas import Usuarios,Administrador
-from ClaseReservas import Reserva
-from ClaseVehiculos import Vehiculos
 import hashlib
 
 def validarprecio(precio):        #Valido que el precio ingresado sea positivo
@@ -85,11 +82,11 @@ def validarexistenciaclave(clave, set):        #Valido que la clave de un diccio
           return False         
      
 
-def validarexistenciaPersona(identificador, contraseña_ingresada, clase):     #Valido que la persona se encuentre registrada 
+def validarexistenciaPersona(identificador, contraseña_ingresada, set):     #Valido que la persona se encuentre registrada 
     contraseña_ingresada = contraseña_ingresada.encode('utf-8')
     objetoHash = hashlib.sha256(contraseña_ingresada)
     contraHasheada = objetoHash.hexdigest()
-    if (identificador, contraHasheada) in clase.setdnis:  
+    if (identificador, contraHasheada) in set:  
         return True
     else:
         return False
@@ -155,18 +152,6 @@ def validarFechaFin(fechainicio, fechafin):         #Valido que la fecha de fin 
     except ValueError:
         print('El formato de fecha ingresa es incorrecto, debe ser D-M-Y')
         return False
-
-
-# def validato(tipodato, validando):  ##este lo usamos??
-#     try:
-#         if type(validando)!= tipodato:
-#            raise TypeError("El tipo de dato es incorrecto")
-    
-#     except TypeError as error:
-#         print(f"Error: {error}")
-#         return False
-
-#     return True
 
 
 def validarusuario(usuario):         #Valido que el largo del nombre de usuario sea mayor o igual que 5 caracteres, pero menor o igual que 20
@@ -237,20 +222,7 @@ def validarcontraseña(contraseña):        #Valido que el largo de la contrase�
             print(f"Error: {error}")
             return False
     
-    return True 
-
-
-#fechas en datetime ojo
-# def validiffechas(fecha1,fecha2): ## este lo usamos?
-#     try:  
-#         if fecha2>fecha1:
-#             raise ValueError("La fecha ingresada es incorrecta, intente de nuevo")
-    
-#     except ValueError as error:
-#             print(f"Error: {error}")
-#             return False 
-
-#     return True   
+    return True   
                    
 
 def validarpatente(patente):      #Valido que la patente pueda ser una de las permitidas en Argentina
@@ -322,8 +294,7 @@ def validarCambiarDatosVehiculo(atributo,valor):
             return validargama(valor)
         
 if __name__=="__main__":
-    print(validarCambiarDatosVehiculo('gama','44998438'))
-    print(validarCambiarDatosVehiculo('patente','4499843h'))
+    pass
 
 
 

@@ -57,12 +57,6 @@ class Vehiculos():
         if self.tipo in df.columns and self.gama in df.index:
             precio = df.loc[self.gama, self.tipo]
         return precio
-    
-    # def objeto_a_lista(self):
-    #     obj_list = []
-    #     for attr, value in self.__dict__.items():
-    #         obj_list.append(value)
-    #     return obj_list
         
     #funcion para designar el auto elegido por el usuario al realizar una reserva
     def asignarauto(fecinicio, fecfin, tipo, gama):

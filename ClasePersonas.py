@@ -8,7 +8,6 @@ import Utilities as util
 #se crea la clase personas
 class Personas:
     setdnis = set()
-
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
         self.dni = dni
         self.nombre = nombre
@@ -64,65 +63,6 @@ class Personas:
                         type(self).setdnis.add((elem[0],self.contraseña))
                 
 
-    # def cambiar_dato(self, atributo):
-    #     match atributo:
-
-    #         case 'dni':
-    #             dniviejo = self.dni
-    #             dninuevo = input('Ingrese su nuevo dni ')
-    #             while validado == False:
-    #                 dninuevo = input('Ingrese su nuevo dni ')
-    #                 validado = val.validardni(dninuevo)
-    #             self.dni = dninuevo
-    #             print("Su DNI ha sido modificado exitosamente de: ", dniviejo," a: ", dninuevo)
-
-    #         case 'nombre':
-    #             nombreviejo = self.nombre
-    #             nombrenuevo = input('Ingrese su nombre nuevo ')
-    #             while validado == False:
-    #                 nombrenuevo = input('Ingrese su nombre nuevo ')
-    #                 validado = val.validarnombre(nombrenuevo)
-    #             self.nombre = nombrenuevo
-    #             print("Su Nombre ha sido modificado exitosamente de: ", nombreviejo," a: ", nombrenuevo)
-
-    #         case 'apellido':
-    #             apellidoviejo = self.apellido
-    #             apellidonuevo = input('Ingrese su apellido nuevo ')
-    #             while validado == False:
-    #                 apellidonuevo=input('Ingrese su apellido nuevo ')
-    #                 validado = val.validarnombre(apellidonuevo)
-    #             self.apellido=apellidonuevo
-    #             print("Su Apellido ha sido modificado exitosamente de: ", apellidoviejo," a: ", apellidonuevo)
-
-    #         case 'fecnac':
-    #             fecnacviejo = self.fecnac
-    #             fecnacnuevo = input('Ingrese su nueva fecha de nacimiento ')
-    #             while validado == False:
-    #                 fecnacnuevo = input('Ingrese su nueva fecha de nacimiento ')
-    #                 validado = val.validarFecha(fecnacnuevo)
-    #             self.fecnac = fecnacnuevo
-    #             print("Su fecha de nacimiento ha sido modificado exitosamente de: ", fecnacviejo," a: ", fecnacnuevo)
-
-    #         case 'email':
-    #             emailviejo=self.email
-    #             emailnuevo=input('Ingrese su email nuevo ')
-    #             while validado == False:
-    #                 emailnuevo=input('Ingrese su email nuevo ')
-    #                 validado = val.validaremail(emailnuevo)
-    #             self.email = emailnuevo
-    #             print("Su email ha sido modificado exitosamente de: ", emailviejo," a: ", emailnuevo)
-
-    #         case 'contraseña':
-    #             contraseñanuevo = input('Ingrese su contraseña nueva ')
-    #             while validado == False:
-    #                 contraseñanuevo = input('Ingrese su contraseña nueva ')
-    #                 validado = val.validarcontraseña(contraseñanuevo)
-    #             contraseñanuevo = contraseñanuevo.encode('utf-8')
-    #             objetoHash = hashlib.sha256(contraseñanuevo)
-    #             contraHasheada = objetoHash.hexdigest()
-    #             self.contraseña = contraHasheada
-                
-
 
 #se crea un hijo de la clase personas: usuarios
 class Usuarios(Personas):
@@ -167,12 +107,13 @@ diccUsuarios = util.leerCsv('Usuarios.csv', Usuarios)
 #se crea otro hijo de la clase persona: Administrador
 class Administrador(Personas):
     cantempleados = 0
-    setdnis = set()
+    setlegajos = set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleados
         Administrador.cantempleados+=1       
-        Administrador.setdnis.add((str(self.legajo),self.contraseña))
+        Administrador.setlegajos.add((str(self.legajo),self.contraseña))
+        Administrador.setdnis.add(self.dni)
 
     #funcion para agregar empleado a diccionario para su carga a csv de empleados
     def agregarEmpleado(self,dni, nombre, apellido, fecnac, email, contraseña):

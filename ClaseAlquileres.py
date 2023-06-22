@@ -10,20 +10,20 @@ class Alquiler():
     diccAlquileres=dict() 
     setAlquileres = set() 
     
-    '''Iniciador de la clase Alquiler, en el mismo se agrega desde el constructor el objeto al diccionario
-    de la clase. A su vez se carga el set de la clase para facilitar las validaciones'''
+    
     def __init__(self, id = None, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
-        """_summary_
+        """Iniciador de la clase Alquiler, en el mismo se agrega desde el constructor el objeto al diccionario
+        de la clase. A su vez se carga el set de la clase para facilitar las validaciones
 
         Args:
-            id (_type_, optional): _description_. Defaults to None.
-            idReserva (_type_, optional): _description_. Defaults to None.
-            dni (_type_, optional): _description_. Defaults to None.
-            patente_auto (_type_, optional): _description_. Defaults to None.
-            fechaInicioAlq (_type_, optional): _description_. Defaults to None.
-            fechaExpiracionAlq (_type_, optional): _description_. Defaults to None.
-            fechadev (_type_, optional): _description_. Defaults to None.
-            monto (_type_, optional): _description_. Defaults to None.
+            id (int): número de identificación del alquiler
+            idReserva (int): número de identificación de la reserva
+            dni (str): número de identificación de la persona
+            patente_auto (str): patente del auto alquilado
+            fechaInicioAlq (datetime): fecha de inicio del alquiler
+            fechaExpiracionAlq (datetime): fecha de expiración del alquier.
+            fechadev (datetime): fecha de devolución del vehículo
+            monto (int): monto a pagar total del alquiler
         """
         self.id = id 
         self.idReserva = idReserva  

@@ -9,17 +9,17 @@ from claseEmpresa import Empresa
 '''Se crea la clase Personas'''
 class Personas:
     
-    '''Iniciador de la clase Personas'''
+    
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
-        """_summary_
+        """Iniciador de la clase Personas
 
         Args:
-            dni (_type_): _description_
-            nombre (_type_): _description_
-            apellido (_type_): _description_
-            fecnac (_type_): _description_
-            email (_type_): _description_
-            contrase (_type_): _description_
+            dni (str): documento nacional de identidad de la persona (identificación)
+            nombre (str): nombre de la perdona
+            apellido (str): apellido de la persona
+            fecnac (datetime): fecha de nacimiento de la persona
+            email (str): email de la persona
+            contraseñia (str): contraseña del perfil creado por la  persona
         """
         self.dni = dni
         self.nombre = nombre
@@ -34,19 +34,18 @@ class Personas:
         return f"Nombre: {self.nombre} {self.apellido}, DNI: {self.dni}, Fecha de nacimiento: {self.fecnac}, Email: {self.email}, Cantidad de reservas realizadas hasta el momento: {self.cantreservas}"
 
 
-    '''Funcion para cambiar un atributo de la Persona. Se ingresa por parámetro que atributo se va a modificar(validado)
-    y que valor se le dara a este atributo. A su vez, se pasaa por parámetro el identificador ya que mientras que
-    en persona se trabaja con dni como clave, en empleados con legajos. De esta manera permite la herencia y eficientización
-    de código'''
-    ''' Aclaraciones extras: 1- Al cambiar el dni, se debe reemplazar el valor anterior por el nuevo en el set
-    2- Al cambiar la contraseña se debe hacer lo mismo, solo que en este caso la que se reemplaza es la tupla dni:contraseña'''
+    
     def cambiar_dato(self, identificador, atributo, valor_nuevo):
-        """_summary_
+        """Funcion para cambiar un atributo de la Persona. Se ingresa por parámetro que atributo se va a modificar(validado)
+        y que valor se le dara a este atributo. A su vez, se pasaa por parámetro el identificador ya que mientras que
+        en persona se trabaja con dni como clave, en empleados con legajos. De esta manera permite la herencia y eficientización
+        de código. Aclaraciones extras: 1- Al cambiar el dni, se debe reemplazar el valor anterior por el nuevo en el set
+        2- Al cambiar la contraseña se debe hacer lo mismo, solo que en este caso la que se reemplaza es la tupla dni:contraseña
 
         Args:
-            identificador (_type_): _description_
-            atributo (_type_): _description_
-            valor_nuevo (_type_): _description_
+            identificador (str): identificado de la persona que quiere cambiar un dato suyo (dni)
+            atributo (str): atributo que la persona quiera modificar
+            valor_nuevo (str): valor nuevo que la persona quiera darle al atributo
         """
         match atributo:
 
@@ -91,25 +90,25 @@ class Usuarios(Personas):
     diccUsuarios=dict()
     setdnis = set()
 
-    '''Iniciador de la clase Usuarios, en el mismo se agrega desde el constructor el objeto al diccionario
-    de la clase. A su vez se carga el set de la clase para facilitar las validaciones. 
-    Notar que setdnis contiene un conjunto de tuplas, donde cada tupla almacena un par dni,contraseña. Se utiliza
-    esta estructura de datos al ser las mismas hasheables e irrepetibles por el dni. Notar también que su mayor implementacion
-    será en validaciones de login, con lo cual no es lo frecuente ir modificando el valor de las tuplas, adecuandose
-    al caso. 
-    Por otra parte, la eleccion de sets se adecua a la funcion de validacion por su rapidez y bajo costo de computo.'''
+    
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
-        """_summary_
+        """Iniciador de la clase Usuarios, en el mismo se agrega desde el constructor el objeto al diccionario
+        de la clase. A su vez se carga el set de la clase para facilitar las validaciones. 
+        Notar que setdnis contiene un conjunto de tuplas, donde cada tupla almacena un par dni,contraseña. Se utiliza
+        esta estructura de datos al ser las mismas hasheables e irrepetibles por el dni. Notar también que su mayor implementacion
+        será en validaciones de login, con lo cual no es lo frecuente ir modificando el valor de las tuplas, adecuandose
+        al caso. 
+        Por otra parte, la eleccion de sets se adecua a la funcion de validacion por su rapidez y bajo costo de computo.
 
         Args:
-            dni (_type_): _description_
-            nombre (_type_): _description_
-            apellido (_type_): _description_
-            fecnac (_type_): _description_
-            email (_type_): _description_
-            contrase (_type_): _description_
-            username (_type_): _description_
-            cantreservas (int, optional): _description_. Defaults to 0.
+            dni (str): documento nacional de identidad de la persona (identificación)
+            nombre (str): nombre de la perdona
+            apellido (str): apellido de la persona
+            fecnac (datetime): fecha de nacimiento de la persona
+            email (str): email de la persona
+            contraseñia (str): contraseña del perfil creado por la  persona
+            username (str): nombre de usuario elegido por la persona
+            cantreservas (int): cantidad total de reservas realizadas por el usuario
         """
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
@@ -118,19 +117,19 @@ class Usuarios(Personas):
         Usuarios.diccUsuarios[self.dni]=self
     
 
-    '''Funcion para crear un usuario. Se pasa por parámetro la contraseña hasheada. Como el usuario interactua con la
-     interfaz por su cuenta, el mismo puede agregarse como usuario.  '''
+    
     def agregarUsuario(dni, username, nombre, apellido, fecnac, email, contraseña):
-        """_summary_
+        """Funcion para crear un usuario. Se pasa por parámetro la contraseña hasheada. Como el usuario interactua con la
+        interfaz por su cuenta, el mismo puede agregarse como usuario.  
 
         Args:
-            dni (_type_): _description_
-            username (_type_): _description_
-            nombre (_type_): _description_
-            apellido (_type_): _description_
-            fecnac (_type_): _description_
-            email (_type_): _description_
-            contrase (_type_): _description_
+            dni (str): documento nacional de identidad de la persona (identificación)
+            username (str): nombre de usuario elegido por la persona
+            nombre (str): nombre de la perdona
+            apellido (str): apellido de la persona
+            fecnac (datetime): fecha de nacimiento de la persona
+            email (str): email de la persona
+            contraseñia (str): contraseña del perfil creado por la  persona
         """
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
@@ -138,57 +137,57 @@ class Usuarios(Personas):
         Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
     
 
-    '''Funcion para agregar una reserva al diccionario de reservas. Al instanciar el objeto reservas, ella sola se agrega
-    al dicionario correspondiente'''
+    
     def agregarReserva(self, patente_auto, fechaInicio, fechaFin):
-        """_summary_
+        """Funcion para agregar una reserva al diccionario de reservas. Al instanciar el objeto reservas, ella sola se agrega
+        al dicionario correspondiente
 
         Args:
-            patente_auto (_type_): _description_
-            fechaInicio (_type_): _description_
-            fechaFin (_type_): _description_
+            patente_auto (str): patente del auto asociada a la reserva
+            fechaInicio (datetime): fecha de inicio de la reserva
+            fechaFin (datetime): fecha de finalización de la reserva
         """
         Reserva(Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
         print(f'La reserva de id {Reserva.cantReservas}, hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}')
 
 
-    '''Funcion para eliminar una reserva del diccionario'''    
+        
     def cancelarReserva(self,idreserva):
-        """_summary_
+        """Funcion para eliminar una reserva del diccionario
 
         Args:
-            idreserva (_type_): _description_
+            idreserva (int): número de identificacion de la reserva
         """
         Reserva.diccReservas[idreserva].cancelarreserva()
 
 
     '''Funciones para modificar las fechas de la reserva. Las fechas se pasan ya validadas'''
     def modifFecInicioReserva(self,idreserva,fechanueva):
-        """_summary_
+        """Funcion para modificar la fecha de inicio de una reserva
 
         Args:
-            idreserva (_type_): _description_
-            fechanueva (_type_): _description_
+            idreserva (int): número de identificacion de la reserva
+            fechanueva (datetime): nueva fecha de inicio de alquiler
         """
         Reserva.diccReservas[idreserva].cambiarfechaInicioAlquiler(fechanueva)
 
     def modifFecFinReserva(self,idreserva,fechanueva):
-        """_summary_
+        """Funcion para modificar la fecha de fin de una reserva
 
         Args:
-            idreserva (_type_): _description_
-            fechanueva (_type_): _description_
+            idreserva (int): número de identificacion de la reserva
+            fechanueva (datetime): nueva fecha de fin de alquiler
         """
         Reserva.diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
 
 
-    '''Funcion para mostrar las reservas a nombre de un usuario'''
+    
     def mostrarMisReservas(self):
-        """_summary_
+        """Funcion para mostrar las reservas a nombre de un usuario
 
         Returns:
-            _type_: _description_
+            Reservas a nombre de un usuario
         """
         Mensaje=''
         for k,v in Reserva.diccReservas.items():            
@@ -221,20 +220,19 @@ class Administrador(Personas):
     diccEmpleados = dict()
     setdnis = set()
     
-    '''Iniciador de la clase Administrador. La explicacion para las estructuras elegidas para los sets son análogas
-    a las de la clase usuarios. Se trabaja con legajo como clave identificatoria al ser más representativa y tambien 
-     unica. '''
+    
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
-        """_summary_
+        """Iniciador de la clase Administrador. La explicacion para las estructuras elegidas para los sets son análogas
+        a las de la clase usuarios. Se trabaja con legajo como clave identificatoria al ser más representativa y tambien unica. 
 
         Args:
-            dni (_type_): _description_
-            nombre (_type_): _description_
-            apellido (_type_): _description_
-            fecnac (_type_): _description_
-            email (_type_): _description_
-            contrase (_type_): _description_
-            legajo (_type_, optional): _description_. Defaults to None.
+            dni (str): número de documento 
+            nombre (str): nombre de la persona
+            apellido (str): apellido de la persona
+            fecnac (datetime): fecha de nacimiento de la persona
+            email (str): email de la persona
+            contraseña (str): contraseña del usuario
+            legajo (int): número de empleado (identifiación)
         """
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleadosAcumulativo
@@ -244,19 +242,19 @@ class Administrador(Personas):
         Administrador.diccEmpleados[self.legajo]=self
 
 
-    '''Funcion para agregar empleado a diccionario para su carga a csv de empleados. Un empleado ya existente
-    se encarga de agregar a otro nuevo. Esto presupone la existencia de al menos un empleado, lo cual se
-     considero como base '''
+    
     def agregarEmpleado(self, dni, nombre, apellido, fecnac, email, contraseña):
-        """_summary_
+        """Funcion para agregar empleado a diccionario para su carga a csv de empleados. Un empleado ya existente
+        se encarga de agregar a otro nuevo. Esto presupone la existencia de al menos un empleado, lo cual se
+        considero como base 
 
         Args:
-            dni (_type_): _description_
-            nombre (_type_): _description_
-            apellido (_type_): _description_
-            fecnac (_type_): _description_
-            email (_type_): _description_
-            contrase (_type_): _description_
+            dni (str): número de documento 
+            nombre (str): nombre de la persona
+            apellido (str): apellido de la persona
+            fecnac (datetime): fecha de nacimiento de la persona
+            email (str): email de la persona
+            contraseña (str): contraseña del usuario
         """
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
@@ -264,41 +262,41 @@ class Administrador(Personas):
         Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
     
 
-    '''Funcion para agregar un vehiculo a diccionario para su carga al archivo Vehiculos. Al instanciar el objeto,
-    el mismo se agrega en el diccionario'''
+    
     def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):   
-        """_summary_
+        """Funcion para agregar un vehiculo a diccionario para su carga al archivo Vehiculos. Al instanciar el objeto,
+        el mismo se agrega en el diccionario
 
         Args:
-            patente (_type_): _description_
-            modelo (_type_): _description_
-            marca (_type_): _description_
-            anio (_type_): _description_
-            tipo (_type_): _description_
-            gama (_type_): _description_
+            patente (str): patente del vehículo
+            modelo (str): modelo del vehículo
+            marca (str): marca del vehículo
+            anio (str): año de fabricación del vehículo
+            tipo (str): tipo de vehículo
+            gama (str): gama del vehículo
         """   
         Vehiculos(patente, modelo, marca, anio, tipo, gama)
         print(f"Se ha agregado correctamente el vehículo de patente {patente}, modelo {modelo}, marca {marca}, anio {anio}, tipo {tipo}")
 
 
-    '''Funcion para modificar un atributo de un vehiculo'''
+
     def modificarVehiculo(self, patente, atributo, valor_nuevo):
-        """_summary_
+        """Funcion para modificar un atributo de un vehiculo
 
         Args:
-            patente (_type_): _description_
-            atributo (_type_): _description_
-            valor_nuevo (_type_): _description_
+            patente (str): patente del vehículo al cual se le quiere hacer una modificación
+            atributo (str): atributo del vehículo que se desea modificar
+            valor_nuevo (str): valor nuevo para el atributo
         """
         Vehiculos.diccVehiculos[patente].modificar(atributo,valor_nuevo)
 
 
-    '''Funcion para dar por finalizado un alquiler. Se modifica la disponibilidad en vehiculos'''
+  
     def finalizarAlquiler(self, idalquiler):
-        """_summary_
+        """Funcion para dar por finalizado un alquiler. Se modifica la disponibilidad en vehiculos
 
         Args:
-            idalquiler (_type_): _description_
+            idalquiler (str): número de identificación del alquiler
         """
         Alquiler.diccAlquileres[idalquiler].finalizar()
         Vehiculos.diccVehiculos[Alquiler.diccAlquileres[idalquiler].patente_auto].devolver()
@@ -310,17 +308,16 @@ class Administrador(Personas):
         Vehiculos.diccVehiculos[patente].eliminar()
 
 
-    '''Funcion para cambiar el precio de un auto segun gama y tipo. La modificacion se hace directamente en el csv
-    con los precios por categoria y tipo. Se utiliza el dataframe de pandas ya que facilita el manejo de tablas con
-    doble entrada'''
     
     def modifPreciosAutos(self, tipo, gama, precionuevo):
-        """_summary_
+        """Funcion para cambiar el precio de un auto segun gama y tipo. La modificacion se hace directamente en el csv
+        con los precios por categoria y tipo. Se utiliza el dataframe de pandas ya que facilita el manejo de tablas con
+        doble entrada
 
         Args:
-            tipo (_type_): _description_
-            gama (_type_): _description_
-            precionuevo (_type_): _description_
+            tipo (str): tipo de vehículo
+            gama (str): gama del vehículo
+            precionuevo (int): precio nuevo a aplicar la gama y tipo de vehículo indicados
         """
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
         df.at[gama, tipo] = precionuevo
@@ -337,24 +334,23 @@ class Administrador(Personas):
         print("El empleado se ha eliminado correctamente")
 
 
-    '''FUNCIONES SON DE GESTIÓN'''
+    '''FUNCIONES DE GESTIÓN'''
 
-    '''Funcion para consultar las ventas por día'''
     def consultarVentasXDia(self, dia):
-        """_summary_
+        """Funcion para consultar las ventas por día
 
         Args:
-            dia (_type_): _description_
+            dia (datetime): día a consultar
         """
         Empresa.gestionVentasxdia(dia)
     
 
-    '''Funcion para consultar las ventas por mes'''
+    
     def consultarVentasXMes(self, mes):
-        """_summary_
+        """Funcion para consultar las ventas por mes
 
         Args:
-            mes (_type_): _description_
+            mes (str): mes a consultar
         """
         Empresa.gestionVentasxmes(mes)
 

@@ -8,18 +8,18 @@ class Reserva():
     setReservas = set()
     diccReservas=dict()
 
-    '''Iniciador de la clase Reserva. Se lleva el contador de reservas para generar automaticamente el id de cada
-    reserva'''
+    
     def __init__(self, id = None, dni = None, patente_auto = None, fechaInicio = None, fechaFin = None, fechaCancel = None):
-        """_summary_
+        """Iniciador de la clase Reserva. Se lleva el contador de reservas para generar automaticamente el id de cada
+        reserva
 
         Args:
-            id (_type_, optional): _description_. Defaults to None.
-            dni (_type_, optional): _description_. Defaults to None.
-            patente_auto (_type_, optional): _description_. Defaults to None.
-            fechaInicio (_type_, optional): _description_. Defaults to None.
-            fechaFin (_type_, optional): _description_. Defaults to None.
-            fechaCancel (_type_, optional): _description_. Defaults to None.
+            id (int): número de id designado para la reserva (identificación)
+            dni (str): dni del usuario que realizó la reserva
+            patente_auto (str): patente del auto reservado
+            fechaInicio (datetime): fecha de inicio del alquiler
+            fechaFin (datetime): fecha de fin del alquiler
+            fechaCancel (datetime): fecha de cancelación del alquiler (opcional)
         """
         self.id = id
         self.dni = dni
@@ -42,22 +42,22 @@ class Reserva():
             self.fechaCancel=datetime.now()                
         
 
-    '''Funcion para cambiar la fecha de finalización de una reserva(posible alquiler, de ahi el nombre)'''
+    
     def cambiarfechaExpiracionAlquiler(self,fechanueva):
-        """_summary_
+        """Funcion para cambiar la fecha de finalización de una reserva(posible alquiler, de ahi el nombre)'''
 
         Args:
-            fechanueva (_type_): _description_
+            fechanueva (datetime): nueva fecha de finalización del alquiler
         """     
         self.fechaFin = fechanueva 
     
 
-    '''Funcion para cambiar la fecha de inicio de una reserva(posible alquiler, de ahi el nombre)'''
+    
     def cambiarfechaInicioAlquiler(self,fechanueva):
-        """_summary_
+        """Funcion para cambiar la fecha de inicio de una reserva(posible alquiler, de ahi el nombre)
 
         Args:
-            fechanueva (_type_): _description_
+            fechanueva (datetime): nueva fecha de inicio del alquiler
         """
         self.fechaInicio = fechanueva 
 

@@ -476,7 +476,7 @@ else:
                             elif operacion == '2':
                                 mes = input('Ingrese mes a consultar ')
                                 while val.validarMesAConsultar(mes) == False:
-                                    print('Ingrese un mes válida')
+                                    print('Ingrese un mes válido')
                                     mes = input('Ingrese mes consultar')
                                 Administrador.diccEmpleados[legajo].consultarVentasXMes(mes)
 

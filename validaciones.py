@@ -114,12 +114,12 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, set):
     else:
         return False
     
-'''Valido que la fecha de nacmiento de una persona sea previa a la del presente'''
+
 def validarFechaNac(fecha): 
-    """_summary_
+    """Valido que la fecha de nacmiento de una persona sea previa a la del presente
 
         Returns:
-            _type_: _description_
+            bool: True si la fecha intresada es menor que la actual, False caso contrario
         """            
     try:
         
@@ -136,15 +136,15 @@ def validarFechaNac(fecha):
         return False
 
 
-'''Valido que la fecha a consultar para gestion economica se encuentre en el formato correcto'''
+
 def validarFechaAConsultar(fecha):
-    """_summary_
+    """Valido que la fecha a consultar para gestion economica se encuentre en el formato correcto
 
     Args:
-        fecha (_type_): _description_
+        fecha (str): fecha ingresada por el usuario
 
     Returns:
-        _type_: _description_
+        bool: True si el formato de la fecha es "D-M-Y", Flase caso contrario
     """
     try:
         fecha_ing = datetime.strptime(fecha, "%d-%m-%Y").date()
@@ -155,15 +155,15 @@ def validarFechaAConsultar(fecha):
         return False
 
 
-'''Valido que el mes a consultar para gestion economica sea uno de los 12 del año'''
+
 def validarMesAConsultar(mes):
-    """_summary_
+    """Valido que el mes a consultar para gestion economica sea uno de los 12 del año'''
 
     Args:
-        mes (_type_): _description_
+        mes (str): mes ingresado por el administrador
 
     Returns:
-        _type_: _description_
+        bool: True si el mes es uno de los 12 del año, Flase caso contrario
     """
     try:
         if int(mes)<=12 and int(mes)>=1:

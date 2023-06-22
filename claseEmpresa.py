@@ -7,17 +7,15 @@ uso de la base de datos para alquiler, que es quien almacena la contabilidad en 
 Para ambos métodos se trabajo con el dataframe de pandas, esto facilita el trabajo con tablas y filtrado de las mismas.'''
 class Empresa():
     
-    '''Funcion para consultar las ventas por mes. Un empleado puede filtrar la informacion de alquileres por mes, 
-    y asi evaluar informes, tendencias, etc.'''
-    
     def gestionVentasxmes(mes):
-        """_summary_
+        """Funcion para consultar las ventas por mes. Un empleado puede filtrar la informacion de alquileres por mes, 
+        y asi evaluar informes, tendencias, etc.
 
         Args:
-            mes (_type_): _description_
+            mes (str): mes a consultar
 
         Returns:
-            _type_: _description_
+            Ventas por mes
         """
         nombresColumnas = ['idAlq', 'idRes', 'dni', 'patente', 'fecInicio', 'fecFin','fechadev','monto']
         df = pd.read_csv('Alquileres.csv', names = nombresColumnas)
@@ -28,15 +26,15 @@ class Empresa():
         print(' Y La suma total de alquileres para este mes es ', sumaTotal)
         return sumaTotal
     
-    '''Funcion para consultar las ventas por día'''
+
     def gestionVentasxdia(dia):
-        """_summary_
+        """Funcion para consultar las ventas por día
 
         Args:
-            dia (_type_): _description_
+            dia (str): día a consultar
 
         Returns:
-            _type_: _description_
+            Ventas por día
         """
         nombresColumnas = ['idAlq', 'idRes', 'dni', 'patente', 'fecInicio', 'fecFin','fechadev','monto']
         df = pd.read_csv('Alquileres.csv', names=nombresColumnas)

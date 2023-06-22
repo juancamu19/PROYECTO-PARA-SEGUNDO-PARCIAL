@@ -11,22 +11,22 @@ class Vehiculos():
     cantVehiculos = 0
     setVehiculos=set()
     
-    '''Iniciador de la clase Vehículos. Cada objeto se agrega al diccionario al crearse, con su patente unica como
-    identificador. Vale aclarar que la elecion de sets facilita el uso de validaciones para este campo, a pesar
-    de no hacer una gran diferncia con respecto a otras estructuras de datos, como si lo hace en usuario, reservas.
-    El precioxdia de cada auto se asigna automaticamente a partir de su tipo y gama'''
+
     def __init__(self, patente, modelo, marca, anio, tipo, gama, precioxdia = None ,disponible = True):
-        """_summary_
+        """Iniciador de la clase Vehículos. Cada objeto se agrega al diccionario al crearse, con su patente unica como
+        identificador. Vale aclarar que la elecion de sets facilita el uso de validaciones para este campo, a pesar
+        de no hacer una gran diferncia con respecto a otras estructuras de datos, como si lo hace en usuario, reservas.
+        El precioxdia de cada auto se asigna automaticamente a partir de su tipo y gama
 
         Args:
-            patente (_type_): _description_
-            modelo (_type_): _description_
-            marca (_type_): _description_
-            anio (_type_): _description_
-            tipo (_type_): _description_
-            gama (_type_): _description_
-            precioxdia (_type_, optional): _description_. Defaults to None.
-            disponible (bool, optional): _description_. Defaults to True.
+            patente (str): patente del vehículo
+            modelo (str): modelo del vehículo
+            marca (str): marca del vehículo
+            anio (str): año de fabricación del vehículo
+            tipo (str): tipo de vehículo (sedane, suv, ...)
+            gama (str): gama del vehículo (alta, media, ...)
+            precioxdia (str): costo de alquiler por día. Defaults to None.
+            disponible (bool): estado de disponibilidad para ser alquilado. Defaults to True.
         """
         self.patente = patente
         self.modelo = modelo
@@ -46,14 +46,14 @@ class Vehiculos():
         self.disponible = True
     
 
-    '''Funcion para modificar un atributo de un auto. Se ingresa por parametro el atributo a cambiar y el
-    nuevo valor a darle'''
+    
     def modificar(self, atributo, valor_nuevo):
-        """_summary_
+        """Funcion para modificar un atributo de un auto. Se ingresa por parametro el atributo a cambiar y el
+        nuevo valor a darle'''
 
         Args:
-            atributo (_type_): _description_
-            valor_nuevo (_type_): _description_
+            atributo (str): atributo del objeto a ser modificado
+            valor_nuevo (str): atributo nuevo para reemplazar el anterior
         """
         match atributo:
             
@@ -86,20 +86,20 @@ class Vehiculos():
         return precio
 
 
-    '''Funcion para designar el auto elegido por el usuario al realizar una reserva. Este auto es elegido 
-    aleatoriamente, siempre y cuando sea del tipo y gama pedido, y este disponible para esa fecha segun
-    las reservas existentes'''
+
     def asignarauto(fecinicio, fecfin, tipo_elegido, gama_elegida):
-        """_summary_
+        """Funcion para designar el auto elegido por el usuario al realizar una reserva. Este auto es elegido 
+        aleatoriamente, siempre y cuando sea del tipo y gama pedido, y este disponible para esa fecha segun
+        las reservas existentes
 
         Args:
-            fecinicio (_type_): _description_
-            fecfin (_type_): _description_
-            tipo_elegido (_type_): _description_
-            gama_elegida (_type_): _description_
+            fecinicio (datetime): fecha de inicio de alquiler
+            fecfin (datetime): decha de fin de alquiler
+            tipo_elegido (str): tipo de vehículo a alquilar
+            gama_elegida (str): gama del vehículo a alquilar
 
         Returns:
-            _type_: _description_
+            Auto asignado a la reserva
         """
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
         fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()

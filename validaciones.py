@@ -106,13 +106,29 @@ def validarFecha(fecha):              #Valido que la fecha de nacmiento de una p
     except ValueError:
         print('El formato de fecha ingresa es incorrecto, debe ser D-M-Y')
         return False
+def validarFechaAConsultar(fecha):
+    try:
+        fecha_ing = datetime.strptime(fecha, "%d-%m-%Y").date()
+        return True
+        
+    except ValueError:
+        print('El formato de fecha ingresa es incorrecto, debe ser D-M-Y')
+        return False
+def validarMesAConsultar(mes):
+    try:
+        if int(mes)<=12 and int(mes)>=1:
+            return True
+        
+    except ValueError:
+        print('El mes es incorrecto')
+        return False
 
 
 def validarAgregarFechaInicio(fechainicio):      #Valido que la fecha de inicio de la reserva sea posterior a 5 días desde el presente
     try:
         fecha_ing = datetime.strptime(fechainicio,"%d-%m-%Y").date()
-        fechaactual = datetime.now()
-        if (fecha_ing - fechaactual.date()).days >= 5:
+        fechaactual = datetime.now().date()
+        if (fecha_ing - fechaactual).days >= 5:
              return True
         else:
              print('la fecha ingresada debe tener como mínimo una anticipación de 5 días')
@@ -127,10 +143,11 @@ def validarModifFechaInicio(fechainicio, fechafin):     #Valido que la modificac
     try:
         fecha_ing = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_fin = datetime.strptime(fechafin,"%d-%m-%Y").date()
-        if fecha_ing >= date.today() and fecha_ing <= fecha_fin:  
+        fechaactual = datetime.now().date()
+        if (fecha_ing - fechaactual).days >= 5 and fecha_ing <= fecha_fin:  
              return True
         else:
-             print('la fecha ingresada ya paso o es posterior a la fecha pactada de fin de alquiler')
+             print('la fecha ingresada no cumple con los 5 dias de anticipación o es posterior a la fecha pactada de fin de alquiler')
              return False
         
     except ValueError:

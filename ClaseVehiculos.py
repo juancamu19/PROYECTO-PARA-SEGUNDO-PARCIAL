@@ -64,8 +64,11 @@ class Vehiculos():
     #funcion para designar el auto elegido por el usuario al realizar una reserva
     def asignarauto(fecinicio, fecfin, tipo, gama):
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
-        fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()    
-        setvehiculosdisponibles=Vehiculos.setVehiculos
+        fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()
+        setvehiculosdisponibles=set()
+        for k,v in Vehiculos.diccVehiculos.items():
+            if v.tipo == tipo and v.gama==gama:
+                setvehiculosdisponibles.add(k)        
         
         for k in Reserva.diccReservas.keys():
             fechaInicioReservak = datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()

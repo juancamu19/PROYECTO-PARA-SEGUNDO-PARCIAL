@@ -8,7 +8,7 @@ class Alquiler():
     cantAlquileres = 0 
     diccAlquileres=dict() 
     setAlquileres = set() 
-    def __init__(self, id = cantAlquileres+1, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
+    def __init__(self, id = None, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
         self.id = id 
         self.idReserva = idReserva  
         self.dni = dni         
@@ -20,14 +20,6 @@ class Alquiler():
         Alquiler.cantAlquileres += 1
         Alquiler.setAlquileres.add(self.id)
         Alquiler.diccAlquileres[self.id]=self
-
-
-
-    # def objeto_a_lista(self):
-    #     obj_list = []
-    #     for attr, value in self.__dict__.items():
-    #         obj_list.append(value)
-    #     return obj_list
     
 #funcion para establecer fecha de devolucion
     def finalizar(self):
@@ -42,11 +34,15 @@ util.leerCsv('Alquileres.csv', Alquiler)
 
 #actualización de diccionarios al iniciar un alquiler
 for k in Reserva.diccReservas.keys():
-    if datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():
-        fechafin=datetime.strptime(Reserva.diccReservas[k].fechaFin)
-        cantdias=(fechafin-datetime.now().date()).days          
-        Alquiler.diccAlquileres[Alquiler.cantAlquileres+1]=Alquiler(k,Reserva.diccReservas[k].dni,Reserva.diccReservas[k].patente_auto,Reserva.diccReservas[k].fechaInicio,Reserva.diccReservas[k].fechaFin,None,cantdias*(Reserva.diccReservas[k].patente_auto.precioxdia))
-        Vehiculos.diccVehiculos[Alquiler.diccAlquileres[Alquiler.cantAlquileres].patente_auto].disponible=False
+    if datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now().date():
+        fechafin=datetime.strptime(Reserva.diccReservas[k].fechaFin,"%d-%m-%Y").date()
+        fechaactual=datetime.now()
+        cantdias=(fechafin-fechaactual.date()).days
+        for clave,v in Alquiler.diccAlquileres.items():
+            if k!=v.idReserva:
+                Alquiler(Alquiler.cantAlquileres+1,k,Reserva.diccReservas[k].dni,Reserva.diccReservas[k].patente_auto,Reserva.diccReservas[k].fechaInicio,Reserva.diccReservas[k].fechaFin,None,cantdias*(Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].precioxdia))
+                Vehiculos.diccVehiculos[Alquiler.diccAlquileres[Alquiler.cantAlquileres].patente_auto].disponible=False
+        
 
 
 

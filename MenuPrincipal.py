@@ -165,12 +165,14 @@ else:
                         cambio = input("Ingrese el número de operación que desea realizar")
 
                         while cambio not in ['1','2']: 
-                            opcion_elegida = input("ingrese nuevamente la opcion: ")
-                        
-                        
+                            cambio = input("ingrese nuevamente la opcion: ")
+                        print('Las reservas a su nombre son las siguientes')
+                        print(Usuarios.diccUsuarios[dnix].mostrarMisReservas())
+
                         idres = input("Ingrese el id de su reserva ")
                         while val.validarexistenciaclave(idres, Reserva.setReservas) == False:
                             idres = input("Ingrese el id de su reserva ")
+                        
                     
 
                         if cambio == '1':                 #Cambiar el incicio de la reserva
@@ -251,6 +253,7 @@ else:
                 legajo = input("Ingrese su legajo ")
                 contraseñax = input("Ingrese su contraseña ")
                 validado = val.validarexistenciaPersona(legajo, contraseñax, Administrador.setlegajos)
+                legajo=int(legajo)
                 
                 if not validado:
                     print("Su legajo o contraseña son incorrectos")
@@ -274,13 +277,14 @@ else:
                         print('6. Cambiar un dato suyo')
                         print('7. Modificar precio por dia de un vehiculo')
                         print('8. Dar de baja a otro empleado')
+                        print('9. Ejecutar tareas de gestión de la Empresa')
                         print('')
-                        print('9. Salir')
+                        print('10. Salir')
                         print('')
 
                         opcion_elegida = input('Ingrese el número de operación que desea realizar ')
 
-                        while opcion_elegida not in ['1','2','3','4','5','6','7','8']: 
+                        while opcion_elegida not in ['1','2','3','4','5','6','7','8','9','10']: 
                             opcion_elegida = input("Ingrese nuevamente la opcion ")
                         
                         
@@ -414,14 +418,42 @@ else:
                             Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)
 
                         if opcion_elegida=='8':
-                            legajo=input('Ingrese legajo del empleado que quiere eliminar')
-                            setSoloLegajos={tupla[0] for tupla in Administrador.setlegajos}
-                            while  val.validarexistenciaclave(legajo,setSoloLegajos) == False:
-                                tipo = input('Ingrese legajo existente ') 
-                            Administrador.diccEmpleados[legajo].darDeBajaEmpleado()
+                            legajoEliminar=input('Ingrese legajo del empleado que quiere eliminar')
+                            while  val.validarexistenciaclave(legajoEliminar,{tupla[0] for tupla in Administrador.setlegajos}) == False:
+                                legajoEliminar = input('Ingrese legajo existente ') 
+                            legajoEliminar=int(legajoEliminar)
+                            Administrador.diccEmpleados[legajoEliminar].darDeBajaEmpleado()
+
+                        if opcion_elegida == "9":                       
+                            print('Operaciones que puede realizar:')
+                            print('')
+                            print('1. Consultar ventas en un dia de su interes')
+                            print('2. Consultar ventas en un mes de su interes')
+                            print('')
+                            operacion = input("Ingrese el número de operación que desea realizar")
+
+                            while operacion not in ['1','2']: 
+                                operacion = input("ingrese nuevamente la opcion: ")
+                            if operacion == '1':
+                                dia = input('Ingrese fecha a consultar ')
+                                while val.validarFechaAConsultar(dia) == False:
+                                    print('Ingrese una fecha válida')
+                                    dia = input('Ingrese fecha a consultar')
+                                Administrador.diccEmpleados[legajo].consultarVentasXDia(dia)
+
+                            elif operacion == '2':
+                                mes = input('Ingrese mes a consultar ')
+                                while val.validarMesAConsultar(mes) == False:
+                                    print('Ingrese un mes válida')
+                                    mes = input('Ingrese mes consultar')
+                                Administrador.diccEmpleados[legajo].consultarVentasXMes(mes)
+
+                                
+                        
 
 
-                        if opcion_elegida == "9":                        #Salir
+
+                        if opcion_elegida == "10":                        #Salir
                             pass
 
 

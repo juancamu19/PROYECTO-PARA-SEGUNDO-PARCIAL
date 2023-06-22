@@ -4,10 +4,11 @@ from ClaseVehiculos import Vehiculos
 from ClaseAlquileres import Alquiler
 import pandas as pd
 import Utilities as util
+from claseEmpresa import Empresa
 
 #se crea la clase personas
 class Personas:
-    setdnis = set()
+    
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
         self.dni = dni
         self.nombre = nombre
@@ -20,13 +21,6 @@ class Personas:
     def __str__(self):
         return f"Nombre: {self.nombre} {self.apellido}, DNI: {self.dni}, Fecha de nacimiento: {self.fecnac}, Email: {self.email}, Cantidad de reservas realizadas hasta el momento: {self.cantreservas}"
 
-        
-    # def objeto_a_lista(self):
-    #     obj_list = []
-    #     for attr, value in self.__dict__.items():
-    #         obj_list.append(value)
-    #     return obj_list
-   
    #MODIFICO CAMBIAR DATO PARA INGRESAR UN PARAMETRO
     def cambiar_dato(self, identificador,atributo, valor):
         match atributo:
@@ -58,7 +52,7 @@ class Personas:
                 contraHasheada = objetoHash.hexdigest()
                 self.contraseña = contraHasheada
                 for elem in type(self).setdnis:
-                    if elem[0]==identificador:
+                    if elem[0]==str(identificador):
                         type(self).setdnis.discard(elem)
                         type(self).setdnis.add((elem[0],self.contraseña))
         
@@ -70,6 +64,7 @@ class Personas:
 #se crea un hijo de la clase personas: usuarios
 class Usuarios(Personas):
     diccUsuarios=dict()
+    setdnis = set()
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
@@ -102,16 +97,16 @@ class Usuarios(Personas):
         Reserva.diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
 
     def mostrarMisReservas(self):
-        for k,v in Reserva.diccReservas.items():
-            Mensaje=''
+        Mensaje=''
+        for k,v in Reserva.diccReservas.items():            
             if v.dni==self.dni:
                 Mensaje+=v.__str__()+'\n'
         return Mensaje
     
     def darDeBajaUsuario(self):
-        for elem in Usuarios.setdnis:
-            if elem[0]==self.dni:
-                Usuarios.setdnis.discard(elem)
+        for k,v in Usuarios.diccUsuarios.items():
+            if k==self.dni:
+                Usuarios.setdnis.discard((self.dni,self.contraseña))
         del(Usuarios.diccUsuarios[self.dni])
         print("Su usuario de ha eliminado correctamente")
 
@@ -125,6 +120,7 @@ class Administrador(Personas):
     cantempleadosAcumulativo = 0
     setlegajos = set()
     diccEmpleados=dict()
+    setdnis = set()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleadosAcumulativo
@@ -165,14 +161,18 @@ class Administrador(Personas):
         df.to_csv('PreciosVehiculos.csv')
 
     def darDeBajaEmpleado(self):
-        for elem in Administrador.setdnis:
-            if elem==self.dni:
-                Administrador.setdnis.discard(elem)
-        for elem in Administrador.setdnis:
-            if elem[0]==self.legajo:
-                Administrador.setlegajos.discard(elem)
+        for k,v in Administrador.diccEmpleados.items():
+            if k==self.legajo:
+                Administrador.setlegajos.discard((self.legajo,self.contraseña))
+                Administrador.setdnis.discard(self.dni)
         del(Administrador.diccEmpleados[self.legajo])
         print("El empleado se ha eliminado correctamente")
+
+    def consultarVentasXDia(self,dia):
+        Empresa.gestionVentasxdia(dia)
+    
+    def consultarVentasXMes(self,mes):
+        Empresa.gestionVentasxmes(mes)
 
 #diccionario que contiene los registros nuevos de empleados
 util.leerCsv('Empleados.csv', Administrador)

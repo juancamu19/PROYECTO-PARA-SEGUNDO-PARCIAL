@@ -18,13 +18,6 @@ class Reserva():
         Reserva.setReservas.add(self.id)
         Reserva.diccReservas[self.id] = self
     
-    # def objeto_a_lista(self):
-    #     obj_list = []
-    #     for attr, value in self.__dict__.items():
-    #         obj_list.append(value)
-    #     return obj_list
-    
-    #funcion para cancelar una reserva
     def cancelarreserva(self):
         fechainicio=datetime.strptime(self.fechaInicio,"%d-%m-%Y").date()
         fechaactual=datetime.now()
@@ -50,4 +43,6 @@ util.leerCsv('Reservas.csv', Reserva)
 
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    pass
+    r1=Reserva(2,'44998438')
+    a=r1.__str__()
+    print(a)

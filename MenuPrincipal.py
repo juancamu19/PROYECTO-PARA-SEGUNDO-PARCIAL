@@ -273,8 +273,9 @@ else:
                         print('5. Finalizar un alquiler (reportar auto devuelto)')
                         print('6. Cambiar un dato suyo')
                         print('7. Modificar precio por dia de un vehiculo')
+                        print('8. Dar de baja a otro empleado')
                         print('')
-                        print('8. Salir')
+                        print('9. Salir')
                         print('')
 
                         opcion_elegida = input('Ingrese el número de operación que desea realizar ')
@@ -410,10 +411,13 @@ else:
                             while  val.validarprecio(precio) == False:
                                 precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ') 
 
-                            Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)    
+                            Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)
+
+                        if opcion_elegida=='8':
+                            pass    
 
 
-                        if opcion_elegida == "8":                        #Salir
+                        if opcion_elegida == "9":                        #Salir
                             pass
 
 

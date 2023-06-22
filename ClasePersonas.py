@@ -113,7 +113,12 @@ class Usuarios(Personas):
     def modifFecFinReserva(self,idreserva,fechanueva):
         Reserva.diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
 
-
+    def mostrarMisReservas(self):
+        for k,v in Reserva.diccReservas.items():
+            Mensaje=''
+            if v.dni==self.dni:
+                Mensaje+=v.__str__()+'\n'
+        return Mensaje
 
 #diccionario que contiene los registros de usuarios del csv
 util.leerCsv('Usuarios.csv', Usuarios)
@@ -122,13 +127,13 @@ util.leerCsv('Usuarios.csv', Usuarios)
 
 #se crea otro hijo de la clase persona: Administrador
 class Administrador(Personas):
-    cantempleados = 0
+    cantempleadosAcumulativo = 0
     setlegajos = set()
     diccEmpleados=dict()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
-        self.legajo= Administrador.cantempleados
-        Administrador.cantempleados+=1       
+        self.legajo= Administrador.cantempleadosAcumulativo
+        Administrador.cantempleadosAcumulativo+=1       
         Administrador.setlegajos.add((str(self.legajo),self.contraseña))
         Administrador.setdnis.add(self.dni)
         Administrador.diccEmpleados[self.legajo]=self
@@ -138,7 +143,7 @@ class Administrador(Personas):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()
-        Administrador.diccEmpleados [Administrador.cantempleados] = Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
+        Administrador.diccEmpleados [Administrador.cantempleadosAcumulativo] = Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
     
     #funcion para agregar un vehiculo a diccionario para su carga a csv de vehiculos
     def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        

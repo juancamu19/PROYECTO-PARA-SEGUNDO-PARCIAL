@@ -84,19 +84,11 @@ class Vehiculos():
     def __str__(self):    
         return(f"El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precioxdia}, es de tipo {self.tipo} y gama {self.gama}")
     
-#diccionario que contiene los registros nuevos de vehiculos
+
 util.leerCsv('Vehiculos.csv', Vehiculos)
 
 
 
-# Pruebas de Funcionamiento
-#creo un falcon de pruebas
-# TESTER=Vehiculos('abc500','Falcon','Ford',2023,'deportivo','alta')
-
-
-
-# if __name__ == "__main__":
-#    print(Vehiculos.asignarPrecio(TESTER))
-#    print(Vehiculos.objeto_a_lista(TESTER))
-#    print(Vehiculos.modificar(TESTER,'patente'))
+if __name__ == "__main__":
+   pass
 

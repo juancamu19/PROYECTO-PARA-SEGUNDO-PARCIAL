@@ -75,8 +75,13 @@ def validaranio(anio_ingresado):
 
 
 '''Valido que el atributo que se quiera modificar sea uno de los definidos'''
-def validaratributo(atributo_vehiculo):    
+def validaratributoVehiculo(atributo_vehiculo):    
     if atributo_vehiculo.strip().lower() not in ['patente','modelo','marca','año','tipo','gama']:
+        return False
+    else:
+        return True
+def validaratributoPersona(atributo_persona):    
+    if atributo_persona.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
         return False
     else:
         return True
@@ -90,7 +95,8 @@ def validarexistenciaclave(clave, set):
           return False         
      
 
-'''Valido que la persona se encuentre registrada'''
+'''Valido que la persona se encuentre registrada. El set pasado por parametro es o bien setdnis de usuarios, o setlegajos de
+administrador. Ambos son conjuntos de tuplas, conteniendo el identificador y la contraseña hasheada en cada una de ellas. '''
 def validarexistenciaPersona(identificador, contraseña_ingresada, set):     
     contraseña_ingresada = contraseña_ingresada.encode('utf-8')
     objetoHash = hashlib.sha256(contraseña_ingresada)
@@ -101,7 +107,7 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, set):
         return False
     
 '''Valido que la fecha de nacmiento de una persona sea previa a la del presente'''
-def validarFecha(fecha):             
+def validarFechaNac(fecha):             
     try:
         fecha_ingresada = datetime.strptime(fecha, "%d-%m-%Y").date()
         fecha_actual = date.today()
@@ -116,7 +122,7 @@ def validarFecha(fecha):
         return False
 
 
-'''Valido que la fecha a consultar se encuentre en el formato correcto'''
+'''Valido que la fecha a consultar para gestion economica se encuentre en el formato correcto'''
 def validarFechaAConsultar(fecha):
     try:
         fecha_ing = datetime.strptime(fecha, "%d-%m-%Y").date()
@@ -127,7 +133,7 @@ def validarFechaAConsultar(fecha):
         return False
 
 
-'''Valido que el mes a consultar sea uno de los 12 del año'''
+'''Valido que el mes a consultar para gestion economica sea uno de los 12 del año'''
 def validarMesAConsultar(mes):
     try:
         if int(mes)<=12 and int(mes)>=1:
@@ -304,7 +310,7 @@ def validarCambiarDatosPersona(atributo, valor_ingresado):
             return validarnombre(valor_ingresado)
 
         case 'fecnac':
-            return validarFecha(valor_ingresado)
+            return validarFechaNac(valor_ingresado)
 
         case 'email':
             return validaremail(valor_ingresado)

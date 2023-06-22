@@ -11,7 +11,10 @@ class Vehiculos():
     cantVehiculos = 0
     setVehiculos=set()
     
-    '''Iniciador de la clase Vehículos'''
+    '''Iniciador de la clase Vehículos. Cada objeto se agrega al diccionario al crearse, con su patente unica como
+    identificador. Vale aclarar que la elecion de sets facilita el uso de validaciones para este campo, a pesar
+    de no hacer una gran diferncia con respecto a otras estructuras de datos, como si lo hace en usuario, reservas.
+    El precioxdia de cada auto se asigna automaticamente a partir de su tipo y gama'''
     def __init__(self, patente, modelo, marca, anio, tipo, gama, precioxdia = None ,disponible = True):
         self.patente = patente
         self.modelo = modelo
@@ -26,12 +29,13 @@ class Vehiculos():
         Vehiculos.diccVehiculos[self.patente]=self
     
     
-    '''Funcion para cambiar estado de dispponibilidad de auto al devolverlo'''
+    '''Funcion para cambiar estado de disponibilidad de auto al devolverlo'''
     def devolver(self):
         self.disponible = True
     
 
-    '''Funcion para modificar un atributo de un auto'''
+    '''Funcion para modificar un atributo de un auto. Se ingresa por parametro el atributo a cambiar y el
+    nuevo valor a darle'''
     def modificar(self, atributo, valor_nuevo):
         match atributo:
             
@@ -54,7 +58,9 @@ class Vehiculos():
                 self.gama = valor_nuevo 
 
 
-    '''Funcion para asignar el precio estipulado en el archivo PreciosVehiculos a un nuevo vehiculo'''    
+    '''Funcion para asignar el precio estipulado en el archivo PreciosVehiculos a cada vehiculo creado. Se utiliza
+    el dataframe de pandas ya que facilita el manejo de tablas con
+    doble entrada '''    
     def asignarPrecio(self):
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
         if self.tipo in df.columns and self.gama in df.index:
@@ -62,13 +68,15 @@ class Vehiculos():
         return precio
 
 
-    '''Funcion para designar el auto elegido por el usuario al realizar una reserva'''
+    '''Funcion para designar el auto elegido por el usuario al realizar una reserva. Este auto es elegido 
+    aleatoriamente, siempre y cuando sea del tipo y gama pedido, y este disponible para esa fecha segun
+    las reservas existentes'''
     def asignarauto(fecinicio, fecfin, tipo_elegido, gama_elegida):
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
         fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()
         setvehiculosdisponibles=set()
         for k,v in Vehiculos.diccVehiculos.items():
-            if v.tipo == tipo and v.gama==gama:
+            if v.tipo == tipo_elegido and v.gama==gama_elegida:
                 setvehiculosdisponibles.add(k)        
         
         for k in Reserva.diccReservas.keys():
@@ -98,7 +106,8 @@ class Vehiculos():
         return(f"El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precioxdia}, es de tipo {self.tipo} y gama {self.gama}")
     
 
-'''Diccionario que contiene los registros de vehículos'''
+'''Función que ejecuta las instancias de la clase. Estas instancias se crean con la informacion del archivo csv
+correspondiente, y son cargados al diccionario desde su constructor'''
 util.leerCsv('Vehiculos.csv', Vehiculos)
 
 

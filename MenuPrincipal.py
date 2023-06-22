@@ -6,7 +6,13 @@ from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
 
+''' se importan:
+- validaciones: para validar los datos ingresados por teclado y pasados por parametro
+utilities: para escribir los csv con la informacion actuaizada de los diccionarios
+clases: se trabajara con sus diccionarios para asi poder acceder a los objetos y sus metodos'''
+
 seguir_operando = "SI"
+'''se verifica que los archivos existan en el directorio correcto. Sino, se informe a la persona'''
 
 if Alquiler.diccAlquileres==False or Reserva.diccReservas==False or Vehiculos.diccVehiculos==False or Usuarios.diccUsuarios==False or Administrador.diccEmpleados==False:
     print('Corrobore con el administrador que se encuentren todos los archivos necesarios en el directorio que corresponde')
@@ -64,7 +70,7 @@ else:
                     apellido = input("Ingrese su apellido ")
 
                 fecnac = input('Ingrese su fecha de nacimiento de la forma D-M-YYYY ')
-                while val.validarFecha(fecnac) == False:
+                while val.validarFechaNac(fecnac) == False:
                     fecnac = input('Ingrese su fecha de nacimiento de la forma D-M-YYYY ')
                 fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
                         
@@ -211,7 +217,7 @@ else:
                     elif operacion == "4":                      
                         
                         atributo = input('Ingrese el atributo a cambiar (dni, nombre, apellido, fecnac, email, contraseña) ')
-                        while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
+                        while val.validaratributoPersona(atributo)==False:
                             print('Escriba correctamente el atributo a modificar')
                             atributo = input('Ingrese el atributo a cambiar(dni, nombre, apellido, fecnac, email, constraseña) ')
 
@@ -252,7 +258,7 @@ else:
         
 
         
-        elif opcion_elegida == '2':                               #Ingreso a las opciones de Empleado
+        elif opcion_elegida == '2':                               
             print('')
             print("Ingrese sus datos como empleado")
             print('')
@@ -370,7 +376,7 @@ else:
                             print()
                             
 
-                        ''''Modificar un vehículo'''
+                        '''Modificar un vehículo'''
                         if opcion_elegida == "3":                       
                             patente = input('Ingrese la patente del vehículo al que le desea realizar modificaciones ')
                             while  val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
@@ -408,7 +414,7 @@ else:
                         '''Cambiar un dato del administrador'''
                         if opcion_elegida == "6":                       
                             atributo = input('Ingrese el atributo a cambiar (dni,nombre,apellido,fecnac,email,contraseña) ')
-                            while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
+                            while val.validaratributoPersona(atributo)==False:
                                 print('Escriba correctamente el atributo a modificar')
                                 atributo = input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
                             
@@ -488,7 +494,8 @@ else:
 
 
 
-        elif opcion_elegida == "3":                                #Salir
+        
+        elif opcion_elegida == "3":                          
             pass
 
 
@@ -501,7 +508,8 @@ else:
             seguir_operando = input("No ha ingresado una opción válida. Desea seguir operando (SI o NO)? ").strip().upper()
     
         
-        '''Actualizo los archivos de: Empleados, Usuarios, Alquileres, Reservas y Vehiculos'''
+        '''Actualizo los archivos de: Empleados, Usuarios, Alquileres, Reservas y Vehiculos. Se cargan los 
+        csv con la información actualizada de los diccionarios'''
         util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)                     
         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
         util.escribirCsv('Alquileres.csv', Alquiler.diccAlquileres)

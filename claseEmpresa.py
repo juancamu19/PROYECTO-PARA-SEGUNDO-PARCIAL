@@ -1,9 +1,14 @@
 import pandas as pd
 
-'''Se crea la clase Empresa'''
+'''Se crea la clase Empresa. Notar que, a priori, al no tener más de una sede, no vale la pena colocar un método
+constructor en esta clase. La empresa se considera como única, y en ella se guardan los métodos de gestión, haciendo
+uso de la base de datos para alquiler, que es quien almacena la contabilidad en el contexto de nuestro proyecto.
+
+Para ambos métodos se trabajo con el dataframe de pandas, esto facilita el trabajo con tablas y filtrado de las mismas.'''
 class Empresa():
     
-    '''Funcion para consultar las ventas por mes'''
+    '''Funcion para consultar las ventas por mes. Un empleado puede filtrar la informacion de alquileres por mes, 
+    y asi evaluar informes, tendencias, etc.'''
     def gestionVentasxmes(mes):
         nombresColumnas = ['idAlq', 'idRes', 'dni', 'patente', 'fecInicio', 'fecFin','fechadev','monto']
         df = pd.read_csv('Alquileres.csv', names = nombresColumnas)

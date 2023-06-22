@@ -1,13 +1,15 @@
 from datetime import datetime
 import Utilities as util
 
-'''Se crea la clase Reserva'''
+'''Se crea la clase Reserva. Set Reservas contiene los id de reservas, y es utilizado para las validaciones, 
+haciendo diferencia con otras estructuras de datos al trabajar con una gran cantidad de datos y frecuentemente.'''
 class Reserva():
     cantReservas = 0  
     setReservas = set()
     diccReservas=dict()
 
-    '''Iniciador de la clase Reserva'''
+    '''Iniciador de la clase Reserva. Se lleva el contador de reservas para generar automaticamente el id de cada
+    reserva'''
     def __init__(self, id = None, dni = None, patente_auto = None, fechaInicio = None, fechaFin = None, fechaCancel = None):
         self.id = id
         self.dni = dni
@@ -20,7 +22,7 @@ class Reserva():
         Reserva.diccReservas[self.id] = self
     
 
-    '''Funcion para calcelar una reserva'''
+    '''Funcion para calcelar una reserva. No se permite cancelar una reserva faltando menos de 5 dias para el alquiler'''
     def cancelarreserva(self):
         fechainicio = datetime.strptime(self.fechaInicio,"%d-%m-%Y").date()
         fechaactual = datetime.now()
@@ -30,12 +32,12 @@ class Reserva():
             self.fechaCancel=datetime.now()                
         
 
-    '''Funcion para cambiar la fecha de finalización de un alquiler'''
+    '''Funcion para cambiar la fecha de finalización de una reserva(posible alquiler, de ahi el nombre)'''
     def cambiarfechaExpiracionAlquiler(self,fechanueva):     
         self.fechaFin = fechanueva 
     
 
-    '''Funcion para cambiar la fecha de inicio de un alquiler'''
+    '''Funcion para cambiar la fecha de inicio de una reserva(posible alquiler, de ahi el nombre)'''
     def cambiarfechaInicioAlquiler(self,fechanueva):
         self.fechaInicio = fechanueva 
 
@@ -45,7 +47,7 @@ class Reserva():
         return f"La reserva de id {self.id}, hecha por el usuario de dni {self.dni} para el vehículo de patente {self.patente_auto}, inicia el {self.fechaInicio} y finaliza el {self.fechaFin}"
 
 
-'''Diccionario que contiene los registros nuevos de reservas'''
+'''Se instancian objetos de reservas ya cargadas, estos se cargan al diccionario de su clase por su cuenta'''
 util.leerCsv('Reservas.csv', Reserva)
 
 

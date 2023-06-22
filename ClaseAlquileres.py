@@ -10,7 +10,8 @@ class Alquiler():
     diccAlquileres=dict() 
     setAlquileres = set() 
     
-    '''Iniciador de la clase Alquiler'''
+    '''Iniciador de la clase Alquiler, en el mismo se agrega desde el constructor el objeto al diccionario
+    de la clase. A su vez se carga el set de la clase para facilitar las validaciones'''
     def __init__(self, id = None, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
         self.id = id 
         self.idReserva = idReserva  
@@ -25,9 +26,13 @@ class Alquiler():
         Alquiler.diccAlquileres[self.id]=self
     
 
-    '''Funcion para establecer fecha de devolucion'''
+    '''Funcion para dar por finalizado el alquiler. 
+    Nota: Este método es necesario ya que no basta con establecer una fecha fin del alquiler. 
+    Eventualmente, los usuarios pueden no respetar estos límites, con lo cual la disponibilidad del vehiculo usado
+    no debe ser True una vez llegada esta fin'''
     def finalizar(self):
         self.fechadev = datetime.now()
+        
     
     
     '''Método str para la clase'''
@@ -35,11 +40,15 @@ class Alquiler():
         return ('{}-{}-{}-{}-{}'.format(self.id, self.fecha, self.dni, self.auto))
    
 
-'''Diccionario que contiene los registros del archivo csv de alquiler'''
+'''Función que ejecuta las instancias de la clase. Estas instancias se crean con la informacion del archivo csv
+correspondiente, y son cargados al diccionario desde su constructor'''
 util.leerCsv('Alquileres.csv', Alquiler)
 
 
-'''Actualización de diccionarios al iniciar un alquiler'''
+'''Generacion automatica de un alquiler una vez llegada su fecha. Esta función se ejecuta independientemente. 
+Vale la pena notar que al no dar la posibilidad de cancelar una reserva con menos de 5 dias de anticipacion con su 
+fecha de inicio, el alquiler se ejecutara de todas maneras. Se crea la instancia con la información traída desde 
+la reserva que se va a concretar en alquiler. Se actualiza tambien el estado de disponibildad del auto en uso. '''
 for k in Reserva.diccReservas.keys():
     if datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now().date():
         fechafin=datetime.strptime(Reserva.diccReservas[k].fechaFin,"%d-%m-%Y").date()

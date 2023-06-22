@@ -24,7 +24,12 @@ class Personas:
         return f"Nombre: {self.nombre} {self.apellido}, DNI: {self.dni}, Fecha de nacimiento: {self.fecnac}, Email: {self.email}, Cantidad de reservas realizadas hasta el momento: {self.cantreservas}"
 
 
-    '''Funcion para cambiar un atributo de la Persona'''
+    '''Funcion para cambiar un atributo de la Persona. Se ingresa por parámetro que atributo se va a modificar(validado)
+    y que valor se le dara a este atributo. A su vez, se pasaa por parámetro el identificador ya que mientras que
+    en persona se trabaja con dni como clave, en empleados con legajos. De esta manera permite la herencia y eficientización
+    de código'''
+    ''' Aclaraciones extras: 1- Al cambiar el dni, se debe reemplazar el valor anterior por el nuevo en el set
+    2- Al cambiar la contraseña se debe hacer lo mismo, solo que en este caso la que se reemplaza es la tupla dni:contraseña'''
     def cambiar_dato(self, identificador, atributo, valor_nuevo):
         match atributo:
 
@@ -63,12 +68,19 @@ class Personas:
 
                 
 
-'''Se crea un hijo de la clase personas: Usuarios'''
+'''Se crea un hijo de la clase personas: Usuarios. 
+ATENCION: setdnis hace referencia a un set de tuplas dni,contraseña usado para login. No son unicamente dnis'''
 class Usuarios(Personas):
     diccUsuarios=dict()
     setdnis = set()
 
-    '''Iniciador de la clase Usuarios'''
+    '''Iniciador de la clase Usuarios, en el mismo se agrega desde el constructor el objeto al diccionario
+    de la clase. A su vez se carga el set de la clase para facilitar las validaciones. 
+    Notar que setdnis contiene un conjunto de tuplas, donde cada tupla almacena un par dni,contraseña. Se utiliza
+    esta estructura de datos al ser las mismas hasheables e irrepetibles por el dni. Notar también que su mayor implementacion
+    será en validaciones de login, con lo cual no es lo frecuente ir modificando el valor de las tuplas, adecuandose
+    al caso. 
+    Por otra parte, la eleccion de sets se adecua a la funcion de validacion por su rapidez y bajo costo de computo.'''
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
@@ -77,7 +89,8 @@ class Usuarios(Personas):
         Usuarios.diccUsuarios[self.dni]=self
     
 
-    '''Funcion para crear un usuario '''
+    '''Funcion para crear un usuario. Se pasa por parámetro la contraseña hasheada. Como el usuario interactua con la
+     interfaz por su cuenta, el mismo puede agregarse como usuario.  '''
     def agregarUsuario(dni, username, nombre, apellido, fecnac, email, contraseña):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
@@ -85,7 +98,8 @@ class Usuarios(Personas):
         Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
     
 
-    '''Funcion para agregar una reserva al diccionario de reservas'''
+    '''Funcion para agregar una reserva al diccionario de reservas. Al instanciar el objeto reservas, ella sola se agrega
+    al dicionario correspondiente'''
     def agregarReserva(self, patente_auto, fechaInicio, fechaFin):
         Reserva(Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
@@ -97,7 +111,7 @@ class Usuarios(Personas):
         Reserva.diccReservas[idreserva].cancelarreserva()
 
 
-    '''Funciones para modificar las fechas de la reserva'''
+    '''Funciones para modificar las fechas de la reserva. Las fechas se pasan ya validadas'''
     def modifFecInicioReserva(self,idreserva,fechanueva):
         Reserva.diccReservas[idreserva].cambiarfechaInicioAlquiler(fechanueva)
 
@@ -114,7 +128,7 @@ class Usuarios(Personas):
         return Mensaje
     
 
-    '''Funcion para eliminar un usuario'''
+    '''Funcion para eliminar un usuario. No basta con eliminarlo como objeto, tambien se debe eliminarlo de los sets.'''
     def darDeBajaUsuario(self):
         for k,v in Usuarios.diccUsuarios.items():
             if k==self.dni:
@@ -123,19 +137,24 @@ class Usuarios(Personas):
         print("Su usuario de ha eliminado correctamente")
 
 
-'''Diccionario que contiene los registros de Usuarios'''
+'''Funcion que instancia los usuarios con la informacion del csv'''
 util.leerCsv('Usuarios.csv', Usuarios)
 
 
 
-'''Se crea otro hijo de la clase personas: Administrador'''
+'''Se crea otro hijo de la clase personas: Administrador
+ATENCION: setdnis en administrador es un set que contiene unicamente los dnis de empleados, a diferencia de usuarios.
+setlegajos, en cambio, es un set de tuplas legajo,contraseña que se usan para validar el login.
+Esta diferencia radica en que para usuarios la clave identificatoria es dni, pero en administrador no.'''
 class Administrador(Personas):
     cantempleadosAcumulativo = 0
     setlegajos = set()
     diccEmpleados = dict()
     setdnis = set()
     
-    '''Iniciador de la clase Administrador'''
+    '''Iniciador de la clase Administrador. La explicacion para las estructuras elegidas para los sets son análogas
+    a las de la clase usuarios. Se trabaja con legajo como clave identificatoria al ser más representativa y tambien 
+     unica. '''
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleadosAcumulativo
@@ -145,7 +164,9 @@ class Administrador(Personas):
         Administrador.diccEmpleados[self.legajo]=self
 
 
-    '''Funcion para agregar empleado a diccionario para su carga a csv de empleados'''
+    '''Funcion para agregar empleado a diccionario para su carga a csv de empleados. Un empleado ya existente
+    se encarga de agregar a otro nuevo. Esto presupone la existencia de al menos un empleado, lo cual se
+     considero como base '''
     def agregarEmpleado(self, dni, nombre, apellido, fecnac, email, contraseña):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
@@ -153,7 +174,8 @@ class Administrador(Personas):
         Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
     
 
-    '''Funcion para agregar un vehiculo a diccionario para su carga al archivo Vehiculos'''
+    '''Funcion para agregar un vehiculo a diccionario para su carga al archivo Vehiculos. Al instanciar el objeto,
+    el mismo se agrega en el diccionario'''
     def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        
         Vehiculos(patente, modelo, marca, anio, tipo, gama)
         print(f"Se ha agregado correctamente el vehículo de patente {patente}, modelo {modelo}, marca {marca}, anio {anio}, tipo {tipo}")
@@ -164,7 +186,7 @@ class Administrador(Personas):
         Vehiculos.diccVehiculos[patente].modificar(atributo,valor_nuevo)
 
 
-    '''Funcion para dar por finalizado un alquiler'''
+    '''Funcion para dar por finalizado un alquiler. Se modifica la disponibilidad en vehiculos'''
     def finalizarAlquiler(self, idalquiler):
         Alquiler.diccAlquileres[idalquiler].finalizar()
         Vehiculos.diccVehiculos[Alquiler.diccAlquileres[idalquiler].patente_auto].devolver()
@@ -175,7 +197,9 @@ class Administrador(Personas):
         Vehiculos.diccVehiculos[patente].eliminar()
 
 
-    '''Funcion para cambiar el precio de un auto segun gama y tipo'''
+    '''Funcion para cambiar el precio de un auto segun gama y tipo. La modificacion se hace directamente en el csv
+    con los precios por categoria y tipo. Se utiliza el dataframe de pandas ya que facilita el manejo de tablas con
+    doble entrada'''
     def modifPreciosAutos(self, tipo, gama, precionuevo):
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
         df.at[gama, tipo] = precionuevo
@@ -192,6 +216,8 @@ class Administrador(Personas):
         print("El empleado se ha eliminado correctamente")
 
 
+    '''FUNCIONES SON DE GESTIÓN'''
+
     '''Funcion para consultar las ventas por día'''
     def consultarVentasXDia(self, dia):
         Empresa.gestionVentasxdia(dia)
@@ -202,19 +228,14 @@ class Administrador(Personas):
         Empresa.gestionVentasxmes(mes)
 
 
-'''Diccionario que contiene los registros nuevos de empleados'''
+'''Se instancian objetos de administrador, estos se cargan al diccionario de su clase por su cuenta'''
 util.leerCsv('Empleados.csv', Administrador)
     
 
 
 '''Pruebas de Funcionamiento'''
 if __name__ == "__main__":
-    dicc1={1:'a',2:'b'}
-    dicc2={1:'a',2:'b'}
-    print(type(dicc1))
-    del(dicc1[1])
-   
-    print(dicc1)
+    pass
 
     
     

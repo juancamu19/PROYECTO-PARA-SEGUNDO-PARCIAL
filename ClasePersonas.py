@@ -77,11 +77,11 @@ class Usuarios(Personas):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()  
-        Usuarios.diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
+        Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
     
     #funcion para agregar reserva a diccionario
     def agregarReserva(self, patente_auto, fechaInicio, fechaFin):
-        Reserva.diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
+        Reserva( Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
         print(f'La reserva de id {Reserva.cantReservas}, hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}')
 
@@ -134,11 +134,11 @@ class Administrador(Personas):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()
-        Administrador.diccEmpleados [Administrador.cantempleadosAcumulativo] = Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
+        Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
     
     #funcion para agregar un vehiculo a diccionario para su carga a csv de vehiculos
     def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        
-        Vehiculos.diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo, gama)
+        Vehiculos(patente, modelo, marca, anio, tipo, gama)
         print(f"Se ha agregado correctamente el vehículo de patente {patente}, modelo {modelo}, marca {marca}, anio {anio}, tipo {tipo}")
 
     #funcion para modificar un atributo de un vehiculo

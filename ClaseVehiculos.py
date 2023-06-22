@@ -71,7 +71,7 @@ class Vehiculos():
             fechaInicioReservak = datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()
             fechaFinReservak = datetime.strptime(Reserva.diccReservas[k].fechaFin,"%d-%m-%Y").date()
             if Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].tipo == tipo and Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].gama == gama:
-                if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and Reserva.diccReservas[k].fechaCancel==None:
+                if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and (Reserva.diccReservas[k].fechaCancel in ['',None]):
                 
                     setvehiculosdisponibles.remove(Reserva.diccReservas[k].patente_auto)  
 
@@ -79,6 +79,12 @@ class Vehiculos():
             return None
         else:
             return random.choice(list(setvehiculosdisponibles))
+    
+    def eliminar(self):
+        for elem in Vehiculos.setVehiculos:
+            if elem==self.patente:
+                Vehiculos.setVehiculos.discard(elem)
+        del(Vehiculos.diccVehiculos[self.patente])
 
     #método str para clase vehiculos
     def __str__(self):    

@@ -215,7 +215,7 @@ else:
 
 
                     elif operacion == "5":                       #Darse de baja
-                        Usuarios.diccUsuarios[dnix].darDeBaja(dnix,Usuarios.diccUsuarios)
+                        Usuarios.diccUsuarios[dnix].darDeBajaUsuario()
 
 
 
@@ -414,7 +414,11 @@ else:
                             Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)
 
                         if opcion_elegida=='8':
-                            pass    
+                            legajo=input('Ingrese legajo del empleado que quiere eliminar')
+                            setSoloLegajos={tupla[0] for tupla in Administrador.setlegajos}
+                            while  val.validarexistenciaclave(legajo,setSoloLegajos) == False:
+                                tipo = input('Ingrese legajo existente ') 
+                            Administrador.diccEmpleados[legajo].darDeBajaEmpleado()
 
 
                         if opcion_elegida == "9":                        #Salir

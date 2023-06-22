@@ -63,24 +63,12 @@ class Personas:
                         type(self).setdnis.add((elem[0],self.contraseña))
         
         print(f"Su {atributo} se ha modficado correctamente a {valor}")
-   
-   
-    def darDeBaja(self,indentificador,dicc):
-        del(dicc[indentificador])
-
-        contraseñax = self.contraseña.encode('utf-8')
-        objetoHash = hashlib.sha256(contraseñax)
-        contraHasheada = objetoHash.hexdigest()
-        Usuarios.setdnis.remove((self.dni,contraHasheada))
-
-        print("Su usuario de ha eliminado correctamente")
 
                 
 
 
 #se crea un hijo de la clase personas: usuarios
 class Usuarios(Personas):
-    setdnis = set()
     diccUsuarios=dict()
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
@@ -119,6 +107,13 @@ class Usuarios(Personas):
             if v.dni==self.dni:
                 Mensaje+=v.__str__()+'\n'
         return Mensaje
+    
+    def darDeBajaUsuario(self):
+        for elem in Usuarios.setdnis:
+            if elem[0]==self.dni:
+                Usuarios.setdnis.discard(elem)
+        del(Usuarios.diccUsuarios[self.dni])
+        print("Su usuario de ha eliminado correctamente")
 
 #diccionario que contiene los registros de usuarios del csv
 util.leerCsv('Usuarios.csv', Usuarios)
@@ -161,7 +156,7 @@ class Administrador(Personas):
 
     #funcion para quitar un vehiculo de diccionario
     def eliminarVehiculo(self, patente):         
-        Vehiculos.diccVehiculos[patente].eliminar(Vehiculos.diccVehiculos)
+        Vehiculos.diccVehiculos[patente].eliminar()
 
     #funcion para cambiar precios de un auto segun gama y tipo
     def modifPreciosAutos(self,tipo,gama,precionuevo):
@@ -169,12 +164,27 @@ class Administrador(Personas):
         df.at[gama, tipo] = precionuevo
         df.to_csv('PreciosVehiculos.csv')
 
+    def darDeBajaEmpleado(self):
+        for elem in Administrador.setdnis:
+            if elem==self.dni:
+                Administrador.setdnis.discard(elem)
+        for elem in Administrador.setdnis:
+            if elem[0]==self.legajo:
+                Administrador.setlegajos.discard(elem)
+        del(Administrador.diccEmpleados[self.legajo])
+        print("El empleado se ha eliminado correctamente")
+
 #diccionario que contiene los registros nuevos de empleados
 util.leerCsv('Empleados.csv', Administrador)
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":
-    pass
+    dicc1={1:'a',2:'b'}
+    dicc2={1:'a',2:'b'}
+    print(type(dicc1))
+    del(dicc1[1])
+   
+    print(dicc1)
 
     
     

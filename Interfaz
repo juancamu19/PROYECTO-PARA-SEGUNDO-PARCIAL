@@ -25,12 +25,12 @@ class LoginWindow(QMainWindow):
 
         # Create a logo label
         logo_label = QLabel(self)
-        logo_pixmap = QPixmap('logo.png')  # Adjust the path to your logo image file
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)
 
         # Create a welcome label
-        welcome_label = QLabel('Bienvenido/a a NoVoyEnTren.com', self)
+        welcome_label = QLabel('Bienvenido/a', self)
         welcome_label.setAlignment(Qt.AlignCenter)
 
         # Create labels
@@ -153,6 +153,12 @@ class AdminWindow(QMainWindow):
         self.legajo=legajo
         self.contraseña=contraseña
 
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+
         # Create a central widget and a layout
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
@@ -188,6 +194,7 @@ class AdminWindow(QMainWindow):
         self.button7.clicked.connect(self.openFinalizarAlquiler)
 
         # Add buttons to the layout
+        layout.addWidget(logo_label)
         layout.addWidget(self.button1)
         layout.addWidget(self.button2)
         layout.addWidget(self.button3)
@@ -237,6 +244,43 @@ class AdminWindow(QMainWindow):
         self.window4 = FinalizarAlquiler(self.legajo, self.contraseña)
         self.window4.show()
 
+class OperacionRealizadaAdmin(QWidget):
+    def __init__(self, legajo, contraseña, ventana):
+        super().__init__()
+        self.setWindowTitle("Operación realizada")
+        self.setMinimumSize(600,600)
+        self.initUI()
+
+        """Traigo desde la ventana en que esté trabajando el valor de legajo y contraseña"""
+        self.legajo=legajo
+        self.contraseña=contraseña
+        self.ventana= ventana
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label_aviso = QLabel("Su operación fue realizada exitosamente!")
+        label_aviso.setStyleSheet("color: green")
+        layout.addWidget(label_aviso)
+
+        self.button2 = QPushButton("Volver al Inicio")
+        self.button2.clicked.connect(self.Volver)
+        layout.addWidget(self.button2)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+    
+    def Volver(self, ventana):
+        self.close()
+        self.window1 = ventana
+        self.window1.close()
+        self.window = AdminWindow(self.legajo, self.contraseña)
+        self.window.show()
+
 """Se crea ventana para agregar autos nuevos"""
 class AgregarAuto(QMainWindow):
     def __init__(self, legajo, contraseña):
@@ -247,6 +291,12 @@ class AgregarAuto(QMainWindow):
         """Traigo el valor de legajo desde Admin Window"""
         self.legajo=legajo
         self.contraseña = contraseña
+
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter) 
 
         # Set window flags to make the window resizable
         self.setWindowFlags(Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowResizable)
@@ -282,6 +332,7 @@ class AgregarAuto(QMainWindow):
         self.confirmado_label.setStyleSheet("color: green")
         self.confirmado_label.hide()
 
+        layout.addWidget(logo_label)
         layout.addWidget(label_patente)
         layout.addWidget(self.input_patente)
         layout.addWidget(label_marca)
@@ -331,6 +382,10 @@ class AgregarAuto(QMainWindow):
         placeholder_color = QColor(255, 0, 0)  # Red color
         palette.setColor(QPalette.PlaceholderText, placeholder_color)
         input.setPalette(palette)
+    
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show()        
 
     def validate_data(self):    
         patente = self.input_patente.text()
@@ -369,6 +424,7 @@ class AgregarAuto(QMainWindow):
 
         if valid_data== True:
             self.show_confirmado()
+            self.openOperacionRealizada(self.legajo, self.contraseña, AgregarAuto())
             Administrador.diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)  
             util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
             
@@ -382,10 +438,16 @@ class ModificarAuto(QWidget):
         """Traigo el valor de legajo y contraseña desde AdminWindow"""
         self.legajo=legajo
         self.contraseña=contraseña
-    
+
     def initUI(self):
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
+
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
 
         # Label
         label_patente = QLabel("Ingrese la patente del auto:")
@@ -407,6 +469,7 @@ class ModificarAuto(QWidget):
         self.combo_atributo.addItem("Gama")
         self.combo_atributo.addItem("Precio por dia")        
 
+        layout.addWidget(logo_label)
         layout.addWidget(label_patente)
         layout.addWidget(self.input_patente)
         layout.addWidget(label_atributo)
@@ -440,6 +503,10 @@ class ModificarAuto(QWidget):
         placeholder_color = QColor(255, 0, 0)  # Red color
         palette.setColor(QPalette.PlaceholderText, placeholder_color)
         input.setPalette(palette)
+    
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show()  
 
     def ClickContinuar(self):
         patente = self.input_patente.text()
@@ -463,6 +530,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
 
                 case 'modelo':
                     if val.validarmodelo(valor)==False:
@@ -471,6 +539,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
 
                 case 'marca':
                     if val.validarmarca(valor)==False:
@@ -479,6 +548,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
 
                 case 'año':  
                     if val.validaranio(valor)==False:
@@ -487,6 +557,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado() 
+                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
 
                 case 'tipo':
                     if val.validartipo(valor)==False:
@@ -495,6 +566,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
               
                 case 'gama':
                     if val.validargama(valor)==False:
@@ -503,6 +575,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
                 
     def Volver(self):
         self.close()
@@ -523,6 +596,13 @@ class EliminarAuto(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
 
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(logo_label)
+
         # Label
         label_patente = QLabel("Ingresa la patente del auto a eliminar:")
         layout.addWidget(label_patente)
@@ -531,21 +611,10 @@ class EliminarAuto(QWidget):
         self.input_patente = QLineEdit()
         layout.addWidget(self.input_patente)
 
-        """Se crea labels de confirmación y de error, ocultos por defecto."""
-        self.confirmado_label= QLabel("La cuenta fue eliminada exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_errorFormato=QLabel("Ingrese una patente de formato válido")
-        self.label_errorFormato.setStyleSheet("color: red")
-        self.label_errorFormato.hide()
-        layout.addWidget(self.label_errorFormato)
-
-        self.label_errorExistencia=QLabel("Ingrese una patente existente")
-        self.label_errorExistencia.setStyleSheet("color: red")
-        self.label_errorExistencia.hide()
-        layout.addWidget(self.label_errorExistencia)
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         # Button
         self.button = QPushButton("Continuar")
@@ -562,14 +631,16 @@ class EliminarAuto(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
     
-    def showErrorFormato(self):
-        self.label_errorFormato.show()
-
-    def showErrorExistencia(self):
-        self.label_errorExistencia.show()
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show()  
 
     def confirmButtonClicked(self):
         patente = self.input_patente.text().strip()
@@ -577,13 +648,15 @@ class EliminarAuto(QWidget):
 
         if val.validarpatente(patente)==False:
             validado=False
-            self.showErrorFormato()
+            self.showError("Ingrese una patente de formato válido", "red")
         else:
             if val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
-                self.showErrorExistencia()
+                self.showError("Ingrese una patente existente", "red")
             else:
-                self.showConfirmado()
+                self.showError("La cuenta fue eliminada exitosamente", "green")
+                self.openOperacionRealizada(self.legajo, self.contraseña, EliminarAuto())
                 Administrador.diccEmpleados[self.legajo].eliminarVehiculo(patente) 
+                util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
     
     def Volver(self):
         self.close()
@@ -607,7 +680,7 @@ class AgregarEmpleado(QWidget):
 
         # Create a logo label
         logo_label = QLabel(self)
-        logo_pixmap = QPixmap('logo.png')  # Adjust the path to your logo image file
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)
 
@@ -625,7 +698,7 @@ class AgregarEmpleado(QWidget):
         label_apellido = QLabel("Apellido:", central_widget)
         self.input_apellido = QLineEdit(central_widget)
 
-        label_fecnac = QLabel("Fecha de nacimiento:", central_widget)
+        label_fecnac = QLabel("Fecha de nacimiento: (DD-MM-YYYY)", central_widget)   #PONER UN CALENDARIO
         self.input_fecnac = QLineEdit(central_widget)
 
         label_email = QLabel("Email:", central_widget)   
@@ -642,7 +715,7 @@ class AgregarEmpleado(QWidget):
         self.confirmado_label.setStyleSheet("color: green")
         self.confirmado_label.hide()
 
-
+        """Se agregan al layout todos los widgets"""
         layout.addWidget(logo_label)
         layout.addWidget(welcome_label)
         layout.addWidget(label_dni)
@@ -678,6 +751,10 @@ class AgregarEmpleado(QWidget):
 
     def show_Confirmado(self):
         self.confirmado_label.show()
+    
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show() 
     
     def PlaceholderText(self, input, text):
         input.clear()
@@ -729,6 +806,7 @@ class AgregarEmpleado(QWidget):
         
         if validado==True:
             self.show_Confirmado() 
+            self.openOperacionRealizada(self.legajo, self.contraseña, AgregarEmpleado())
             Administrador.diccEmpleados[self.legajo].agregarEmpleado(dni, nombre, apellido, fecnac, email, contraseña)
             util.escribirCsv('Empleados.csv', Administrador.diccEmpleados) 
 
@@ -746,6 +824,13 @@ class EliminarEmpleado(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
 
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(logo_label)
+
         # Label
         label_legajo = QLabel("Ingresa tu Legajo:")
         layout.addWidget(label_legajo)
@@ -754,16 +839,10 @@ class EliminarEmpleado(QWidget):
         self.input_legajo = QLineEdit()
         layout.addWidget(self.input_legajo)
 
-        """Se crea labels de confirmación y de error, ocultos por defecto."""
-        self.confirmado_label= QLabel("La cuenta fue eliminada exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_error=QLabel("Ingrese un legajo válido")
-        self.label_error.setStyleSheet("color: red")
-        self.label_error.hide()
-        layout.addWidget(self.label_error)
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         # Button
         self.button = QPushButton("Continuar")
@@ -780,11 +859,16 @@ class EliminarEmpleado(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show() 
     
-    def showError(self):
-        self.label_error.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
 
     def confirmButtonClicked(self):
         legajo= self.input_legajo.text().strip()
@@ -792,11 +876,13 @@ class EliminarEmpleado(QWidget):
 
         if val.validarexistenciaclave(legajo, Administrador.setlegajos)==False:
             validado=False
-            self.showError()
+            self.showError("Ingrese un legajo válido", "red")
+            self.input_legajo.clear()
         else:
-            self.label_error.hide()
-            self.showConfirmado()
-            # FALTA EL METODO PARA ELIMINAR EMPLEADO 
+            self.showError("La cuenta fue eliminada exitosamente", "green")
+            Administrador.diccEmpleados[self.legajo].darDeBajaEmpleado(legajo) #SGREGAR LOS PARAMETROS ACA
+            util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)
+            self.openOperacionRealizada(self.legajo, self.contraseña, EliminarEmpleado())
     
     def Volver(self):
         self.close()
@@ -819,6 +905,12 @@ class ModificarPrecioAuto(QWidget):
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
 
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+
         """Labels y combo boxes de tipo y gama de auto cuyo precio se desea cambiar"""
         label_comboTipo = QLabel("Seleccione el tipo de vehículo cuyo precio desea cambiar")
         label_comboGama = QLabel("Seleccione la gama de vehículo cuyo precio desea cambiar")
@@ -839,6 +931,7 @@ class ModificarPrecioAuto(QWidget):
         self.input_precio = QLineEdit()
 
         """Se agregan los labels y combo boxes al layout"""
+        layout.addWidget(logo_label)
         layout.addWidget(label_comboTipo)
         layout.addWidget(self.comboTipo)
         layout.addWidget(label_comboGama)
@@ -846,17 +939,10 @@ class ModificarPrecioAuto(QWidget):
         layout.addWidget(label_precio)
         layout.addWidget(self.input_precio)
 
-
-        """Labels ocultos para la confirmación de la reserva y por si está mal la selección de fechas"""
-        self.confirmado_label= QLabel("El cambio de precio fue realizado exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_errorPrecio=QLabel("El precio indicado no es válido")
-        self.label_errorPrecio.setStyleSheet("color: red")
-        self.label_errorPrecio.hide()
-        layout.addWidget(self.label_errorPrecio)
+        """Se crea label reutilizable para error y confirmacion"""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         """Se crea boton de confirmar reserva y de volver a la página anterior"""
         self.button1 = QPushButton("Confirmar")
@@ -873,20 +959,29 @@ class ModificarPrecioAuto(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
-    
-    def showError(self):
-        self.label_errorPrecio.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
+
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show() 
 
     def ClickConfirmar(self):
         tipo = self.comboTipo.currentText().lower()
         gama = self.comboGama.currentText().lower()
         precio = self.input_precio.text()
         validado = True
-        Administrador.diccEmpleados[self.legajo].modifPreciosAutos(tipo,gama,precio) 
-
-
+        if val.validarprecio(precio)==False:
+            self.showError("El precio indicado no es válido", "red")
+        else:
+            Administrador.diccEmpleados[self.legajo].modifPreciosAutos(tipo,gama,precio) 
+            self.showError("El cambio de precio fue realizado exitosamente", "green")
+            self.openOperacionRealizada(self.legajo, self.contraseña, ModificarPrecioAuto())
+        
     def Volver(self):
         self.close()
         self.window = AdminWindow(self.legajo, self.contraseña)
@@ -905,6 +1000,13 @@ class FinalizarAlquiler(QWidget):
     def initUI(self):
         layout = QVBoxLayout()
 
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(logo_label)
+
         # Label
         label_idalq= QLabel("Ingresa el id del alquiler a finalizar:")
         layout.addWidget(label_idalq)
@@ -913,16 +1015,10 @@ class FinalizarAlquiler(QWidget):
         self.input_idalq = QLineEdit()
         layout.addWidget(self.input_idalq)
 
-        """Se crea labels de confirmación y de error, ocultos por defecto."""
-        self.confirmado_label= QLabel("El alquiler fue terminado exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_error=QLabel("Ingrese un id de alquiler válido")
-        self.label_error.setStyleSheet("color: red")
-        self.label_error.hide()
-        layout.addWidget(self.label_error)
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         # Button
         self.button = QPushButton("Continuar")
@@ -938,11 +1034,16 @@ class FinalizarAlquiler(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
-    
-    def showError(self):
-        self.label_error.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
+
+    def openOperacionRealizada(self, legajo, contraseña, ventana):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+        self.window1.show() 
 
     def confirmButtonClicked(self):
         idalq= self.input_idalq.text().strip()
@@ -950,12 +1051,12 @@ class FinalizarAlquiler(QWidget):
 
         if val.validarexistenciaclave(idalq, Alquiler.setAlquileres) == False:  #ARREGLAR ACA!!
             validado=False
-            self.showError()
+            self.showError("Ingrese un id de alquiler válido", "red")
         else:
-            self.label_error.hide()
-            self.showConfirmado()
+            self.showError("El alquiler fue terminado exitosamente", "green")
             Administrador.diccEmpleados[self.legajo].finalizarAlquiler(idalq)
             util.escribirCsv('Alquileres.csv', Alquiler.diccAlquileres)
+            self.openOperacionRealizada(self.legajo, self.contraseña, FinalizarAlquiler())
     
     def Volver(self):
         self.close()
@@ -970,21 +1071,21 @@ class RegistroWindow(QMainWindow):
         self.setWindowTitle('Registro de usuario')
         self.setMinimumSize(700,700)
 
-        # Create a central widget and a layout
+        """Se crea el layout y central widget"""
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
 
         # Create a logo label
         logo_label = QLabel(self)
-        logo_pixmap = QPixmap('logo.png')  # Adjust the path to your logo image file
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)
 
-        # Create a welcome label
+        """Label de bienvenida"""
         welcome_label = QLabel('Registrese en nuestra plataforma', self)
         welcome_label.setAlignment(Qt.AlignCenter)
 
-        # Create labels and input boxes
+        """Se crean los label e input boxes"""
         label_dni = QLabel("DNI:", central_widget)
         self.input_dni = QLineEdit(central_widget)
 
@@ -1009,12 +1110,12 @@ class RegistroWindow(QMainWindow):
         label_confirmarcontraseña = QLabel("Confirmar contraseña:", central_widget)
         self.input_confirmarcontraseña = QLineEdit(central_widget)
 
-        #Creo un label que informa cuando se agregó un auto exitosamente. Está escondido por defecto, se muestra al pasar la validación de los datos
+        """Creo un label que informa cuando se registró el usuario exitosamente. Está escondido por defecto, se muestra al pasar la validación de los datos"""
         self.confirmado_label = QLabel("Usted ha sido registrado exitosamente!.", central_widget)
         self.confirmado_label.setStyleSheet("color: green")
         self.confirmado_label.hide()
 
-
+        """Se agregan todos los widgets al layout"""
         layout.addWidget(logo_label)
         layout.addWidget(welcome_label)
         layout.addWidget(label_dni)
@@ -1035,7 +1136,7 @@ class RegistroWindow(QMainWindow):
         layout.addWidget(self.input_confirmarcontraseña)
         layout.addWidget(self.confirmado_label)
 
-        # Create the register button
+        """Se crean botones de registro y volver atrás"""
         button1 = QPushButton('Registrarse', central_widget)
         button1.clicked.connect(self.validacionRegistro)
         layout.addWidget(button1)
@@ -1044,22 +1145,17 @@ class RegistroWindow(QMainWindow):
         button2.clicked.connect(self.Volver)
         layout.addWidget(button2)
         
-
-        # Set the central widget
+        """Se setea el central widget y estilo de la ventana"""
         self.setCentralWidget(central_widget)
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)
 
-        # Set the central widget and apply the style sheet
-        self.setCentralWidget(central_widget)
-        with open('Estilo.qss', 'r') as est:
-            style = est.read()
-            self.setStyleSheet(style)
-
+    """Se crea método para mostrar el label de confirmación"""
     def show_Confirmado(self):
         self.confirmado_label.show()
     
+    """Se crea método para ubicar el PlaceholderText cuando hay algún error en los datos ingresados"""
     def PlaceholderText(self, input, text):
         input.clear()
         input.setPlaceholderText(text)
@@ -1068,15 +1164,18 @@ class RegistroWindow(QMainWindow):
         palette.setColor(QPalette.PlaceholderText, placeholder_color)
         input.setPalette(palette)
 
+    """Se crea método para abrir la ventana de confirmación de la operación realizada"""
     def openRegistroRealizado(self, dni, usuario, contraseña):
         self.window=RegistroRealizadoUsuario(dni, usuario, contraseña)
         self.window.show()
 
+    """Se crea método para volver a LoginWindow"""
     def Volver(self):
         self.close()
         self.window = LoginWindow()
         self.window.show()     
     
+    """Se crea método para validar los datos ingresados y ejecutar el registro"""
     def validacionRegistro(self):
         dni= self.input_dni.text()
         nombre= self.input_nombre.text()
@@ -1154,6 +1253,8 @@ class RegistroRealizadoUsuario(QWidget):
 
     def IrAlInicio(self):
         self.close()
+        self.window1=RegistroWindow()
+        self.window1.close()
         self.window = MainWindow(self.dni, self.usuario, self.contraseña)
         self.window.show()  
 
@@ -1174,9 +1275,12 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
         layout.setAlignment(Qt.AlignCenter)
 
-        """Traigo a un QLabel los valores de dni y usuario desde la ventana de inicio de sesión"""
-        self.dnix=QLabel()
-        self.usuariox=QLabel(central_widget)
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(logo_label)
 
         # Create buttons
         self.button1 = QPushButton('Hacer una Reserva', central_widget)
@@ -1277,21 +1381,10 @@ class CrearReserva(QWidget):
         layout.addWidget(label_comboGama)
         layout.addWidget(self.comboGama)
 
-        """Labels ocultos para la confirmación de la reserva y por si está mal la selección de fechas"""
-        self.confirmado_label= QLabel("La reserva fue realizada exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_error=QLabel("Seleccione una fecha de inicio con más de 5 días de anticipación, y fecha de fin posterior.")
-        self.label_error.setStyleSheet("color: red")
-        self.label_error.hide()
-        layout.addWidget(self.label_error)
-
-        self.label_auto=QLabel("Lo sentimos, no hay autos disponibles según lo pedido")
-        self.label_auto.setStyleSheet("color: red")
-        self.label_auto.hide()
-        layout.addWidget(self.label_error)
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         """Se crea boton de confirmar reserva y de volver a la página anterior"""
         self.button1 = QPushButton("Confirmar")
@@ -1308,14 +1401,16 @@ class CrearReserva(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showAuto(self):
-        self.label_auto.show()
+    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+        self.window1.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
-    
-    def showError(self):
-        self.label_error.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
 
     def ClickConfirmar(self):
 
@@ -1326,23 +1421,23 @@ class CrearReserva(QWidget):
         validado = True
 
         if val.validarAgregarFechaInicio(fecha_inicio)==False:
-            self.showError()
+            self.showError("Seleccione una fecha de inicio con más de 5 días de anticipación, y fecha de fin posterior.", "red")
             validado = False
         
         if val.validarFechaFin(fecha_inicio, fecha_fin)==False:
-            self.showError()
+            self.showError("Seleccione una fecha de inicio con más de 5 días de anticipación, y fecha de fin posterior.", "red")
             validado = False
         
         if validado == True:
-            self.showConfirmado()
             auto = Vehiculos.asignarauto(fecha_inicio,fecha_fin,tipo,gama)
 
             if auto== None:
-                self.showAuto()
+                self.showError("Lo sentimos, no hay autos disponibles según lo pedido. Pruebe cambiando el tipo y gama de auto", "red")
             else:
+                self.showError("La reserva fue realizada exitosamente", "green")
                 Usuarios.diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
                 util.escribirCsv('Reservas.csv', Reserva.diccReservas)
-                self.showConfirmado()
+                self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CrearReserva(self.dni, self.usuario, self.contraseña))
 
     def Volver(self):
         self.close()
@@ -1354,6 +1449,7 @@ class Cancelacion(QWidget):
     def __init__(self, dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle("Cancelación de reservas")
+        self.setMinimumSize(600,600)
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
@@ -1372,16 +1468,10 @@ class Cancelacion(QWidget):
         self.input_idres = QLineEdit()
         layout.addWidget(self.input_idres)
 
-        """Se crea labels de confirmación y de error, ocultos por defecto."""
-        self.confirmado_label= QLabel("La reserva fue cancelada exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_error=QLabel("Ingrese un id de reserva válido")
-        self.label_error.setStyleSheet("color: red")
-        self.label_error.hide()
-        layout.addWidget(self.label_error)
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         # Button
         self.button = QPushButton("Continuar")
@@ -1397,11 +1487,16 @@ class Cancelacion(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
-    
-    def showError(self):
-        self.label_error.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
+
+    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+        self.window1.show()
 
     def confirmButtonClicked(self):
         idres= self.input_idres.text().strip()
@@ -1409,11 +1504,13 @@ class Cancelacion(QWidget):
 
         if val.validarexistenciaclave(idres, Reserva.setReservas)==False:
             validado=False
-            self.showError()
+            self.showError("Ingrese un id de reserva válido", "red")
         else:
-            self.showConfirmado()
+            self.label_error.hide()
+            self.showError("La reserva fue cancelada exitosamente", "green")
             Usuarios.diccUsuarios[self.dni].cancelarReserva(idres)
             util.escribirCsv('Reservas.csv', Reserva.diccReservas)
+            self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, Cancelacion(self.dni, self.usuario, self.contraseña))
     
     def Volver(self):
         self.close()
@@ -1454,8 +1551,7 @@ class OperacionRealizadaUsuario(QWidget):
     
     def Volver(self, ventana):
         self.close()
-        self.window1 = ventana
-        self.window1.close()
+        
         self.window = MainWindow(self.dni,self.usuario, self.contraseña)
         self.window.show()
 
@@ -1547,6 +1643,7 @@ class CambioDatos(QWidget):
                         self.PlaceholderText("Ingrese DNI válido")
                 else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()  
                         self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
@@ -1555,6 +1652,7 @@ class CambioDatos(QWidget):
                         self.PlaceholderText("Ingrese un nombre válido (sin números ni caracteres especiales)")
                     else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
                         self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
@@ -1563,6 +1661,7 @@ class CambioDatos(QWidget):
                         self.PlaceholderText("Ingrese un apellido válido (sin números ni caracteres especiales)")
                 else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
                         self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
@@ -1571,6 +1670,7 @@ class CambioDatos(QWidget):
                         self.PlaceholderText("Ingrese una fecha de nacimiento válida (debe ser mayor de edad)")
                 else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
                         self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
@@ -1579,6 +1679,7 @@ class CambioDatos(QWidget):
                         self.PlaceholderText("Ingrese un email válido")
                 else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
                         self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
               
@@ -1623,26 +1724,10 @@ class EliminarUsuario(QWidget):
         layout.addWidget(label_contra2)
         layout.addWidget(self.input_contra2)
 
-        """Se crea labels de confirmación y de error, ocultos por defecto."""
-        self.confirmado_label= QLabel("La cuenta fue eliminada exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.label_errordni=QLabel("Ingrese un DNI válido")
-        self.label_errordni.setStyleSheet("color: red")
-        self.label_errordni.hide()
-        layout.addWidget(self.label_errordni)
-
-        self.label_errorcontra=QLabel("Las contraseñas no coinciden o es inválida")
-        self.label_errorcontra.setStyleSheet("color: red")
-        self.label_errorcontra.hide()
-        layout.addWidget(self.label_errorcontra)
-
-        self.label_errorpersona=QLabel("Los datos no coinciden con una persona registrada")
-        self.label_errorpersona.setStyleSheet("color: red")
-        self.label_errorpersona.hide()
-        layout.addWidget(self.label_errorpersona)
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.error_label=QLabel()
+        self.error_label.hide()
+        layout.addWidget(self.error_label)
 
         # Button
         self.button = QPushButton("Continuar")
@@ -1659,17 +1744,21 @@ class EliminarUsuario(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def showConfirmado(self):
-        self.confirmado_label.show()
+    def showError(self, text, color):
+        self.error_label.clear()
+        self.error_label.setText(text)
+        coloraplicado= "color: " + color
+        self.error_label.setStyleSheet(coloraplicado)
+        self.error_label.show()
     
-    def showErrorDNI(self):
-        self.label_errordni.show()
-
-    def showErrorContra(self):
-        self.label_errorcontra.show()
-
-    def showErrorPersona(self):
-        self.label_errorpersona.show()
+    def clearInputs(self):
+        self.input_dni.clear()
+        self.input_contra1.clear()
+        self.input_contra2.clear()
+    
+    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+        self.window1.show()
 
     def confirmButtonClicked(self):
         dni= self.input_dni.text().strip()
@@ -1679,19 +1768,24 @@ class EliminarUsuario(QWidget):
 
         if val.validardni(dni)==False:
             validado=False
-            self.showErrorDNI()
+            self.showError("Ingrese un DNI válido", "red")
+            self.input_dni.clear()
         
         if contra1 != contra2 or val.validarcontraseña(contra1)==False:
             validado=False
-            self.showErrorContra
+            self.showError("Las contraseñas no coinciden o es inválida", "red")
+            self.input_contra1.clear()
+            self.input_contra2.clear()
 
         if val.validarexistenciaPersona(dni, contra1, Usuarios)==False:
             validado=False
-            self.showErrorPersona()
+            self.showError("Los datos no coinciden con una persona registrada", "red")
+            self.clearInputs()
         else:
-            self.showConfirmado()
+            self.showError("La cuenta fue eliminada exitosamente", "green")
             Usuarios.diccUsuarios[self.dni].darDeBaja(self.dni, Usuarios.diccUsuarios)
             util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
+            self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, EliminarUsuario())
 
     def Volver(self):
         self.close()

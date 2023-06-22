@@ -1420,6 +1420,45 @@ class Cancelacion(QWidget):
         self.window = MainWindow(self.dni, self.usuario, self.contraseña)
         self.window.show()     
 
+
+class OperacionRealizadaUsuario(QWidget):
+    def __init__(self, dni, usuario, contraseña, ventana):
+        super().__init__()
+        self.setWindowTitle("Operación realizada")
+        self.setMinimumSize(600,600)
+        self.initUI()
+
+        """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
+        self.dni=dni
+        self.usuario=usuario
+        self.contraseña=contraseña
+        self.ventana= ventana
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label_aviso = QLabel("Su operación fue realizada exitosamente!")
+        label_aviso.setStyleSheet("color: green")
+        layout.addWidget(label_aviso)
+
+        self.button2 = QPushButton("Volver al Inicio")
+        self.button2.clicked.connect(self.Volver)
+        layout.addWidget(self.button2)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+    
+    def Volver(self, ventana):
+        self.close()
+        self.window1 = ventana
+        self.window1.close()
+        self.window = MainWindow(self.dni,self.usuario, self.contraseña)
+        self.window.show()
+
 class CambioDatos(QWidget):
     def __init__(self,dni, usuario, contraseña):
         super().__init__()
@@ -1484,7 +1523,11 @@ class CambioDatos(QWidget):
         self.close()
         self.window = MainWindow(self.dni, self.usuario, self.contraseña)
         self.window.show()    
-    
+
+    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+        self.window1.show()
+
     def PlaceholderText(self, text):
         self.input_valor.clear()
         self.input_valor.setPlaceholderText(text)
@@ -1497,53 +1540,57 @@ class CambioDatos(QWidget):
         atributo= self.combo_atributo.currentText().strip().lower()
         valor = self.input_valor.text()     
 
-        if val.validaratributo(atributo)==False:      #ESTO ES MEDIO AL PEDO PERO DESP DE PROBAR SE VUELA. 
-            validado= False
-        else:
-            match atributo:
+        match atributo:
 
-                case 'dni':
-                    if val.validardni(valor)==False:
+            case 'dni':
+                if val.validardni(valor)==False:
                         self.PlaceholderText("Ingrese DNI válido")
-                    else:
+                else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()  
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
-                case 'nombre':
+            case 'nombre':
                     if val.validarnombre(valor)==False:
                         self.PlaceholderText("Ingrese un nombre válido (sin números ni caracteres especiales)")
                     else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
-                case 'apellido':
-                    if val.validarnombre(valor)==False:
+            case 'apellido':
+                if val.validarnombre(valor)==False:
                         self.PlaceholderText("Ingrese un apellido válido (sin números ni caracteres especiales)")
-                    else:
+                else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
-                case 'fecha de nacimiento':  
-                    if val.validarFecha(valor)==False:
+            case 'fecha de nacimiento':  
+                if val.validarFecha(valor)==False:
                         self.PlaceholderText("Ingrese una fecha de nacimiento válida (debe ser mayor de edad)")
-                    else:
+                else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
-                case 'email':
-                    if val.validaremail(valor)==False:
+            case 'email':
+                if val.validaremail(valor)==False:
                         self.PlaceholderText("Ingrese un email válido")
-                    else:
+                else:
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
               
-                case 'contraseña':
-                    if val.validarcontraseña(valor)==False:
+            case 'contraseña':
+                if val.validarcontraseña(valor)==False:
                         self.PlaceholderText("Ingrese una contraseña válida")
-                    else:
+                else:
+                        
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
 
 class EliminarUsuario(QWidget):
     def __init__(self, dni, usuario, contraseña):
@@ -1643,8 +1690,9 @@ class EliminarUsuario(QWidget):
             self.showErrorPersona()
         else:
             self.showConfirmado()
-            # ACA AGREGAR LA FUNCION MAS LA ESCRITURA DEL CSV  
-    
+            Usuarios.diccUsuarios[self.dni].darDeBaja(self.dni, Usuarios.diccUsuarios)
+            util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
+
     def Volver(self):
         self.close()
         self.window = MainWindow(self.dni, self.usuario, self.contraseña)

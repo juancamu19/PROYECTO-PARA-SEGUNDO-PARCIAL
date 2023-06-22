@@ -8,11 +8,10 @@ from datetime import datetime
 # from claseEmpresa import Empresa
 import validaciones as val
 import Utilities as util
-from ClasePersonas import Administrador, Usuarios, Personas, diccEmpleados,diccUsuarios
-from ClaseAlquileres import Alquiler,diccAlquileres
-from ClaseReservas import Reserva,diccReservas
-from ClaseVehiculos import Vehiculos,diccVehiculos
-import hashlib
+from ClasePersonas import Administrador, Usuarios, Personas
+from ClaseAlquileres import Alquiler
+from ClaseReservas import Reserva
+from ClaseVehiculos import Vehiculos
 
 class LoginWindow(QMainWindow):
     def __init__(self):
@@ -333,8 +332,8 @@ class AgregarAuto(QMainWindow):
 
         if valid_data== True:
             self.show_confirmado()
-            diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)  
-            util.escribirCsv('Vehiculos.csv', diccVehiculos)
+            Administrador.diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)  
+            util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
             
 
 class ModificarAuto(QWidget):   
@@ -424,48 +423,48 @@ class ModificarAuto(QWidget):
                     if val.validarpatente(valor)==False:
                         self.PlaceholderText(self.input_valor, "Reingrese una patente válida")
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
-                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+                        Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
 
                 case 'modelo':
                     if val.validarmodelo(valor)==False:
                         self.PlaceholderText(self.input_valor, "Reingrese un modelo de vehículo válido")
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
-                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+                        Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
 
                 case 'marca':
                     if val.validarmarca(valor)==False:
                         self.PlaceholderText(self.input_valor, "Reingrese una marca de auto válida")
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
-                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+                        Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
 
                 case 'año':  
                     if val.validaranio(valor)==False:
                         self.PlaceholderText(self.input_valor, "Reingrese una año válido (anterior al año actual)")
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
-                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+                        Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado() 
 
                 case 'tipo':
                     if val.validartipo(valor)==False:
                         self.PlaceholderText(self.input_valor, "Reingrese una tipo de vehículo válido")
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
-                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+                        Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
+                        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
               
                 case 'gama':
                     if val.validargama(valor)==False:
                         self.PlaceholderText(self.input_valor, "Reingrese una gama e vehículo válido")
                     else:
-                        diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
-                        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+                        Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
+                        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
                 
     def Volver(self):
@@ -547,7 +546,7 @@ class EliminarAuto(QWidget):
                 self.showErrorExistencia()
             else:
                 self.showConfirmado()
-                diccEmpleados[self.legajo].eliminarVehiculo(patente) 
+                Administrador.diccEmpleados[self.legajo].eliminarVehiculo(patente) 
     
     def Volver(self):
         self.close()
@@ -776,7 +775,7 @@ class RegistroWindow(QMainWindow):
         if validado==True:
             self.show_Confirmado() #VER SI SE PUEDE HACER UNA VENTANA EMERGENTE PARA VOLVER... NO SE SI LLEGAMOS. 
             Usuarios.agregarUsuario(dni, usuario, nombre, apellido, fecnac, email, contraseña)
-            util.escribirCsv('Usuarios.csv', diccUsuarios)
+            util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
             
 
 class MainWindow(QMainWindow):
@@ -961,8 +960,8 @@ class CrearReserva(QWidget):
             if auto== None:
                 self.showAuto()
             else:
-                diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
-                util.escribirCsv('Reservas.csv', diccReservas)
+                Usuarios.diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
+                util.escribirCsv('Reservas.csv', Reserva.diccReservas)
                 self.showConfirmado()
 
     def Volver(self):
@@ -1033,8 +1032,8 @@ class Cancelacion(QWidget):
             self.showError()
         else:
             self.showConfirmado()
-            diccUsuarios[self.dni].cancelarReserva(idres)
-            util.escribirCsv('Reservas.csv', diccReservas)
+            Usuarios.diccUsuarios[self.dni].cancelarReserva(idres)
+            util.escribirCsv('Reservas.csv', Reserva.diccReservas)
     
     def Volver(self):
         self.close()
@@ -1127,43 +1126,43 @@ class CambioDatos(QWidget):
                     if val.validardni(valor)==False:
                         self.PlaceholderText("Ingrese DNI válido")
                     else:
-                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()  
 
                 case 'nombre':
                     if val.validarnombre(valor)==False:
                         self.PlaceholderText("Ingrese un nombre válido (sin números ni caracteres especiales)")
                     else:
-                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
 
                 case 'apellido':
                     if val.validarnombre(valor)==False:
                         self.PlaceholderText("Ingrese un apellido válido (sin números ni caracteres especiales)")
                     else:
-                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
 
                 case 'fecha de nacimiento':  
                     if val.validarFecha(valor)==False:
                         self.PlaceholderText("Ingrese una fecha de nacimiento válida (debe ser mayor de edad)")
                     else:
-                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
 
                 case 'email':
                     if val.validaremail(valor)==False:
                         self.PlaceholderText("Ingrese un email válido")
                     else:
-                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         self.show_confirmado()
               
                 case 'contraseña':
                     if val.validarcontraseña(valor)==False:
                         self.PlaceholderText("Ingrese una contraseña válida")
                     else:
-                        diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
-                        util.escribirCsv('Usuarios.csv', diccUsuarios)
+                        Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
+                        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
 
 class EliminarUsuario(QWidget):

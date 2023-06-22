@@ -6,7 +6,8 @@ from ClaseVehiculos import Vehiculos
 #se crea la clase alquiler
 class Alquiler():
     cantAlquileres = 0 
-    diccAlquileres=dict()  
+    diccAlquileres=dict() 
+    setAlquileres = set() 
     def __init__(self, id = cantAlquileres+1, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
         self.id = id 
         self.idReserva = idReserva  
@@ -17,6 +18,7 @@ class Alquiler():
         self.fechadev = fechadev  
         self.monto=monto     
         Alquiler.cantAlquileres += 1
+        Alquiler.setAlquileres.add(self.id)
         Alquiler.diccAlquileres[self.id]=self
 
 

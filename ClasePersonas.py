@@ -1,7 +1,7 @@
 import hashlib
-from ClaseReservas import Reserva,diccReservas
-from ClaseVehiculos import Vehiculos,diccVehiculos 
-from ClaseAlquileres import diccAlquileres
+from ClaseReservas import Reserva
+from ClaseVehiculos import Vehiculos
+from ClaseAlquileres import Alquiler
 import pandas as pd
 import Utilities as util
 
@@ -81,40 +81,42 @@ class Personas:
 #se crea un hijo de la clase personas: usuarios
 class Usuarios(Personas):
     setdnis = set()
+    diccUsuarios=dict()
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
         self.cantreservas = int(cantreservas)
         Usuarios.setdnis.add((self.dni,self.contraseña)) 
+        Usuarios.diccUsuarios[self.dni]=self
     
     #funcion para agregar usuario a diccionario para cargar a csv
     def agregarUsuario(dni, username, nombre, apellido, fecnac, email, contraseña):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()  
-        diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
+        Usuarios.diccUsuarios[dni]= Usuarios(dni, nombre, apellido, fecnac, email, contraHasheada, username)
     
     #funcion para agregar reserva a diccionario
     def agregarReserva(self, patente_auto, fechaInicio, fechaFin):
-        diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
+        Reserva.diccReservas[Reserva.cantReservas + 1] = Reserva( Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
         print(f'La reserva de id {Reserva.cantReservas}, hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}')
 
     #funcion para quitar reserva del diccionario    
     def cancelarReserva(self,idreserva):
-        diccReservas[idreserva].cancelarreserva()
+        Reserva.diccReservas[idreserva].cancelarreserva()
 
     #funciones para modificar las fechas de la reserva
     def modifFecInicioReserva(self,idreserva,fechanueva):
-        diccReservas[idreserva].cambiarfechaInicioAlquiler(fechanueva)
+        Reserva.diccReservas[idreserva].cambiarfechaInicioAlquiler(fechanueva)
 
     def modifFecFinReserva(self,idreserva,fechanueva):
-        diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
+        Reserva.diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
 
 
 
 #diccionario que contiene los registros de usuarios del csv
-diccUsuarios = util.leerCsv('Usuarios.csv', Usuarios)
+util.leerCsv('Usuarios.csv', Usuarios)
 
 
 
@@ -122,37 +124,39 @@ diccUsuarios = util.leerCsv('Usuarios.csv', Usuarios)
 class Administrador(Personas):
     cantempleados = 0
     setlegajos = set()
+    diccEmpleados=dict()
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleados
         Administrador.cantempleados+=1       
         Administrador.setlegajos.add((str(self.legajo),self.contraseña))
         Administrador.setdnis.add(self.dni)
+        Administrador.diccEmpleados[self.legajo]=self
 
     #funcion para agregar empleado a diccionario para su carga a csv de empleados
     def agregarEmpleado(self,dni, nombre, apellido, fecnac, email, contraseña):
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()
-        diccEmpleados [Administrador.cantempleados] = Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
+        Administrador.diccEmpleados [Administrador.cantempleados] = Administrador(dni, nombre, apellido, fecnac, email, contraHasheada)
     
     #funcion para agregar un vehiculo a diccionario para su carga a csv de vehiculos
     def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        
-        diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo, gama)
+        Vehiculos.diccVehiculos[patente]= Vehiculos(patente, modelo, marca, anio, tipo, gama)
         print(f"Se ha agregado correctamente el vehículo de patente {patente}, modelo {modelo}, marca {marca}, anio {anio}, tipo {tipo}")
 
     #funcion para modificar un atributo de un vehiculo
     def modificarVehiculo(self, patente, atributo,valor):
-        diccVehiculos[patente].modificar(atributo,valor)
+        Vehiculos.diccVehiculos[patente].modificar(atributo,valor)
 
     #funcion para dar por finalizado un alquiler
     def finalizarAlquiler(self, idalquiler):
-        diccAlquileres[idalquiler].finalizar()
-        diccVehiculos[diccAlquileres[idalquiler].patente_auto].devolver()
+        Alquiler.diccAlquileres[idalquiler].finalizar()
+        Vehiculos.diccVehiculos[Alquiler.diccAlquileres[idalquiler].patente_auto].devolver()
 
     #funcion para quitar un vehiculo de diccionario
     def eliminarVehiculo(self, patente):         
-        diccVehiculos[patente].eliminar(diccVehiculos)
+        Vehiculos.diccVehiculos[patente].eliminar(Vehiculos.diccVehiculos)
 
     #funcion para cambiar precios de un auto segun gama y tipo
     def modifPreciosAutos(self,tipo,gama,precionuevo):
@@ -161,7 +165,7 @@ class Administrador(Personas):
         df.to_csv('PreciosVehiculos.csv')
 
 #diccionario que contiene los registros nuevos de empleados
-diccEmpleados = util.leerCsv('Empleados.csv', Administrador)
+util.leerCsv('Empleados.csv', Administrador)
     
 # Pruebas de Funcionamiento
 if __name__ == "__main__":

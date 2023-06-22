@@ -1,4 +1,3 @@
-from ClaseAlquileres import diccAlquileres
 import pandas as pd
 class Empresa():
     def gestionVentasxdia(mes):

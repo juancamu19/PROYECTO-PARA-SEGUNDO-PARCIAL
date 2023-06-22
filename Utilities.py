@@ -11,30 +11,41 @@ def escribirCsv(archivo, dicc):
         return False
 
 
-def leerCsv(archivo, clase):                        #Leo el archivo csv e instancio su contenido en un diccionario para facilitar el manejo de la información
-    dic1 = dict()
+# def leerCsv(archivo, clase):                        #Leo el archivo csv e instancio su contenido en un diccionario para facilitar el manejo de la información
+#     dic1 = dict()
+#     try:
+#         with open(archivo) as file:
+#             lector = csv.reader(file)
+#             for row in lector:
+#                 if archivo=='Empleados.csv':
+#                     if len(row)<6:
+#                         pass
+#                     else:
+#                         clave = row[6]
+#                         dic1[clave] = clase(*row[:])
+#                 else:
+#                     if len(row)==0:
+#                         pass
+#                     else:
+#                         clave = row[0]
+#                         dic1[clave] = clase(*row[:])
+#         return dic1
+#     except FileNotFoundError:
+#         print('Archivo no encontrado')
+#         return False
+
+def leerCsv(archivo, clase):                        
     try:
         with open(archivo) as file:
             lector = csv.reader(file)
             for row in lector:
-                if archivo=='Empleados.csv':
-                    if len(row)<6:
-                        pass
+                    if len(row)!=0:
+                        clase(*row[:])
                     else:
-                        clave = row[6]
-                        dic1[clave] = clase(*row[:])
-                else:
-                    if len(row)==0:
                         pass
-                    else:
-                        clave = row[0]
-                        dic1[clave] = clase(*row[:])
-        return dic1
     except FileNotFoundError:
         print('Archivo no encontrado')
         return False
-
-
 
 def objeto_a_lista(objeto):
         obj_list = []

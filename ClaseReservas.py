@@ -5,7 +5,7 @@ import Utilities as util
 class Reserva():
     cantReservas = 0  
     setReservas = set()
-    # diccionario=dict()
+    diccReservas=dict()
 
     def __init__(self, id = None, dni = None, patente_auto = None, fechaInicio = None, fechaFin = None, fechaCancel = None):
         self.id = id
@@ -14,9 +14,9 @@ class Reserva():
         self.fechaInicio = fechaInicio
         self.fechaFin = fechaFin
         self.fechaCancel = fechaCancel
-
         Reserva.cantReservas += 1
         Reserva.setReservas.add(self.id)
+        Reserva.diccReservas[self.id] = self
     
     # def objeto_a_lista(self):
     #     obj_list = []
@@ -46,7 +46,7 @@ class Reserva():
 
 
 #diccionario que contiene los registros nuevos de reservas
-diccReservas = util.leerCsv('Reservas.csv', Reserva)
+util.leerCsv('Reservas.csv', Reserva)
 
 # Pruebas de Funcionamiento
 if __name__ == "__main__":

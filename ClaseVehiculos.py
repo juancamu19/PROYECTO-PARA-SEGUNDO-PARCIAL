@@ -2,12 +2,12 @@ from datetime import datetime
 import pandas as pd
 import random
 import Utilities as util
-from ClaseReservas import diccReservas
+from ClaseReservas import Reserva
 
 
 #se crea la clase vehiculos
 class Vehiculos():
-    # diccionario=dict()
+    diccVehiculos=dict()
     cantVehiculos = 0
     setVehiculos=set()
     
@@ -19,10 +19,10 @@ class Vehiculos():
         self.tipo = tipo
         self.gama = gama
         self.disponible = True
-        self.precioxdia = self.asignarPrecio()   
-        
+        self.precioxdia = self.asignarPrecio()
         Vehiculos.cantVehiculos+=1
         Vehiculos.setVehiculos.add(self.patente)
+        Vehiculos.diccVehiculos[self.patente]=self
     
     
     #funcion para cambiar estado de dispponibilidad de auto al devolverlo
@@ -67,13 +67,13 @@ class Vehiculos():
         fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()    
         setvehiculosdisponibles=Vehiculos.setVehiculos
         
-        for k in diccReservas.keys():
-            fechaInicioReservak = datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()
-            fechaFinReservak = datetime.strptime(diccReservas[k].fechaFin,"%d-%m-%Y").date()
-            if diccVehiculos[diccReservas[k].patente_auto].tipo == tipo and diccVehiculos[diccReservas[k].patente_auto].gama == gama:
-                if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and diccReservas[k].fechaCancel==None:
+        for k in Reserva.diccReservas.keys():
+            fechaInicioReservak = datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()
+            fechaFinReservak = datetime.strptime(Reserva.diccReservas[k].fechaFin,"%d-%m-%Y").date()
+            if Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].tipo == tipo and Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].gama == gama:
+                if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and Reserva.diccReservas[k].fechaCancel==None:
                 
-                    setvehiculosdisponibles.remove(diccReservas[k].patente_auto)  
+                    setvehiculosdisponibles.remove(Reserva.diccReservas[k].patente_auto)  
 
         if len(setvehiculosdisponibles) == 0:
             return None
@@ -85,7 +85,7 @@ class Vehiculos():
         return(f"El vehículo {self.marca} {self.modelo} de patente {self.patente}, año {self.anio}, tiene un precio de alquiler por día de {self.precioxdia}, es de tipo {self.tipo} y gama {self.gama}")
     
 #diccionario que contiene los registros nuevos de vehiculos
-diccVehiculos = util.leerCsv('Vehiculos.csv', Vehiculos)
+util.leerCsv('Vehiculos.csv', Vehiculos)
 
 
 

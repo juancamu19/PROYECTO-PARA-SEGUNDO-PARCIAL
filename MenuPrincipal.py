@@ -1,17 +1,14 @@
 from datetime import datetime
 import validaciones as val
 import Utilities as util
-from ClasePersonas import Administrador, Usuarios, Personas,diccEmpleados,diccUsuarios
-from ClaseAlquileres import Alquiler,diccAlquileres
-from ClaseReservas import Reserva,diccReservas
-from ClaseVehiculos import Vehiculos,diccVehiculos
-
-
-
+from ClasePersonas import Administrador, Usuarios
+from ClaseAlquileres import Alquiler
+from ClaseReservas import Reserva
+from ClaseVehiculos import Vehiculos
 seguir_operando = "SI"
 
 # any(not dicc for dicc in[diccAlquileres,diccReservas,diccVehiculos,diccUsuarios,diccEmpleados])
-if diccAlquileres==False or diccReservas==False or diccVehiculos==False or diccUsuarios==False or diccEmpleados==False:
+if Alquiler.diccAlquileres==False or Reserva.diccReservas==False or Vehiculos.diccVehiculos==False or Usuarios.diccUsuarios==False or Administrador.diccEmpleados==False:
     print('Corrobore con el administrador que se encuentren todos los archivos necesarios en el directorio que corresponde')
     
 else:    
@@ -88,7 +85,7 @@ else:
 
                 print('')
                 print("Se ha registrado la siguiente información:")
-                print(diccUsuarios [dni])    
+                print(Usuarios.diccUsuarios [dni])    
                     
             
 
@@ -104,7 +101,7 @@ else:
 
                 print('')
                 print("Ha ingresado:")
-                print(diccUsuarios [dnix])
+                print(Usuarios.diccUsuarios [dnix])
                 print('')
                 
                 seguir_operando = "SI"
@@ -153,8 +150,8 @@ else:
                         if auto == None:
                             print('No hay auto disponible')
                         else: 
-                            diccUsuarios[dnix].agregarReserva(auto, fechainicio, fechafin)
-                            print("Infromación detallada del vehículo: ", diccVehiculos[auto])
+                            Usuarios.diccUsuarios[dnix].agregarReserva(auto, fechainicio, fechafin)
+                            print("Infromación detallada del vehículo: ", Vehiculos.diccVehiculos[auto])
                         
                                 
                                 
@@ -178,17 +175,17 @@ else:
 
                         if cambio == '1':                 #Cambiar el incicio de la reserva
                             fechanueva = input('ingrese fecha de Inicio de alquiler de la forma D-M-YYYY')
-                            while val.validarModifFechaInicio(fechanueva,diccReservas[idres].fechaFin) == False:
+                            while val.validarModifFechaInicio(fechanueva,Reserva.diccReservas[idres].fechaFin) == False:
                                 fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')
-                            diccUsuarios[dnix].modifFecInicioReserva(idres,fechanueva)
+                            Usuarios.diccUsuarios[dnix].modifFecInicioReserva(idres,fechanueva)
 
                             
                         elif cambio == '2':               #Cambiar el fin de la reserva
                             fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')
-                            while val.validarFechaFin(diccReservas[idres].fechaInicio,fechanueva) == False:                    
+                            while val.validarFechaFin(Reserva.diccReservas[idres].fechaInicio,fechanueva) == False:                    
                                 fechanueva = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
 
-                            diccUsuarios[dnix].modifFecFinReserva(idres,fechanueva)
+                            Usuarios.diccUsuarios[dnix].modifFecFinReserva(idres,fechanueva)
 
                         
                                     
@@ -198,7 +195,7 @@ else:
                         while val.validarexistenciaclave(idres,Reserva.setReservas) == False:
                             idres = input("ingrese el id de su reserva ")
                             
-                        diccUsuarios[dnix].cancelarReserva(idres)
+                        Usuarios.diccUsuarios[dnix].cancelarReserva(idres)
 
                             
                         
@@ -213,12 +210,12 @@ else:
                         while val.validarCambiarDatosPersona(atributo,valor) == False:
                             valor = input('Ingrese el nuevo valor para el atributo a cambiar')
                                 
-                        diccUsuarios[dnix].cambiar_dato(dnix,atributo,valor)
+                        Usuarios.diccUsuarios[dnix].cambiar_dato(dnix,atributo,valor)
 
 
 
                     elif operacion == "5":                       #Darse de baja
-                        diccUsuarios[dnix].darDeBaja(dnix,diccUsuarios)
+                        Usuarios.diccUsuarios[dnix].darDeBaja(dnix,Usuarios.diccUsuarios)
 
 
 
@@ -226,7 +223,7 @@ else:
                         pass
                 
                     
-                    if val.validarexistenciaclave(dnix,diccUsuarios) == True:
+                    if val.validarexistenciaclave(dnix,Usuarios.diccUsuarios) == True:
                         seguir_operando = input("Desea seguir operando como usuario (SI o NO)? ").strip().upper()
                         while seguir_operando not in ['SI','NO']: 
                             seguir_operando = input("No ha ingresado una opción válida. Desea seguir operando (SI o NO)? ").strip().upper()
@@ -318,7 +315,7 @@ else:
                                 contraseña = input("Ingrese la contraseña ")
                                 confirmar_contraseña = input('Confirmar contraseña ingresada ')
 
-                            diccEmpleados[legajo].agregarEmpleado(dni, nombre, apellido, fecnac, email, contraseña)  
+                            Administrador.diccEmpleados[legajo].agregarEmpleado(dni, nombre, apellido, fecnac, email, contraseña)  
 
 
                         if opcion_elegida == "2":                       #Agregar un vehículo
@@ -347,7 +344,7 @@ else:
                             while  val.validargama(gama) == False:
                                 gama = input('Ingrese una gama válida de auto ')
                                 
-                            diccEmpleados[legajo].agregarVehiculo(patente, modelo, marca, anio,tipo,gama)
+                            Administrador.diccEmpleados[legajo].agregarVehiculo(patente, modelo, marca, anio,tipo,gama)
                             print()
                             
 
@@ -367,7 +364,7 @@ else:
                             while val.validarCambiarDatosVehiculo(atributo,valor)==False:
                                 valor=input('Ingrese el valor del atributo a cambiar')
                                     
-                            diccEmpleados[legajo].modificarVehiculo(patente,atributo,valor) 
+                            Administrador.diccEmpleados[legajo].modificarVehiculo(patente,atributo,valor) 
                         
                         
                         if opcion_elegida == "4":                       #Eliminar un vehículo
@@ -375,15 +372,15 @@ else:
                             while  val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
                                 patente=input('Ingrese patente existente')
                                 
-                            diccEmpleados[legajo].eliminarVehiculo(patente)                 
+                            Administrador.diccEmpleados[legajo].eliminarVehiculo(patente)                 
 
 
                         if opcion_elegida == "5":                        #Finalizar un alquiler (reportar auto devuelto)
                             idalquiler = input('Ingrese id del alquiler ')
-                            while  val.validarexistenciaId(idalquiler,diccAlquileres) == False:
+                            while  val.validarexistenciaId(idalquiler,Alquiler.diccAlquileres) == False:
                                 idalquiler=input('Ingrese id del alquiler ')
                                 
-                            diccEmpleados[legajo].finalizarAlquiler(idalquiler) 
+                            Administrador.diccEmpleados[legajo].finalizarAlquiler(idalquiler) 
 
 
                         if opcion_elegida == "6":                        #Cambiar un dato suyo
@@ -397,7 +394,7 @@ else:
                             while val.validarCambiarDatosPersona(atributo,valor)==False:
                                 valor=input('Ingrese el nuevo valor para el atributo a cambiar')
 
-                            diccEmpleados[legajo].cambiar_dato(legajo,atributo,valor)
+                            Administrador.diccEmpleados[legajo].cambiar_dato(legajo,atributo,valor)
 
 
                         if opcion_elegida == "7":                        #Modificar precio por dia de un vehiculo       
@@ -413,7 +410,7 @@ else:
                             while  val.validarprecio(precio) == False:
                                 precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ') 
 
-                            diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)    
+                            Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)    
 
 
                         if opcion_elegida == "8":                        #Salir
@@ -438,10 +435,9 @@ else:
             seguir_operando = input("No ha ingresado una opción válida. Desea seguir operando (SI o NO)? ").strip().upper()
     
         
-        util.escribirCsv('Empleados.csv', diccEmpleados)                     #Actualizo los csv
-        util.escribirCsv('Usuarios.csv', diccUsuarios)
-        util.escribirCsv('Empleados.csv', diccEmpleados)
-        util.escribirCsv('Alquileres.csv', diccAlquileres)
-        util.escribirCsv('Reservas.csv', diccReservas)
-        util.escribirCsv('Vehiculos.csv', diccVehiculos)
+        util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)                     #Actualizo los csv
+        util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
+        util.escribirCsv('Alquileres.csv', Alquiler.diccAlquileres)
+        util.escribirCsv('Reservas.csv', Reserva.diccReservas)
+        util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
 

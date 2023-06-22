@@ -1,11 +1,12 @@
 from datetime import datetime
 from ClaseVehiculos import Vehiculos
 import Utilities as util
-from ClaseReservas import diccReservas
-from ClaseVehiculos import diccVehiculos
+from ClaseReservas import Reserva
+from ClaseVehiculos import Vehiculos
 #se crea la clase alquiler
 class Alquiler():
-    cantAlquileres = 0   
+    cantAlquileres = 0 
+    diccAlquileres=dict()  
     def __init__(self, id = cantAlquileres+1, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
         self.id = id 
         self.idReserva = idReserva  
@@ -15,8 +16,9 @@ class Alquiler():
         self.fechaExpiracionAlq = fechaExpiracionAlq 
         self.fechadev = fechadev  
         self.monto=monto     
-
         Alquiler.cantAlquileres += 1
+        Alquiler.diccAlquileres[self.id]=self
+
 
 
     # def objeto_a_lista(self):
@@ -34,15 +36,15 @@ class Alquiler():
         return ('{}-{}-{}-{}-{}'.format(self.id, self.fecha, self.dni, self.auto))
    
 #diccionario que contiene los registros del archivo csv de alquiler
-diccAlquileres = util.leerCsv('Alquileres.csv', Alquiler)
+util.leerCsv('Alquileres.csv', Alquiler)
 
 #actualización de diccionarios al iniciar un alquiler
-for k in diccReservas.keys():
-    if datetime.strptime(diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():
-        fechafin=datetime.strptime(diccReservas[k].fechaFin)
+for k in Reserva.diccReservas.keys():
+    if datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now():
+        fechafin=datetime.strptime(Reserva.diccReservas[k].fechaFin)
         cantdias=(fechafin-datetime.now().date()).days          
-        diccAlquileres[Alquiler.cantAlquileres+1]=Alquiler(k,diccReservas[k].dni,diccReservas[k].patente_auto,diccReservas[k].fechaInicio,diccReservas[k].fechaFin,None,cantdias*diccReservas[k].patente_auto.precioxdia)
-        diccVehiculos[diccAlquileres[Alquiler.cantAlquileres].patente_auto].disponible=False
+        Alquiler.diccAlquileres[Alquiler.cantAlquileres+1]=Alquiler(k,Reserva.diccReservas[k].dni,Reserva.diccReservas[k].patente_auto,Reserva.diccReservas[k].fechaInicio,Reserva.diccReservas[k].fechaFin,None,cantdias*(Reserva.diccReservas[k].patente_auto.precioxdia))
+        Vehiculos.diccVehiculos[Alquiler.diccAlquileres[Alquiler.cantAlquileres].patente_auto].disponible=False
 
 
 

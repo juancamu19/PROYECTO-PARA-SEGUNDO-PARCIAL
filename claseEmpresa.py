@@ -9,7 +9,16 @@ class Empresa():
     
     '''Funcion para consultar las ventas por mes. Un empleado puede filtrar la informacion de alquileres por mes, 
     y asi evaluar informes, tendencias, etc.'''
+    
     def gestionVentasxmes(mes):
+        """_summary_
+
+        Args:
+            mes (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         nombresColumnas = ['idAlq', 'idRes', 'dni', 'patente', 'fecInicio', 'fecFin','fechadev','monto']
         df = pd.read_csv('Alquileres.csv', names = nombresColumnas)
         df[['dia', 'mes', 'anio']] = df['fecInicio'].str.split('-',expand=True)
@@ -21,6 +30,14 @@ class Empresa():
     
     '''Funcion para consultar las ventas por día'''
     def gestionVentasxdia(dia):
+        """_summary_
+
+        Args:
+            dia (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         nombresColumnas = ['idAlq', 'idRes', 'dni', 'patente', 'fecInicio', 'fecFin','fechadev','monto']
         df = pd.read_csv('Alquileres.csv', names=nombresColumnas)
         filtro = (df['fecInicio'] == dia)

@@ -13,6 +13,18 @@ class Alquiler():
     '''Iniciador de la clase Alquiler, en el mismo se agrega desde el constructor el objeto al diccionario
     de la clase. A su vez se carga el set de la clase para facilitar las validaciones'''
     def __init__(self, id = None, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
+        """_summary_
+
+        Args:
+            id (_type_, optional): _description_. Defaults to None.
+            idReserva (_type_, optional): _description_. Defaults to None.
+            dni (_type_, optional): _description_. Defaults to None.
+            patente_auto (_type_, optional): _description_. Defaults to None.
+            fechaInicioAlq (_type_, optional): _description_. Defaults to None.
+            fechaExpiracionAlq (_type_, optional): _description_. Defaults to None.
+            fechadev (_type_, optional): _description_. Defaults to None.
+            monto (_type_, optional): _description_. Defaults to None.
+        """
         self.id = id 
         self.idReserva = idReserva  
         self.dni = dni         

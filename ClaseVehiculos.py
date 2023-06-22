@@ -16,6 +16,18 @@ class Vehiculos():
     de no hacer una gran diferncia con respecto a otras estructuras de datos, como si lo hace en usuario, reservas.
     El precioxdia de cada auto se asigna automaticamente a partir de su tipo y gama'''
     def __init__(self, patente, modelo, marca, anio, tipo, gama, precioxdia = None ,disponible = True):
+        """_summary_
+
+        Args:
+            patente (_type_): _description_
+            modelo (_type_): _description_
+            marca (_type_): _description_
+            anio (_type_): _description_
+            tipo (_type_): _description_
+            gama (_type_): _description_
+            precioxdia (_type_, optional): _description_. Defaults to None.
+            disponible (bool, optional): _description_. Defaults to True.
+        """
         self.patente = patente
         self.modelo = modelo
         self.marca = marca
@@ -37,6 +49,12 @@ class Vehiculos():
     '''Funcion para modificar un atributo de un auto. Se ingresa por parametro el atributo a cambiar y el
     nuevo valor a darle'''
     def modificar(self, atributo, valor_nuevo):
+        """_summary_
+
+        Args:
+            atributo (_type_): _description_
+            valor_nuevo (_type_): _description_
+        """
         match atributo:
             
             case 'patente':
@@ -72,6 +90,17 @@ class Vehiculos():
     aleatoriamente, siempre y cuando sea del tipo y gama pedido, y este disponible para esa fecha segun
     las reservas existentes'''
     def asignarauto(fecinicio, fecfin, tipo_elegido, gama_elegida):
+        """_summary_
+
+        Args:
+            fecinicio (_type_): _description_
+            fecfin (_type_): _description_
+            tipo_elegido (_type_): _description_
+            gama_elegida (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         fecinicio = datetime.strptime(fecinicio,"%d-%m-%Y").date()
         fecfin = datetime.strptime(fecfin,"%d-%m-%Y").date()
         setvehiculosdisponibles=set()

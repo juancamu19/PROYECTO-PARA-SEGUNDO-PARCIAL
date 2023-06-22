@@ -2,6 +2,15 @@ import csv
 
 '''Escribo un archivo csv con los elementos del diccionario indicado para almacenar la información en el tiempo'''
 def escribirCsv(archivo, dicc):
+    """_summary_
+
+    Args:
+        archivo (_type_): _description_
+        dicc (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:                    
         with open(archivo, "w", newline="",encoding='utf-8') as fileEscAlq:  
             escritor = csv.writer(fileEscAlq)
@@ -17,7 +26,16 @@ def escribirCsv(archivo, dicc):
 '''Leo el archivo csv, e instancio los objetos de la clase indicada por parametro, donde los valores para los
 atributos de cada objeto se obtienen del csv. La creacion de cada objeto basta para que el mismo se cargue
 al diccionario de su clase '''
-def leerCsv(archivo, clase):                        
+def leerCsv(archivo, clase): 
+    """_summary_
+
+    Args:
+        archivo (_type_): _description_
+        clase (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """                      
     try:
         with open(archivo) as file:
             lector = csv.reader(file)
@@ -35,10 +53,18 @@ def leerCsv(archivo, clase):
 '''Almaceno en una lista la información un objeto. Esta funcion se utiliza en escribircsv. La finalidad es que con
 un objeto pasado por parametro, se almacene su informacion en una lista, y esa lista sea escrita en cada linea del csv.'''
 def objeto_a_lista(objeto):
-        obj_list = []
-        for attr, value in objeto.__dict__.items():
-            obj_list.append(value)
-        return obj_list
+    """_summary_
+
+    Args:
+        objeto (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    obj_list = []
+    for attr, value in objeto.__dict__.items():
+        obj_list.append(value)
+    return obj_list
 
 
 

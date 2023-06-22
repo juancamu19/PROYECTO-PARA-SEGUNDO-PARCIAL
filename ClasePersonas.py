@@ -11,6 +11,16 @@ class Personas:
     
     '''Iniciador de la clase Personas'''
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña):
+        """_summary_
+
+        Args:
+            dni (_type_): _description_
+            nombre (_type_): _description_
+            apellido (_type_): _description_
+            fecnac (_type_): _description_
+            email (_type_): _description_
+            contrase (_type_): _description_
+        """
         self.dni = dni
         self.nombre = nombre
         self.apellido = apellido
@@ -31,6 +41,13 @@ class Personas:
     ''' Aclaraciones extras: 1- Al cambiar el dni, se debe reemplazar el valor anterior por el nuevo en el set
     2- Al cambiar la contraseña se debe hacer lo mismo, solo que en este caso la que se reemplaza es la tupla dni:contraseña'''
     def cambiar_dato(self, identificador, atributo, valor_nuevo):
+        """_summary_
+
+        Args:
+            identificador (_type_): _description_
+            atributo (_type_): _description_
+            valor_nuevo (_type_): _description_
+        """
         match atributo:
 
             case 'dni':
@@ -82,6 +99,18 @@ class Usuarios(Personas):
     al caso. 
     Por otra parte, la eleccion de sets se adecua a la funcion de validacion por su rapidez y bajo costo de computo.'''
     def __init__(self,dni, nombre, apellido, fecnac, email, contraseña,username, cantreservas=0):
+        """_summary_
+
+        Args:
+            dni (_type_): _description_
+            nombre (_type_): _description_
+            apellido (_type_): _description_
+            fecnac (_type_): _description_
+            email (_type_): _description_
+            contrase (_type_): _description_
+            username (_type_): _description_
+            cantreservas (int, optional): _description_. Defaults to 0.
+        """
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.username = username
         self.cantreservas = int(cantreservas)
@@ -92,6 +121,17 @@ class Usuarios(Personas):
     '''Funcion para crear un usuario. Se pasa por parámetro la contraseña hasheada. Como el usuario interactua con la
      interfaz por su cuenta, el mismo puede agregarse como usuario.  '''
     def agregarUsuario(dni, username, nombre, apellido, fecnac, email, contraseña):
+        """_summary_
+
+        Args:
+            dni (_type_): _description_
+            username (_type_): _description_
+            nombre (_type_): _description_
+            apellido (_type_): _description_
+            fecnac (_type_): _description_
+            email (_type_): _description_
+            contrase (_type_): _description_
+        """
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()  
@@ -101,6 +141,13 @@ class Usuarios(Personas):
     '''Funcion para agregar una reserva al diccionario de reservas. Al instanciar el objeto reservas, ella sola se agrega
     al dicionario correspondiente'''
     def agregarReserva(self, patente_auto, fechaInicio, fechaFin):
+        """_summary_
+
+        Args:
+            patente_auto (_type_): _description_
+            fechaInicio (_type_): _description_
+            fechaFin (_type_): _description_
+        """
         Reserva(Reserva.cantReservas+1, self.dni, patente_auto, fechaInicio, fechaFin)
         self.cantreservas+=1  
         print(f'La reserva de id {Reserva.cantReservas}, hecha por el usuario de dni {self.dni} para el vehículo de patente {patente_auto}, inicia el {fechaInicio} y finaliza el {fechaFin}')
@@ -108,19 +155,41 @@ class Usuarios(Personas):
 
     '''Funcion para eliminar una reserva del diccionario'''    
     def cancelarReserva(self,idreserva):
+        """_summary_
+
+        Args:
+            idreserva (_type_): _description_
+        """
         Reserva.diccReservas[idreserva].cancelarreserva()
 
 
     '''Funciones para modificar las fechas de la reserva. Las fechas se pasan ya validadas'''
     def modifFecInicioReserva(self,idreserva,fechanueva):
+        """_summary_
+
+        Args:
+            idreserva (_type_): _description_
+            fechanueva (_type_): _description_
+        """
         Reserva.diccReservas[idreserva].cambiarfechaInicioAlquiler(fechanueva)
 
     def modifFecFinReserva(self,idreserva,fechanueva):
+        """_summary_
+
+        Args:
+            idreserva (_type_): _description_
+            fechanueva (_type_): _description_
+        """
         Reserva.diccReservas[idreserva].cambiarfechaExpiracionAlquiler(fechanueva)
 
 
     '''Funcion para mostrar las reservas a nombre de un usuario'''
     def mostrarMisReservas(self):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """
         Mensaje=''
         for k,v in Reserva.diccReservas.items():            
             if v.dni==self.dni:
@@ -156,6 +225,17 @@ class Administrador(Personas):
     a las de la clase usuarios. Se trabaja con legajo como clave identificatoria al ser más representativa y tambien 
      unica. '''
     def __init__(self, dni, nombre, apellido, fecnac, email, contraseña, legajo = None):
+        """_summary_
+
+        Args:
+            dni (_type_): _description_
+            nombre (_type_): _description_
+            apellido (_type_): _description_
+            fecnac (_type_): _description_
+            email (_type_): _description_
+            contrase (_type_): _description_
+            legajo (_type_, optional): _description_. Defaults to None.
+        """
         super().__init__(dni, nombre, apellido, fecnac, email, contraseña)
         self.legajo= Administrador.cantempleadosAcumulativo
         Administrador.cantempleadosAcumulativo+=1       
@@ -168,6 +248,16 @@ class Administrador(Personas):
     se encarga de agregar a otro nuevo. Esto presupone la existencia de al menos un empleado, lo cual se
      considero como base '''
     def agregarEmpleado(self, dni, nombre, apellido, fecnac, email, contraseña):
+        """_summary_
+
+        Args:
+            dni (_type_): _description_
+            nombre (_type_): _description_
+            apellido (_type_): _description_
+            fecnac (_type_): _description_
+            email (_type_): _description_
+            contrase (_type_): _description_
+        """
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)
         contraHasheada = objetoHash.hexdigest()
@@ -176,31 +266,62 @@ class Administrador(Personas):
 
     '''Funcion para agregar un vehiculo a diccionario para su carga al archivo Vehiculos. Al instanciar el objeto,
     el mismo se agrega en el diccionario'''
-    def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):        
+    def agregarVehiculo(self, patente, modelo, marca, anio, tipo, gama):   
+        """_summary_
+
+        Args:
+            patente (_type_): _description_
+            modelo (_type_): _description_
+            marca (_type_): _description_
+            anio (_type_): _description_
+            tipo (_type_): _description_
+            gama (_type_): _description_
+        """   
         Vehiculos(patente, modelo, marca, anio, tipo, gama)
         print(f"Se ha agregado correctamente el vehículo de patente {patente}, modelo {modelo}, marca {marca}, anio {anio}, tipo {tipo}")
 
 
     '''Funcion para modificar un atributo de un vehiculo'''
     def modificarVehiculo(self, patente, atributo, valor_nuevo):
+        """_summary_
+
+        Args:
+            patente (_type_): _description_
+            atributo (_type_): _description_
+            valor_nuevo (_type_): _description_
+        """
         Vehiculos.diccVehiculos[patente].modificar(atributo,valor_nuevo)
 
 
     '''Funcion para dar por finalizado un alquiler. Se modifica la disponibilidad en vehiculos'''
     def finalizarAlquiler(self, idalquiler):
+        """_summary_
+
+        Args:
+            idalquiler (_type_): _description_
+        """
         Alquiler.diccAlquileres[idalquiler].finalizar()
         Vehiculos.diccVehiculos[Alquiler.diccAlquileres[idalquiler].patente_auto].devolver()
 
 
     '''Funcion para eliminar un vehículo'''
-    def eliminarVehiculo(self, patente):         
+    def eliminarVehiculo(self, patente): 
+                             
         Vehiculos.diccVehiculos[patente].eliminar()
 
 
     '''Funcion para cambiar el precio de un auto segun gama y tipo. La modificacion se hace directamente en el csv
     con los precios por categoria y tipo. Se utiliza el dataframe de pandas ya que facilita el manejo de tablas con
     doble entrada'''
+    
     def modifPreciosAutos(self, tipo, gama, precionuevo):
+        """_summary_
+
+        Args:
+            tipo (_type_): _description_
+            gama (_type_): _description_
+            precionuevo (_type_): _description_
+        """
         df = pd.read_csv('PreciosVehiculos.csv', index_col=0)
         df.at[gama, tipo] = precionuevo
         df.to_csv('PreciosVehiculos.csv')
@@ -220,11 +341,21 @@ class Administrador(Personas):
 
     '''Funcion para consultar las ventas por día'''
     def consultarVentasXDia(self, dia):
+        """_summary_
+
+        Args:
+            dia (_type_): _description_
+        """
         Empresa.gestionVentasxdia(dia)
     
 
     '''Funcion para consultar las ventas por mes'''
     def consultarVentasXMes(self, mes):
+        """_summary_
+
+        Args:
+            mes (_type_): _description_
+        """
         Empresa.gestionVentasxmes(mes)
 
 

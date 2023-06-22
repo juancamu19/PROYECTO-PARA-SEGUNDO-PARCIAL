@@ -3,7 +3,8 @@ from datetime import date
 import hashlib
 
 '''Valido que el precio ingresado sea positivo'''
-def validarprecio(precio_vehiculo):        
+def validarprecio(precio_vehiculo): 
+           
     try:
         if int(precio_vehiculo)<0:
             print('El precio debe ser mayor que cero')
@@ -15,7 +16,8 @@ def validarprecio(precio_vehiculo):
 
 
 '''Valido que el tipo de auto sea uno de los que tenemos en nuestro sistema'''
-def validartipo(tipo_vehiculo):         
+def validartipo(tipo_vehiculo): 
+            
     if tipo_vehiculo.strip().lower() not in ['sedan','pick-up','suv','deportivo']:
         return False
     else:
@@ -23,7 +25,8 @@ def validartipo(tipo_vehiculo):
 
 
 '''Valido que la gama del auto sea una de los que tenemos en nuestro sistema'''
-def validargama(gama_vehiculo):          
+def validargama(gama_vehiculo):  
+         
     if gama_vehiculo.strip().lower() not in ['baja','media','alta']:
         return False
     else:
@@ -31,7 +34,8 @@ def validargama(gama_vehiculo):
 
 
 '''Valido que no se ingrese un nombre de marca con números'''
-def validarmarca(marca_vehiculo):        
+def validarmarca(marca_vehiculo):  
+          
     try:
         marca_vehiculo = marca_vehiculo.replace(' ','')
         if not marca_vehiculo.isalpha():
@@ -61,7 +65,8 @@ def validarmodelo(modelo_vehiculo):
 
 
 '''Valido que el año ingresado no sea del futuro'''
-def validaranio(anio_ingresado):         
+def validaranio(anio_ingresado): 
+            
     try:
         if int(anio_ingresado) <= date.today().year:
             return True
@@ -75,7 +80,8 @@ def validaranio(anio_ingresado):
 
 
 '''Valido que el atributo que se quiera modificar sea uno de los definidos'''
-def validaratributoVehiculo(atributo_vehiculo):    
+def validaratributoVehiculo(atributo_vehiculo): 
+       
     if atributo_vehiculo.strip().lower() not in ['patente','modelo','marca','año','tipo','gama']:
         return False
     else:
@@ -88,16 +94,18 @@ def validaratributoPersona(atributo_persona):
 
 
 '''Valido que la clave de un diccionario exista en el set de claves asociado al mismo'''
-def validarexistenciaclave(clave, set):        
-     if clave in set:
-          return True
-     else:
-          return False         
+def validarexistenciaclave(clave, set): 
+    """"""             
+    if clave in set:
+        return True
+    else:
+        return False         
      
 
 '''Valido que la persona se encuentre registrada. El set pasado por parametro es o bien setdnis de usuarios, o setlegajos de
 administrador. Ambos son conjuntos de tuplas, conteniendo el identificador y la contraseña hasheada en cada una de ellas. '''
-def validarexistenciaPersona(identificador, contraseña_ingresada, set):     
+def validarexistenciaPersona(identificador, contraseña_ingresada, set):
+         
     contraseña_ingresada = contraseña_ingresada.encode('utf-8')
     objetoHash = hashlib.sha256(contraseña_ingresada)
     contraHasheada = objetoHash.hexdigest()
@@ -107,8 +115,14 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, set):
         return False
     
 '''Valido que la fecha de nacmiento de una persona sea previa a la del presente'''
-def validarFechaNac(fecha):             
+def validarFechaNac(fecha): 
+    """_summary_
+
+        Returns:
+            _type_: _description_
+        """            
     try:
+        
         fecha_ingresada = datetime.strptime(fecha, "%d-%m-%Y").date()
         fecha_actual = date.today()
         if fecha_ingresada < fecha_actual:
@@ -124,6 +138,14 @@ def validarFechaNac(fecha):
 
 '''Valido que la fecha a consultar para gestion economica se encuentre en el formato correcto'''
 def validarFechaAConsultar(fecha):
+    """_summary_
+
+    Args:
+        fecha (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:
         fecha_ing = datetime.strptime(fecha, "%d-%m-%Y").date()
         return True
@@ -135,6 +157,14 @@ def validarFechaAConsultar(fecha):
 
 '''Valido que el mes a consultar para gestion economica sea uno de los 12 del año'''
 def validarMesAConsultar(mes):
+    """_summary_
+
+    Args:
+        mes (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     try:
         if int(mes)<=12 and int(mes)>=1:
             return True
@@ -145,7 +175,8 @@ def validarMesAConsultar(mes):
 
 
 '''Valido que la fecha de inicio de la reserva sea posterior a 5 días desde el presente'''
-def validarAgregarFechaInicio(fechainicio):     
+def validarAgregarFechaInicio(fechainicio): 
+        
     try:
         fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_actual = datetime.now().date()
@@ -161,7 +192,8 @@ def validarAgregarFechaInicio(fechainicio):
 
 
 '''Valido que la modificación de la fecha de inicio del alquiler pertenezca al futuro y sea previa a la fecha de fin del mismo'''
-def validarModifFechaInicio(fechainicio, fechafin):     
+def validarModifFechaInicio(fechainicio, fechafin):
+        
     try:
         fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_fin = datetime.strptime(fechafin,"%d-%m-%Y").date()
@@ -178,7 +210,8 @@ def validarModifFechaInicio(fechainicio, fechafin):
 
 
 '''Valido que la fecha de fin de alquiler sea posterior a la fecha de inicio de alquiler'''
-def validarFechaFin(fechainicio, fechafin):        
+def validarFechaFin(fechainicio, fechafin): 
+           
     try:
         fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
@@ -194,7 +227,8 @@ def validarFechaFin(fechainicio, fechafin):
 
 
 '''Valido que el largo del nombre de usuario sea mayor o igual que 5 caracteres, pero menor o igual que 20'''
-def validarusuario(usuario):         
+def validarusuario(usuario): 
+            
     usuario = str(usuario).strip()
     try:
         if len(usuario) < 5 or len(usuario) > 20:

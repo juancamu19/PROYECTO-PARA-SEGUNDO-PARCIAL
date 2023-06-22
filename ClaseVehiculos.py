@@ -124,9 +124,9 @@ class Vehiculos():
 
     '''Función para eliminar un vehículo'''
     def eliminar(self):
-        for elem in Vehiculos.setVehiculos:
-            if elem==self.patente:
-                Vehiculos.setVehiculos.discard(elem)
+        for k,v in Vehiculos.diccVehiculos.items():
+            if k==self.patente:
+                Vehiculos.setVehiculos.discard(self.patente)                
         del(Vehiculos.diccVehiculos[self.patente])
 
 

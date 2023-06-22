@@ -328,7 +328,7 @@ else:
                                 apellido = input("Ingrese el apellido del nuevo empleado")
 
                             fecnac = input('Ingrese la fecha de nacimiento de la forma D-M-YYYY ')
-                            while val.validarFecha(fecnac) == False:
+                            while val.validarFechaNac(fecnac) == False:
                                 fecnac = input('Ingrese fecha de nacimiento de la forma D-M-YYYY ')
                             fecnac = datetime.strptime(fecnac,"%d-%m-%Y").date()
 

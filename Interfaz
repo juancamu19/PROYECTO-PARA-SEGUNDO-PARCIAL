@@ -8,7 +8,7 @@ from datetime import datetime
 # from claseEmpresa import Empresa
 import validaciones as val
 import Utilities as util
-from ClasePersonas import Administrador, Usuarios, Personas
+from ClasePersonas import Administrador, Usuarios
 from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
@@ -424,6 +424,7 @@ class AgregarAuto(QMainWindow):
 
         if valid_data== True:
             self.show_confirmado()
+            self.close()
             self.openOperacionRealizada(self.legajo, self.contraseña, AgregarAuto())
             Administrador.diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)  
             util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
@@ -504,8 +505,8 @@ class ModificarAuto(QWidget):
         palette.setColor(QPalette.PlaceholderText, placeholder_color)
         input.setPalette(palette)
     
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show()  
 
     def ClickContinuar(self):
@@ -530,7 +531,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
+                        self.openOperacionRealizada(self.legajo, self.contraseña)
 
                 case 'modelo':
                     if val.validarmodelo(valor)==False:
@@ -539,7 +540,7 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
+                        self.openOperacionRealizada(self.legajo, self.contraseña)
 
                 case 'marca':
                     if val.validarmarca(valor)==False:
@@ -548,7 +549,8 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
+                        self.close()
+                        self.openOperacionRealizada(self.legajo, self.contraseña)
 
                 case 'año':  
                     if val.validaranio(valor)==False:
@@ -557,7 +559,8 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado() 
-                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
+                        self.close()
+                        self.openOperacionRealizada(self.legajo, self.contraseña)
 
                 case 'tipo':
                     if val.validartipo(valor)==False:
@@ -566,7 +569,8 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor) 
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
+                        self.close()
+                        self.openOperacionRealizada(self.legajo, self.contraseña)
               
                 case 'gama':
                     if val.validargama(valor)==False:
@@ -575,7 +579,8 @@ class ModificarAuto(QWidget):
                         Administrador.diccEmpleados[self.legajo].modificarVehiculo(patente,atributo,valor)
                         util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.legajo, self.contraseña, ModificarAuto())
+                        self.close()
+                        self.openOperacionRealizada(self.legajo, self.contraseña)
                 
     def Volver(self):
         self.close()
@@ -638,8 +643,8 @@ class EliminarAuto(QWidget):
         self.error_label.setStyleSheet(coloraplicado)
         self.error_label.show()
     
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show()  
 
     def confirmButtonClicked(self):
@@ -653,8 +658,8 @@ class EliminarAuto(QWidget):
             if val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
                 self.showError("Ingrese una patente existente", "red")
             else:
-                self.showError("La cuenta fue eliminada exitosamente", "green")
-                self.openOperacionRealizada(self.legajo, self.contraseña, EliminarAuto())
+                self.close()
+                self.openOperacionRealizada(self.legajo, self.contraseña)
                 Administrador.diccEmpleados[self.legajo].eliminarVehiculo(patente) 
                 util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
     
@@ -752,8 +757,8 @@ class AgregarEmpleado(QWidget):
     def show_Confirmado(self):
         self.confirmado_label.show()
     
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show() 
     
     def PlaceholderText(self, input, text):
@@ -806,7 +811,8 @@ class AgregarEmpleado(QWidget):
         
         if validado==True:
             self.show_Confirmado() 
-            self.openOperacionRealizada(self.legajo, self.contraseña, AgregarEmpleado())
+            self.close()
+            self.openOperacionRealizada(self.legajo, self.contraseña)
             Administrador.diccEmpleados[self.legajo].agregarEmpleado(dni, nombre, apellido, fecnac, email, contraseña)
             util.escribirCsv('Empleados.csv', Administrador.diccEmpleados) 
 
@@ -859,8 +865,8 @@ class EliminarEmpleado(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show() 
     
     def showError(self, text, color):
@@ -880,9 +886,10 @@ class EliminarEmpleado(QWidget):
             self.input_legajo.clear()
         else:
             self.showError("La cuenta fue eliminada exitosamente", "green")
-            Administrador.diccEmpleados[self.legajo].darDeBajaEmpleado(legajo) #SGREGAR LOS PARAMETROS ACA
+            self.close()
+            Administrador.diccEmpleados[self.legajo].darDeBajaEmpleado(legajo)
             util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)
-            self.openOperacionRealizada(self.legajo, self.contraseña, EliminarEmpleado())
+            self.openOperacionRealizada(self.legajo, self.contraseña)
     
     def Volver(self):
         self.close()
@@ -966,8 +973,8 @@ class ModificarPrecioAuto(QWidget):
         self.error_label.setStyleSheet(coloraplicado)
         self.error_label.show()
 
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show() 
 
     def ClickConfirmar(self):
@@ -980,7 +987,8 @@ class ModificarPrecioAuto(QWidget):
         else:
             Administrador.diccEmpleados[self.legajo].modifPreciosAutos(tipo,gama,precio) 
             self.showError("El cambio de precio fue realizado exitosamente", "green")
-            self.openOperacionRealizada(self.legajo, self.contraseña, ModificarPrecioAuto())
+            self.openOperacionRealizada(self.legajo, self.contraseña)
+            self.close()
         
     def Volver(self):
         self.close()
@@ -1041,8 +1049,8 @@ class FinalizarAlquiler(QWidget):
         self.error_label.setStyleSheet(coloraplicado)
         self.error_label.show()
 
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show() 
 
     def confirmButtonClicked(self):
@@ -1054,9 +1062,10 @@ class FinalizarAlquiler(QWidget):
             self.showError("Ingrese un id de alquiler válido", "red")
         else:
             self.showError("El alquiler fue terminado exitosamente", "green")
+            self.close()
             Administrador.diccEmpleados[self.legajo].finalizarAlquiler(idalq)
             util.escribirCsv('Alquileres.csv', Alquiler.diccAlquileres)
-            self.openOperacionRealizada(self.legajo, self.contraseña, FinalizarAlquiler())
+            self.openOperacionRealizada(self.legajo, self.contraseña)
     
     def Volver(self):
         self.close()
@@ -1401,8 +1410,8 @@ class CrearReserva(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
-    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
-        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+    def openOperacionRealizada(self, dni, usuario, contraseña):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña)
         self.window1.show()
 
     def showError(self, text, color):
@@ -1435,9 +1444,10 @@ class CrearReserva(QWidget):
                 self.showError("Lo sentimos, no hay autos disponibles según lo pedido. Pruebe cambiando el tipo y gama de auto", "red")
             else:
                 self.showError("La reserva fue realizada exitosamente", "green")
+                self.close()
                 Usuarios.diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
                 util.escribirCsv('Reservas.csv', Reserva.diccReservas)
-                self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CrearReserva(self.dni, self.usuario, self.contraseña))
+                self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
 
     def Volver(self):
         self.close()
@@ -1494,8 +1504,8 @@ class Cancelacion(QWidget):
         self.error_label.setStyleSheet(coloraplicado)
         self.error_label.show()
 
-    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
-        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+    def openOperacionRealizada(self, dni, usuario, contraseña):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña)
         self.window1.show()
 
     def confirmButtonClicked(self):
@@ -1506,11 +1516,11 @@ class Cancelacion(QWidget):
             validado=False
             self.showError("Ingrese un id de reserva válido", "red")
         else:
-            self.label_error.hide()
+            self.close()
             self.showError("La reserva fue cancelada exitosamente", "green")
             Usuarios.diccUsuarios[self.dni].cancelarReserva(idres)
             util.escribirCsv('Reservas.csv', Reserva.diccReservas)
-            self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, Cancelacion(self.dni, self.usuario, self.contraseña))
+            self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
     
     def Volver(self):
         self.close()
@@ -1519,7 +1529,7 @@ class Cancelacion(QWidget):
 
 
 class OperacionRealizadaUsuario(QWidget):
-    def __init__(self, dni, usuario, contraseña, ventana):
+    def __init__(self, dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle("Operación realizada")
         self.setMinimumSize(600,600)
@@ -1529,7 +1539,7 @@ class OperacionRealizadaUsuario(QWidget):
         self.dni=dni
         self.usuario=usuario
         self.contraseña=contraseña
-        self.ventana= ventana
+
 
     def initUI(self):
         layout = QVBoxLayout()
@@ -1551,8 +1561,43 @@ class OperacionRealizadaUsuario(QWidget):
     
     def Volver(self, ventana):
         self.close()
-        
         self.window = MainWindow(self.dni,self.usuario, self.contraseña)
+        self.window.show()
+
+class finalizarOperacionUsuario(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Operación realizada")
+        self.setMinimumSize(600,600)
+        self.initUI()
+
+        """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label_aviso = QLabel("Su operación fue realizada exitosamente!")
+        label_aviso.setStyleSheet("color: green")
+        layout.addWidget(label_aviso)
+
+        self.button2 = QPushButton("Volver al Inicio")
+        self.button2.clicked.connect(self.Volver)
+        layout.addWidget(self.button2)
+
+        self.button1=QPushButton("Cerrar Programa")
+        self.button1.clicked.connect(self.close)
+        layout.addWidget(self.button1)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+    
+    def Volver(self):
+        self.close()
+        self.window = LoginWindow()
         self.window.show()
 
 class CambioDatos(QWidget):
@@ -1620,8 +1665,8 @@ class CambioDatos(QWidget):
         self.window = MainWindow(self.dni, self.usuario, self.contraseña)
         self.window.show()    
 
-    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
-        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+    def openOperacionRealizada(self, dni, usuario, contraseña):
+        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña)
         self.window1.show()
 
     def PlaceholderText(self, text):
@@ -1645,7 +1690,8 @@ class CambioDatos(QWidget):
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()  
-                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
+                        self.close()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
 
             case 'nombre':
                     if val.validarnombre(valor)==False:
@@ -1654,7 +1700,8 @@ class CambioDatos(QWidget):
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
+                        self.close()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
 
             case 'apellido':
                 if val.validarnombre(valor)==False:
@@ -1663,7 +1710,8 @@ class CambioDatos(QWidget):
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
+                        self.close()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
 
             case 'fecha de nacimiento':  
                 if val.validarFecha(valor)==False:
@@ -1672,7 +1720,8 @@ class CambioDatos(QWidget):
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
+                        sef.close()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
 
             case 'email':
                 if val.validaremail(valor)==False:
@@ -1681,7 +1730,8 @@ class CambioDatos(QWidget):
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
+                        self.close()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
               
             case 'contraseña':
                 if val.validarcontraseña(valor)==False:
@@ -1691,7 +1741,8 @@ class CambioDatos(QWidget):
                         Usuarios.diccUsuarios[self.dni].cambiar_dato(self.dni,atributo,valor)
                         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
                         self.show_confirmado()
-                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, CambioDatos())
+                        self.close()
+                        self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
 
 class EliminarUsuario(QWidget):
     def __init__(self, dni, usuario, contraseña):
@@ -1756,8 +1807,8 @@ class EliminarUsuario(QWidget):
         self.input_contra1.clear()
         self.input_contra2.clear()
     
-    def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
-        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
+    def finalizarOperacion(self):
+        self.window1 = finalizarOperacionUsuario()
         self.window1.show()
 
     def confirmButtonClicked(self):
@@ -1777,15 +1828,15 @@ class EliminarUsuario(QWidget):
             self.input_contra1.clear()
             self.input_contra2.clear()
 
-        if val.validarexistenciaPersona(dni, contra1, Usuarios)==False:
+        if val.validarexistenciaPersona(dni, contra1, Usuarios.setdnis)==False:
             validado=False
             self.showError("Los datos no coinciden con una persona registrada", "red")
             self.clearInputs()
         else:
             self.showError("La cuenta fue eliminada exitosamente", "green")
-            Usuarios.diccUsuarios[self.dni].darDeBaja(self.dni, Usuarios.diccUsuarios)
+            Usuarios.diccUsuarios[dni].darDeBajaUsuario()
             util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
-            self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, EliminarUsuario())
+            self.finalizarOperacion()
 
     def Volver(self):
         self.close()

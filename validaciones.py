@@ -2,11 +2,11 @@ from datetime import datetime
 from datetime import date
 import hashlib
 
-
-def validarprecio(precio):        #Valido que el precio ingresado sea positivo
+'''Valido que el precio ingresado sea positivo'''
+def validarprecio(precio_vehiculo):        
     try:
-        if int(precio)<0:
-            print('El precio debe ser positivo')
+        if int(precio_vehiculo)<0:
+            print('El precio debe ser mayor que cero')
             return False
     
     except ValueError:
@@ -14,24 +14,27 @@ def validarprecio(precio):        #Valido que el precio ingresado sea positivo
         return False 
 
 
-def validartipo(tipo):         #Valido que el tipo de auto sea uno de los que tenemos en nuestro sistema
-    if tipo.strip().lower() not in ['sedan','pick-up','suv','deportivo']:
+'''Valido que el tipo de auto sea uno de los que tenemos en nuestro sistema'''
+def validartipo(tipo_vehiculo):         
+    if tipo_vehiculo.strip().lower() not in ['sedan','pick-up','suv','deportivo']:
         return False
     else:
         return True
 
 
-def validargama(gama):          #Valido que la gama del auto sea una de los que tenemos en nuestro sistema
-    if gama.strip().lower() not in ['baja','media','alta']:
+'''Valido que la gama del auto sea una de los que tenemos en nuestro sistema'''
+def validargama(gama_vehiculo):          
+    if gama_vehiculo.strip().lower() not in ['baja','media','alta']:
         return False
     else:
         return True
 
 
-def validarmarca(marca):        #Valido que no se ingrese un nombre de marca con números
+'''Valido que no se ingrese un nombre de marca con números'''
+def validarmarca(marca_vehiculo):        
     try:
-        marca = marca.replace(' ','')
-        if not marca.isalpha():
+        marca_vehiculo = marca_vehiculo.replace(' ','')
+        if not marca_vehiculo.isalpha():
             print('Nombre inválido')
             return False
          
@@ -42,10 +45,11 @@ def validarmarca(marca):        #Valido que no se ingrese un nombre de marca con
     return True
 
 
-def validarmodelo(modelo):      #Valido que el modelo sólo contenga caracteres alfanuméricos o espacios
+'''Valido que el modelo sólo contenga caracteres alfanuméricos o espacios'''
+def validarmodelo(modelo_vehiculo):      
     try:
-        modelo = modelo.replace(' ','')
-        if not modelo.isalnum():
+        modelo_vehiculo = modelo_vehiculo.replace(' ','')
+        if not modelo_vehiculo.isalnum():
             print('Nombre inválido')
             return False
          
@@ -56,9 +60,10 @@ def validarmodelo(modelo):      #Valido que el modelo sólo contenga caracteres 
     return True
 
 
-def validaranio(anio):         #Valido que el año ingresado no sea del futuro
+'''Valido que el año ingresado no sea del futuro'''
+def validaranio(anio_ingresado):         
     try:
-        if int(anio) <= date.today().year:
+        if int(anio_ingresado) <= date.today().year:
             return True
         else:
             print('No hemos alcanzado ese año aún, registra el auto cuando llegue su momento')
@@ -69,21 +74,24 @@ def validaranio(anio):         #Valido que el año ingresado no sea del futuro
         return False 
 
 
-def validaratributo(atributo_vehiculo):     #Valido que el atributo que se quiera modificar sea uno de los definidos
+'''Valido que el atributo que se quiera modificar sea uno de los definidos'''
+def validaratributo(atributo_vehiculo):    
     if atributo_vehiculo.strip().lower() not in ['patente','modelo','marca','año','tipo','gama']:
         return False
     else:
         return True
 
 
-def validarexistenciaclave(clave, set):        #Valido que la clave de un diccionario exista en el mismo
+'''Valido que la clave de un diccionario exista en el set de claves asociado al mismo'''
+def validarexistenciaclave(clave, set):        
      if clave in set:
           return True
      else:
           return False         
      
 
-def validarexistenciaPersona(identificador, contraseña_ingresada, set):     #Valido que la persona se encuentre registrada 
+'''Valido que la persona se encuentre registrada'''
+def validarexistenciaPersona(identificador, contraseña_ingresada, set):     
     contraseña_ingresada = contraseña_ingresada.encode('utf-8')
     objetoHash = hashlib.sha256(contraseña_ingresada)
     contraHasheada = objetoHash.hexdigest()
@@ -92,12 +100,12 @@ def validarexistenciaPersona(identificador, contraseña_ingresada, set):     #Va
     else:
         return False
     
-
-def validarFecha(fecha):              #Valido que la fecha de nacmiento de una persona sea previa a la del presente
+'''Valido que la fecha de nacmiento de una persona sea previa a la del presente'''
+def validarFecha(fecha):             
     try:
-        fecha_ing = datetime.strptime(fecha, "%d-%m-%Y").date()
+        fecha_ingresada = datetime.strptime(fecha, "%d-%m-%Y").date()
         fecha_actual = date.today()
-        if fecha_ing < fecha_actual:
+        if fecha_ingresada < fecha_actual:
              return True
         else:
              print('La fecha ingresada no es valida')
@@ -106,6 +114,9 @@ def validarFecha(fecha):              #Valido que la fecha de nacmiento de una p
     except ValueError:
         print('El formato de fecha ingresa es incorrecto, debe ser D-M-Y')
         return False
+
+
+'''Valido que la fecha a consultar se encuentre en el formato correcto'''
 def validarFechaAConsultar(fecha):
     try:
         fecha_ing = datetime.strptime(fecha, "%d-%m-%Y").date()
@@ -114,6 +125,9 @@ def validarFechaAConsultar(fecha):
     except ValueError:
         print('El formato de fecha ingresa es incorrecto, debe ser D-M-Y')
         return False
+
+
+'''Valido que el mes a consultar sea uno de los 12 del año'''
 def validarMesAConsultar(mes):
     try:
         if int(mes)<=12 and int(mes)>=1:
@@ -124,27 +138,29 @@ def validarMesAConsultar(mes):
         return False
 
 
-def validarAgregarFechaInicio(fechainicio):      #Valido que la fecha de inicio de la reserva sea posterior a 5 días desde el presente
+'''Valido que la fecha de inicio de la reserva sea posterior a 5 días desde el presente'''
+def validarAgregarFechaInicio(fechainicio):     
     try:
-        fecha_ing = datetime.strptime(fechainicio,"%d-%m-%Y").date()
-        fechaactual = datetime.now().date()
-        if (fecha_ing - fechaactual).days >= 5:
+        fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
+        fecha_actual = datetime.now().date()
+        if (fecha_ingresada - fecha_actual).days >= 5:
              return True
         else:
-             print('la fecha ingresada debe tener como mínimo una anticipación de 5 días')
+             print('La fecha ingresada debe tener como mínimo una anticipación de 5 días')
              return False
     
     except ValueError:
-        print('el formato de fecha ingresada es incorrecto, debe ser D-M-Y')
+        print('El formato de fecha ingresada es incorrecto, debe ser D-M-Y')
         return False
 
 
-def validarModifFechaInicio(fechainicio, fechafin):     #Valido que la modificación de la fecha de inicio del alquiler pertenezca al futuro y sea previa a la fecha de fin del mismo
+'''Valido que la modificación de la fecha de inicio del alquiler pertenezca al futuro y sea previa a la fecha de fin del mismo'''
+def validarModifFechaInicio(fechainicio, fechafin):     
     try:
-        fecha_ing = datetime.strptime(fechainicio,"%d-%m-%Y").date()
+        fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_fin = datetime.strptime(fechafin,"%d-%m-%Y").date()
-        fechaactual = datetime.now().date()
-        if (fecha_ing - fechaactual).days >= 5 and fecha_ing <= fecha_fin:  
+        fecha_actual = datetime.now().date()
+        if (fecha_ingresada - fecha_actual).days >= 5 and fecha_ingresada <= fecha_fin:  
              return True
         else:
              print('la fecha ingresada no cumple con los 5 dias de anticipación o es posterior a la fecha pactada de fin de alquiler')
@@ -155,7 +171,8 @@ def validarModifFechaInicio(fechainicio, fechafin):     #Valido que la modificac
         return False
 
 
-def validarFechaFin(fechainicio, fechafin):         #Valido que la fecha de fin de alquiler sea posterior a la fecha de inicio de alquiler
+'''Valido que la fecha de fin de alquiler sea posterior a la fecha de inicio de alquiler'''
+def validarFechaFin(fechainicio, fechafin):        
     try:
         fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
@@ -170,7 +187,8 @@ def validarFechaFin(fechainicio, fechafin):         #Valido que la fecha de fin 
         return False
 
 
-def validarusuario(usuario):         #Valido que el largo del nombre de usuario sea mayor o igual que 5 caracteres, pero menor o igual que 20
+'''Valido que el largo del nombre de usuario sea mayor o igual que 5 caracteres, pero menor o igual que 20'''
+def validarusuario(usuario):         
     usuario = str(usuario).strip()
     try:
         if len(usuario) < 5 or len(usuario) > 20:
@@ -184,12 +202,12 @@ def validarusuario(usuario):         #Valido que el largo del nombre de usuario 
     return True
 
 
-def validardni(dni):         #Valido que el dni tenga entre 7 y 8 dígitos
+'''Valido que el dni tenga entre 7 y 8 dígitos'''
+def validardni(dni):        
     dni = str(dni).strip()
     try:
         if len(dni) < 7 or len(dni) > 8 or dni.isdigit() == False:
             raise ValueError("El dni ingresado es incorrecto, intente de nuevo")
-            
          
     except ValueError as error:
         print(f"Error: {error}")
@@ -201,7 +219,8 @@ def validardni(dni):         #Valido que el dni tenga entre 7 y 8 dígitos
     return True
 
 
-def validarnombre(nombre):      #Valido que el nombre de la persona sólo contenga caracteres alfabéticos o espacios
+'''Valido que el nombre de la persona sólo contenga caracteres alfabéticos o espacios'''
+def validarnombre(nombre):     
     try:
         nombre = nombre.replace(' ','')
         if not nombre.isalpha():
@@ -215,7 +234,8 @@ def validarnombre(nombre):      #Valido que el nombre de la persona sólo conten
     return True
 
 
-def validaremail(mail):       #Valido que el mail no sea nulo y que contenga el "@"
+'''Valido que el mail no sea nulo y que contenga el "@"'''
+def validaremail(mail):       
     try:
          if len(mail) == 0 or mail.count("@") == 0:
             print("El mail ingresado es incorrecto, intente de nuevo")
@@ -227,11 +247,12 @@ def validaremail(mail):       #Valido que el mail no sea nulo y que contenga el 
     return True 
 
 
-def validarcontraseña(contraseña):        #Valido que el largo de la contraseña sea mayor o igual que 5 caracteres, pero menor o igual que 20
-    contraseña = str(contraseña)
+'''Valido que el largo de la contraseña sea mayor o igual que 5 caracteres, pero menor o igual que 20'''
+def validarcontraseña(contraseña_ingresada):       
+    contraseña_ingresada = str(contraseña_ingresada)
     
     try:
-         if len(contraseña) < 5 or len(contraseña) > 20:
+         if len(contraseña_ingresada) < 5 or len(contraseña_ingresada) > 20:
             raise ValueError("La contraseña ingresada es incorrecta, intente de nuevo")
          
     except ValueError as error:
@@ -241,7 +262,8 @@ def validarcontraseña(contraseña):        #Valido que el largo de la contrase�
     return True   
                    
 
-def validarpatente(patente):      #Valido que la patente pueda ser una de las permitidas en Argentina
+'''Valido que la patente pueda ser una de las permitidas en Argentina'''
+def validarpatente(patente):      
     patente = str(patente)
     
     try:
@@ -268,48 +290,50 @@ def validarpatente(patente):      #Valido que la patente pueda ser una de las pe
     return True
 
 
-def validarCambiarDatosPersona(atributo,valor):
+'''Valido que el atributo que el usuario quiera cambiar de su perfil, cumpla los requerimientos propio de dicho atributo'''
+def validarCambiarDatosPersona(atributo, valor_ingresado):
      match atributo:
 
         case 'dni':
-            return validardni(valor)
+            return validardni(valor_ingresado)
 
         case 'nombre':
-            return validarnombre(valor)
+            return validarnombre(valor_ingresado)
 
         case 'apellido':
-            return validarnombre(valor)
+            return validarnombre(valor_ingresado)
 
         case 'fecnac':
-            return validarFecha(valor)
+            return validarFecha(valor_ingresado)
 
         case 'email':
-            return validaremail(valor)
+            return validaremail(valor_ingresado)
         
         case 'contraseña':
-            return validarcontraseña(valor)  
+            return validarcontraseña(valor_ingresado)  
 
 
-def validarCambiarDatosVehiculo(atributo,valor):
+'''Valido que el atributo que un administador quiera cambiar de un vehículo, cumpla los requerimientos propio de dicho atributo'''
+def validarCambiarDatosVehiculo(atributo,valor_ingresado):
     match atributo:
             
         case 'patente':
-            return validarpatente(valor) 
+            return validarpatente(valor_ingresado) 
         
         case 'modelo' :
-            return validarmodelo(valor) 
+            return validarmodelo(valor_ingresado) 
         
         case 'marca' :
-            return validarmarca(valor)
+            return validarmarca(valor_ingresado)
         
         case 'año':
-            return validaranio(valor)
+            return validaranio(valor_ingresado)
         
         case 'tipo' :
-            return validartipo(valor)
+            return validartipo(valor_ingresado)
         
         case 'gama':
-            return validargama(valor)
+            return validargama(valor_ingresado)
 
 
 

@@ -5,9 +5,9 @@ from ClasePersonas import Administrador, Usuarios
 from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
+
 seguir_operando = "SI"
 
-# any(not dicc for dicc in[diccAlquileres,diccReservas,diccVehiculos,diccUsuarios,diccEmpleados])
 if Alquiler.diccAlquileres==False or Reserva.diccReservas==False or Vehiculos.diccVehiculos==False or Usuarios.diccUsuarios==False or Administrador.diccEmpleados==False:
     print('Corrobore con el administrador que se encuentren todos los archivos necesarios en el directorio que corresponde')
     
@@ -29,8 +29,8 @@ else:
             opcion_elegida = input("Ingrese nuevamente la opcion: ")
 
 
-        
-        if opcion_elegida == '1':                                 #Ingreso a las opciones de Usuario
+        '''Ingreso a las opciones de Usuario'''
+        if opcion_elegida == '1':                                 
             print('')
             print('Operaciones que puede realizar:')
             print('')
@@ -45,7 +45,8 @@ else:
             
             print('')
 
-            if opcion_elegida == "1":                               #Registro del Usuario (Persona)
+            '''Registro del Usuario (Persona)'''
+            if opcion_elegida == "1":                              
                                                     
                 dni = input("Ingrese su dni (sólo números) ")
                 while val.validardni(dni) == False:              
@@ -89,19 +90,20 @@ else:
                     
             
 
-            elif opcion_elegida == "2":                             #Ingreso del Usuario (Persona)
+                '''Ingreso del Usuario (Persona)'''
+            elif opcion_elegida == "2":                             
                 
-                dnix = input("Ingrese su dni ")
-                contraseñax = input("Ingrese su contraseña ")
+                dni_ingresado = input("Ingrese su dni ")
+                contraseña_ingresada = input("Ingrese su contraseña ")
 
-                while val.validarexistenciaPersona(dnix, contraseñax, Usuarios.setdnis) == False:
+                while val.validarexistenciaPersona(dni_ingresado, contraseña_ingresada, Usuarios.setdnis) == False:
                     print("Alguno de los datos ingresados es incorrecto, intente nuevamente")
-                    dnix = input("Ingrese su dni ")
-                    contraseñax = input("Ingrese su contraseña ")
+                    dni_ingresado = input("Ingrese su dni ")
+                    contraseña_ingresada = input("Ingrese su contraseña ")
 
                 print('')
                 print("Ha ingresado:")
-                print(Usuarios.diccUsuarios [dnix])
+                print(Usuarios.diccUsuarios [dni_ingresado])
                 print('')
                 
                 seguir_operando = "SI"
@@ -120,11 +122,12 @@ else:
 
                     operacion = input("Ingrese el número de operación que desea realizar ")
 
-                    while opcion_elegida not in ['1','2','3','4','5','6']: 
-                        opcion_elegida = input("ingrese nuevamente la opcion: ")
+                    while operacion not in ['1','2','3','4','5','6']: 
+                        opoperacion = input("Ingrese nuevamente la opcion: ")
 
 
-                    if operacion == "1":                        #Realizar una reserva
+                    '''Realizar una reserva'''
+                    if operacion == "1":                        
                         fechainicio = input('Ingrese fecha inicio del alquiler de la forma D-M-YYYY (debe haber una anticipación mínima de 5 días) ')
                         while val.validarAgregarFechaInicio(fechainicio) == False:
                             print('Ingrese una fecha válida')
@@ -150,12 +153,12 @@ else:
                         if auto == None:
                             print('No hay auto disponible')
                         else: 
-                            Usuarios.diccUsuarios[dnix].agregarReserva(auto, fechainicio, fechafin)
+                            Usuarios.diccUsuarios[dni_ingresado].agregarReserva(auto, fechainicio, fechafin)
                             print("Infromación detallada del vehículo: ", Vehiculos.diccVehiculos[auto])
                         
                                 
-                                
-                    elif operacion == "2":                     #Cambiar una fecha de reserva
+                        '''Cambiar una fecha de reserva'''        
+                    elif operacion == "2":                     
 
                         print('Operaciones que puede realizar:')
                         print('')
@@ -167,41 +170,45 @@ else:
                         while cambio not in ['1','2']: 
                             cambio = input("ingrese nuevamente la opcion: ")
                         print('Las reservas a su nombre son las siguientes')
-                        print(Usuarios.diccUsuarios[dnix].mostrarMisReservas())
+                        print(Usuarios.diccUsuarios[dni_ingresado].mostrarMisReservas())
 
                         idres = input("Ingrese el id de su reserva ")
                         while val.validarexistenciaclave(idres, Reserva.setReservas) == False:
                             idres = input("Ingrese el id de su reserva ")
                         
-                    
 
-                        if cambio == '1':                 #Cambiar el incicio de la reserva
+                        '''Cambiar el incicio de la reserva'''
+                        if cambio == '1':                
                             fechanueva = input('ingrese fecha de Inicio de alquiler de la forma D-M-YYYY')
                             while val.validarModifFechaInicio(fechanueva,Reserva.diccReservas[idres].fechaFin) == False:
                                 fechanueva = input('Ingrese fecha de inicio del alquiler de la forma D-M-YYYY ')
-                            Usuarios.diccUsuarios[dnix].modifFecInicioReserva(idres,fechanueva)
+                            
+                            Usuarios.diccUsuarios[dni_ingresado].modifFecInicioReserva(idres,fechanueva)
 
                             
-                        elif cambio == '2':               #Cambiar el fin de la reserva
+                            '''Cambiar el fin de la reserva'''
+                        elif cambio == '2':               
                             fechanueva = input('ingrese fecha de expiración de alquiler de la forma D-M-YYYY')
                             while val.validarFechaFin(Reserva.diccReservas[idres].fechaInicio,fechanueva) == False:                    
                                 fechanueva = input('Ingrese fecha fin del alquiler de la forma D-M-YYYY ')
 
-                            Usuarios.diccUsuarios[dnix].modifFecFinReserva(idres,fechanueva)
+                            Usuarios.diccUsuarios[dni_ingresado].modifFecFinReserva(idres,fechanueva)
 
                         
-                                    
-                    elif operacion == "3":                     #Cancelar una reserva
+
+                        '''Cancelar una reserva'''
+                    elif operacion == "3":                     
                         validado = False
                         idres = input("ingrese el id de su reserva ")
                         while val.validarexistenciaclave(idres,Reserva.setReservas) == False:
                             idres = input("ingrese el id de su reserva ")
                             
-                        Usuarios.diccUsuarios[dnix].cancelarReserva(idres)
+                        Usuarios.diccUsuarios[dni_ingresado].cancelarReserva(idres)
 
                             
-                        
-                    elif operacion == "4":                      #Cambiar un dato del usuario
+
+                        '''Cambiar un dato del usuario'''
+                    elif operacion == "4":                      
                         
                         atributo = input('Ingrese el atributo a cambiar (dni, nombre, apellido, fecnac, email, contraseña) ')
                         while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
@@ -212,20 +219,23 @@ else:
                         while val.validarCambiarDatosPersona(atributo,valor) == False:
                             valor = input('Ingrese el nuevo valor para el atributo a cambiar')
                                 
-                        Usuarios.diccUsuarios[dnix].cambiar_dato(dnix,atributo,valor)
+                        Usuarios.diccUsuarios[dni_ingresado].cambiar_dato(dni_ingresado,atributo,valor)
 
 
 
-                    elif operacion == "5":                       #Darse de baja
-                        Usuarios.diccUsuarios[dnix].darDeBajaUsuario()
+                        '''Eliminar un usuario (eliminarse a si mismo como usuario)'''
+                    elif operacion == "5":                       
+                        Usuarios.diccUsuarios[dni_ingresado].darDeBajaUsuario()
 
 
 
-                    elif operacion == "6":                      #Salir
+                        '''Salir'''
+                    elif operacion == "6":                      
                         pass
                 
                     
-                    if val.validarexistenciaclave(dnix,Usuarios.diccUsuarios) == True:
+                    '''Valido que el usuario no se haya eliminado a si mismo para poder permitirle seguir realizando operaciones'''
+                    if val.validarexistenciaclave(dni_ingresado,Usuarios.diccUsuarios) == True:
                         seguir_operando = input("Desea seguir operando como usuario (SI o NO)? ").strip().upper()
                         while seguir_operando not in ['SI','NO']: 
                             seguir_operando = input("No ha ingresado una opción válida. Desea seguir operando (SI o NO)? ").strip().upper()
@@ -234,7 +244,8 @@ else:
 
 
 
-            elif opcion_elegida == '3':                      #Salir
+                '''Salir'''
+            elif opcion_elegida == '3':                      
                 pass
 
                     
@@ -242,6 +253,7 @@ else:
 
         
         elif opcion_elegida == '2':                               #Ingreso a las opciones de Empleado
+            print('')
             print("Ingrese sus datos como empleado")
             print('')
             
@@ -251,10 +263,13 @@ else:
             while not validado and volver_a_ingresar == "SI":
 
                 legajo = input("Ingrese su legajo ")
-                contraseñax = input("Ingrese su contraseña ")
-                validado = val.validarexistenciaPersona(legajo, contraseñax, Administrador.setlegajos)
-                legajo=int(legajo)
+                contraseña_ingresada = input("Ingrese su contraseña ")
                 
+                '''Valido que el usuario como administrador ya se encuentre registrado'''
+                validado = val.validarexistenciaPersona(legajo, contraseña_ingresada, Administrador.setlegajos)
+                
+                legajo=int(legajo)
+
                 if not validado:
                     print("Su legajo o contraseña son incorrectos")
                     volver_a_ingresar = input("Desea volver a ingresar sus datos (SI o NO)? ").strip().upper()
@@ -277,7 +292,7 @@ else:
                         print('6. Cambiar un dato suyo')
                         print('7. Modificar precio por dia de un vehiculo')
                         print('8. Dar de baja a otro empleado')
-                        print('9. Ejecutar tareas de gestión de la Empresa')
+                        print('9. Ejecutar tareas de gestión económica de la Empresa')
                         print('')
                         print('10. Salir')
                         print('')
@@ -288,7 +303,8 @@ else:
                             opcion_elegida = input("Ingrese nuevamente la opcion ")
                         
                         
-                        if opcion_elegida == '1':                      #Registrar un empleado nuevo
+                        '''Registrar un empleado nuevo'''
+                        if opcion_elegida == '1':                      
 
                             dni = input("Ingrese el dni del nuevo empleado(sólo números) ")
                             while val.validardni(dni) == False:              
@@ -323,7 +339,8 @@ else:
                             Administrador.diccEmpleados[legajo].agregarEmpleado(dni, nombre, apellido, fecnac, email, contraseña)  
 
 
-                        if opcion_elegida == "2":                       #Agregar un vehículo
+                        '''Agregar un vehículo'''
+                        if opcion_elegida == "2":                       
                             patente = input('Ingrese la patente ')
                             while (val.validarpatente(patente) == False) or (val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == True):
                                 print('La patente ingresada se encuentra en un formato incorrecto, o ya se encuentra asociada a un vehículo')
@@ -353,56 +370,58 @@ else:
                             print()
                             
 
-                        if opcion_elegida == "3":                       #Modificar un vehículo
-                            patente=input('Ingrese patente')
+                        ''''Modificar un vehículo'''
+                        if opcion_elegida == "3":                       
+                            patente = input('Ingrese la patente del vehículo al que le desea realizar modificaciones ')
                             while  val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
-                                patente=input('Ingrese patente existente')
-                                    
+                                patente = input('Ingrese patente existente ')  
 
-                            atributo=input('Ingrese atributo a cambiar')
-
+                            atributo = input('Ingrese atributo a cambiar (patente, modelo, marca, año, tipo, gama) ')
                             while  val.validaratributo(atributo) == False:
-                                atributo=input('Ingrese atributo a cambiar')
+                                atributo = input('Ingrese un atributo válido para cambiar ')
 
-                            valor=input('Ingrese el valor del atributo a cambiar')
-
-                            while val.validarCambiarDatosVehiculo(atributo,valor)==False:
-                                valor=input('Ingrese el valor del atributo a cambiar')
+                            valor_nuevo = input('Ingrese el valor del atributo a cambiar')
+                            while val.validarCambiarDatosVehiculo(atributo, valor_nuevo) == False:
+                                valor_nuevo = input('Ingrese el valor del atributo a cambiar nuevamente')
                                     
-                            Administrador.diccEmpleados[legajo].modificarVehiculo(patente,atributo,valor) 
+                            Administrador.diccEmpleados[legajo].modificarVehiculo(patente,atributo,valor_nuevo) 
                         
                         
-                        if opcion_elegida == "4":                       #Eliminar un vehículo
-                            patente=input('Ingrese patente')
+                        '''Eliminar un vehículo'''
+                        if opcion_elegida == "4":                       
+                            patente = input('Ingrese patente')
                             while  val.validarexistenciaclave(patente,Vehiculos.setVehiculos) == False:
-                                patente=input('Ingrese patente existente')
+                                patente = input('Ingrese patente existente')
                                 
                             Administrador.diccEmpleados[legajo].eliminarVehiculo(patente)                 
 
 
-                        if opcion_elegida == "5":                        #Finalizar un alquiler (reportar auto devuelto)
-                            idalquiler = input('Ingrese id del alquiler ')
+                        '''Finalizar un alquiler (reportar auto devuelto)'''
+                        if opcion_elegida == "5":                        
+                            idalquiler = input('Ingrese id del alquiler a finalizar ')
                             while  val.validarexistenciaId(idalquiler,Alquiler.diccAlquileres) == False:
                                 idalquiler=input('Ingrese id del alquiler ')
                                 
                             Administrador.diccEmpleados[legajo].finalizarAlquiler(idalquiler) 
 
 
-                        if opcion_elegida == "6":                        #Cambiar un dato suyo
-                            atributo = input('Ingrese el atributo a cambiar (dni,nombre,apellido,fecnac,email,contraseña)')
+                        '''Cambiar un dato del administrador'''
+                        if opcion_elegida == "6":                       
+                            atributo = input('Ingrese el atributo a cambiar (dni,nombre,apellido,fecnac,email,contraseña) ')
                             while atributo.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
                                 print('Escriba correctamente el atributo a modificar')
                                 atributo = input('Ingrese el atributo a cambiar(dni,nombre,apellido,fecnac,email,constraseña)')
                             
-                            valor=input('Ingrese el nuevo valor para el atributo a cambiar')
+                            valor_nuevo = input('Ingrese el nuevo valor para el atributo a cambiar')
                         
-                            while val.validarCambiarDatosPersona(atributo,valor)==False:
-                                valor=input('Ingrese el nuevo valor para el atributo a cambiar')
+                            while val.validarCambiarDatosPersona(atributo,valor_nuevo)==False:
+                                valor_nuevo=input('Ingrese el nuevo valor para el atributo a cambiar')
 
-                            Administrador.diccEmpleados[legajo].cambiar_dato(legajo,atributo,valor)
+                            Administrador.diccEmpleados[legajo].cambiar_dato(legajo, atributo, valor_nuevo)
 
 
-                        if opcion_elegida == "7":                        #Modificar precio por dia de un vehiculo       
+                        '''Modificar precio por dia de un vehiculo '''  
+                        if opcion_elegida == "7":                               
                             tipo = input('Ingrese el tipo de auto ')
                             while  val.validartipo(tipo) == False:
                                 tipo = input('Ingrese tipo de auto correcto ')
@@ -411,19 +430,23 @@ else:
                             while val.validargama(gama) == False:
                                 gama = input('Ingrese gama de auto correcta')
                                 
-                            precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ')
-                            while  val.validarprecio(precio) == False:
-                                precio = input('Ingrese nuevo precio por dia para este tipo y gama de autos ') 
+                            precio_nuevo = input('Ingrese nuevo precio por dia para este tipo y gama de autos ')
+                            while  val.validarprecio(precio_nuevo) == False:
+                                precio_nuevo = input('Ingrese nuevo precio por dia para este tipo y gama de autos ') 
 
-                            Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio)
+                            Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio_nuevo)
 
-                        if opcion_elegida=='8':
-                            legajoEliminar=input('Ingrese legajo del empleado que quiere eliminar')
+
+                        '''Eliminar otro empleado/administrador'''
+                        if opcion_elegida == '8':
+                            legajoEliminar = input('Ingrese legajo del empleado que quiere eliminar ')
                             while  val.validarexistenciaclave(legajoEliminar,{tupla[0] for tupla in Administrador.setlegajos}) == False:
                                 legajoEliminar = input('Ingrese legajo existente ') 
                             legajoEliminar=int(legajoEliminar)
                             Administrador.diccEmpleados[legajoEliminar].darDeBajaEmpleado()
 
+
+                        '''Ejecutar tareas de gestión económica de la Empresa'''
                         if opcion_elegida == "9":                       
                             print('Operaciones que puede realizar:')
                             print('')
@@ -434,6 +457,8 @@ else:
 
                             while operacion not in ['1','2']: 
                                 operacion = input("ingrese nuevamente la opcion: ")
+                            
+                            '''Consultar ventas de un día en particular'''
                             if operacion == '1':
                                 dia = input('Ingrese fecha a consultar ')
                                 while val.validarFechaAConsultar(dia) == False:
@@ -441,6 +466,7 @@ else:
                                     dia = input('Ingrese fecha a consultar')
                                 Administrador.diccEmpleados[legajo].consultarVentasXDia(dia)
 
+                                '''Consultar ventas de un mes en particular'''
                             elif operacion == '2':
                                 mes = input('Ingrese mes a consultar ')
                                 while val.validarMesAConsultar(mes) == False:
@@ -449,11 +475,8 @@ else:
                                 Administrador.diccEmpleados[legajo].consultarVentasXMes(mes)
 
                                 
-                        
-
-
-
-                        if opcion_elegida == "10":                        #Salir
+                        '''Salir'''
+                        if opcion_elegida == "10":                       
                             pass
 
 
@@ -468,6 +491,9 @@ else:
         elif opcion_elegida == "3":                                #Salir
             pass
 
+
+
+
         
         print('')
         seguir_operando = input("Desea seguir operando (SI o NO)? ").strip().upper()
@@ -475,7 +501,8 @@ else:
             seguir_operando = input("No ha ingresado una opción válida. Desea seguir operando (SI o NO)? ").strip().upper()
     
         
-        util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)                     #Actualizo los csv
+        '''Actualizo los archivos de: Empleados, Usuarios, Alquileres, Reservas y Vehiculos'''
+        util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)                     
         util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
         util.escribirCsv('Alquileres.csv', Alquiler.diccAlquileres)
         util.escribirCsv('Reservas.csv', Reserva.diccReservas)

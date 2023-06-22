@@ -3,11 +3,14 @@ from ClaseVehiculos import Vehiculos
 import Utilities as util
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
-#se crea la clase alquiler
+
+'''Se crea la clase Alquiler'''
 class Alquiler():
     cantAlquileres = 0 
     diccAlquileres=dict() 
     setAlquileres = set() 
+    
+    '''Iniciador de la clase Alquiler'''
     def __init__(self, id = None, idReserva = None, dni = None, patente_auto = None, fechaInicioAlq = None, fechaExpiracionAlq = None, fechadev = None, monto = None):
         self.id = id 
         self.idReserva = idReserva  
@@ -16,23 +19,27 @@ class Alquiler():
         self.fechaInicioAlq = fechaInicioAlq 
         self.fechaExpiracionAlq = fechaExpiracionAlq 
         self.fechadev = fechadev  
-        self.monto=monto     
+        self.monto = monto     
         Alquiler.cantAlquileres += 1
         Alquiler.setAlquileres.add(self.id)
         Alquiler.diccAlquileres[self.id]=self
     
-#funcion para establecer fecha de devolucion
+
+    '''Funcion para establecer fecha de devolucion'''
     def finalizar(self):
-        self.fechadev=datetime.now()
+        self.fechadev = datetime.now()
     
-#método str para la clase
+    
+    '''Método str para la clase'''
     def __str__(self):
         return ('{}-{}-{}-{}-{}'.format(self.id, self.fecha, self.dni, self.auto))
    
-#diccionario que contiene los registros del archivo csv de alquiler
+
+'''Diccionario que contiene los registros del archivo csv de alquiler'''
 util.leerCsv('Alquileres.csv', Alquiler)
 
-#actualización de diccionarios al iniciar un alquiler
+
+'''Actualización de diccionarios al iniciar un alquiler'''
 for k in Reserva.diccReservas.keys():
     if datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()==datetime.now().date():
         fechafin=datetime.strptime(Reserva.diccReservas[k].fechaFin,"%d-%m-%Y").date()

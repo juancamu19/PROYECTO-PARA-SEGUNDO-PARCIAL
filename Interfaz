@@ -1,11 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget, QComboBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget, QComboBox, QDesktopWidget
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QColor
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt 
 
 from datetime import datetime
-# from claseEmpresa import Empresa
+from claseEmpresa import Empresa
 import validaciones as val
 import Utilities as util
 from ClasePersonas import Administrador, Usuarios
@@ -13,11 +13,13 @@ from ClaseAlquileres import Alquiler
 from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
 
+
 class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Inicio de Sesión')
         self.setMinimumSize(600, 600)
+        self.center()
 
         # Create a central widget and a layout
         central_widget = QWidget(self)
@@ -59,7 +61,7 @@ class LoginWindow(QMainWindow):
 
         self.button_login.clicked.connect(self.openMainWindow)
 
-        self.button_admin.clicked.connect(self.openAdminWindow)
+        self.button_admin.clicked.connect(self.openLoginAdminWindow)
 
         self.button_registro.clicked.connect(self.openRegistroWindow)
 
@@ -82,6 +84,19 @@ class LoginWindow(QMainWindow):
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)
+
+    def center(self):
+        # Get the screen's geometry
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        # Calculate the center point
+        center_point = screen_geometry.center()
+
+        # Adjust the window position
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def resizeEvent(self, event):
         # Center the objects when the window is resized
@@ -117,25 +132,9 @@ class LoginWindow(QMainWindow):
             self.window = MainWindow(dni, usuario, contrasena) 
             self.window.show()
 
-    def openAdminWindow(self):
-        dni=self.input_dni.text()
-        legajo = self.input_user.text()
-        contraseña = self.input_password.text()
-        validado=True
-
-        if val.validardni(dni)==False:
-            self.show_error()
-            self.input_dni.clear()
-            validado==False
-        
-        if val.validarexistenciaPersona(legajo, contraseña, Administrador)==False:
-            self.show_error()
-            self.input_user.clear()
-            self.input_password.clear()
-
-        if validado==True:
+    def openLoginAdminWindow(self):
             self.close()
-            self.window = AdminWindow(legajo,contraseña)
+            self.window = LoginAdministradorWindow()
             self.window.show()
 
     def openRegistroWindow(self):
@@ -143,14 +142,116 @@ class LoginWindow(QMainWindow):
         self.window = RegistroWindow()
         self.window.show()
 
+class LoginAdministradorWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Inicio de Sesión de Administradores')
+        self.setMinimumSize(600, 600)
+        self.center()
+
+        # Create a central widget and a layout
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+
+        # Create a welcome label
+        welcome_label = QLabel('Bienvenido/a', self)
+        welcome_label.setAlignment(Qt.AlignCenter)
+
+        # Create labels
+        label_legajo = QLabel('Legajo del empleado:', self)
+        label_password = QLabel('Contraseña:', self)
+
+        # Create input boxes
+        input_legajo = QLineEdit(self)
+        self.input_legajo = input_legajo
+        input_user = QLineEdit(self)
+        self.input_password = QLineEdit(self)
+        self.input_password.setEchoMode(QLineEdit.Password)
+
+        # Create login button
+        self.button_login = QPushButton('Ingresar', self)
+    
+        # Create the error label (hidden by default)
+        self.error_label = QLabel("El legajo o contraseña es incorrecto.", central_widget)
+        self.error_label.setStyleSheet("color: red")
+        self.error_label.hide()
+
+        self.button_login.clicked.connect(self.openAdminWindow)
+
+        # Add widgets to the layout
+        layout.addWidget(logo_label)
+        layout.addWidget(welcome_label)
+        layout.addWidget(label_legajo)
+        layout.addWidget(input_legajo)
+        layout.addWidget(label_password)
+        layout.addWidget(self.input_password)
+        layout.addWidget(self.button_login)
+        layout.addWidget(self.error_label)
+
+        # Set the central widget and apply the style sheet
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
+    def resizeEvent(self, event):
+        # Center the objects when the window is resized
+        super().resizeEvent(event)
+        self.centerObjects()
+
+    def centerObjects(self):
+        # Center the objects in the window
+        central_widget = self.centralWidget()
+        layout = central_widget.layout()
+        layout.setAlignment(Qt.AlignCenter)
+
+    def show_error(self):
+        self.error_label.show()
+    
+    def clear_inputs(self):
+        self.input_legajo.clear()
+        self.input_password.clear()
+
+    def openAdminWindow(self):
+        legajo = self.input_legajo.text()
+        contraseña = self.input_password.text()
+        validado=True
+        
+        if val.validarexistenciaPersona(legajo, contraseña, Administrador.setlegajos)==False:
+            self.show_error()
+            self.input_legajo.clear()
+            self.input_password.clear()
+
+        if validado==True:
+            self.close()
+            self.window = AdminWindow(legajo,contraseña)
+            self.window.show()
+
 class AdminWindow(QMainWindow):
     def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle('Gestión de Administrador')
         self.setMinimumSize(600, 600)
+        self.center()
 
         """Traigo los valores de legajo y contraseña desde Login window"""
-        self.legajo=legajo
+        self.legajo=int(legajo)
         self.contraseña=contraseña
 
         # Create a logo label
@@ -166,32 +267,28 @@ class AdminWindow(QMainWindow):
 
         # Create buttons
         self.button1 = QPushButton('Agregar un auto', central_widget)
-        self.button1.setIcon(QIcon('icon1.png'))  # Replace with the path to your button icon
         self.button1.clicked.connect(self.openAgregarAuto)
 
         self.button2 = QPushButton('Modificar un auto existente', central_widget)
-        self.button2.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
         self.button2.clicked.connect(self.openModificarAuto)
 
         self.button3 = QPushButton('Modificar el precio de un tipo y gama de auto', central_widget)
-        self.button3.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
         self.button3.clicked.connect(self.openModificarPrecioAuto)
 
         self.button4 = QPushButton('Eliminar un auto', central_widget)
-        self.button4.setIcon(QIcon('icon3.png'))  # Replace with the path to your button icon
         self.button4.clicked.connect(self.openEliminarAuto)  
 
         self.button5 = QPushButton('Agregar un empleado nuevo', central_widget)
-        self.button5.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
         self.button5.clicked.connect(self.openAgregarEmpleado)
 
         self.button6 = QPushButton('Eliminar un empleado', central_widget)
-        self.button6.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
         self.button6.clicked.connect(self.openEliminarEmpleado)
 
         self.button7 = QPushButton('Finalizar un alquiler', central_widget)
-        self.button7.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
         self.button7.clicked.connect(self.openFinalizarAlquiler)
+
+        self.button8 = QPushButton('Realizar tareas de gestión económica', central_widget)
+        self.button8.clicked.connect(self.openGestionEconomica)
 
         # Add buttons to the layout
         layout.addWidget(logo_label)
@@ -202,12 +299,23 @@ class AdminWindow(QMainWindow):
         layout.addWidget(self.button5)
         layout.addWidget(self.button6)
         layout.addWidget(self.button7)
+        layout.addWidget(self.button8)
 
         # Set the central widget and apply the style sheet
         self.setCentralWidget(central_widget)
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def openAgregarAuto(self):
         self.close()
@@ -231,30 +339,35 @@ class AdminWindow(QMainWindow):
 
     def openEliminarEmpleado(self):
         self.close()
-        self.window4 = EliminarEmpleado(self.legajo, self.contraseña)
-        self.window4.show()
+        self.window5 = EliminarEmpleado(self.legajo, self.contraseña)
+        self.window5.show()
 
     def openModificarPrecioAuto(self):
         self.close()
-        self.window4 = ModificarPrecioAuto(self.legajo, self.contraseña)
-        self.window4.show()
+        self.window6 = ModificarPrecioAuto(self.legajo, self.contraseña)
+        self.window6.show()
     
     def openFinalizarAlquiler(self):
         self.close()
-        self.window4 = FinalizarAlquiler(self.legajo, self.contraseña)
-        self.window4.show()
+        self.window7 = FinalizarAlquiler(self.legajo, self.contraseña)
+        self.window7.show()
+
+    def openGestionEconomica(self):
+        self.close()
+        self.window8 = GestionEconomica(self.legajo, self.contraseña)
+        self.window8.show()
 
 class OperacionRealizadaAdmin(QWidget):
-    def __init__(self, legajo, contraseña, ventana):
+    def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle("Operación realizada")
         self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde la ventana en que esté trabajando el valor de legajo y contraseña"""
         self.legajo=legajo
         self.contraseña=contraseña
-        self.ventana= ventana
 
     def initUI(self):
         layout = QVBoxLayout()
@@ -273,11 +386,19 @@ class OperacionRealizadaAdmin(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
     
-    def Volver(self, ventana):
+    def Volver(self):
         self.close()
-        self.window1 = ventana
-        self.window1.close()
         self.window = AdminWindow(self.legajo, self.contraseña)
         self.window.show()
 
@@ -287,9 +408,9 @@ class AgregarAuto(QMainWindow):
         super().__init__()
         self.setWindowTitle('Agregar un auto')
         self.setMinimumSize(600, 600)
+        self.center()
 
-        """Traigo el valor de legajo desde Admin Window"""
-        self.legajo=legajo
+        self.legajo=int(legajo)
         self.contraseña = contraseña
 
         # Create a logo label
@@ -297,9 +418,6 @@ class AgregarAuto(QMainWindow):
         logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter) 
-
-        # Set window flags to make the window resizable
-        self.setWindowFlags(Qt.Window | Qt.WindowMinMaxButtonsHint | Qt.WindowCloseButtonHint | Qt.WindowResizable)
 
         # Create a central widget and a layout
         central_widget = QWidget(self)
@@ -324,8 +442,6 @@ class AgregarAuto(QMainWindow):
         label_gama = QLabel("Gama:", central_widget)
         self.input_gama = QLineEdit(central_widget)
 
-        label_precioxdia = QLabel("Precio por dia:", central_widget)
-        self.input_precioxdia = QLineEdit(central_widget)
 
         #Creo un label que informa cuando se agregó un auto exitosamente. Está escondido por defecto, se muestra al pasar la validación de los datos
         self.confirmado_label = QLabel("El auto fue agregado exitosamente!.", central_widget)
@@ -345,8 +461,6 @@ class AgregarAuto(QMainWindow):
         layout.addWidget(self.input_tipo)
         layout.addWidget(label_gama)
         layout.addWidget(self.input_gama)
-        layout.addWidget(label_precioxdia)
-        layout.addWidget(self.input_precioxdia)
         layout.addWidget(self.confirmado_label)
 
         # Create the register button
@@ -358,14 +472,21 @@ class AgregarAuto(QMainWindow):
         button2.clicked.connect(self.Volver)
         layout.addWidget(button2)
 
-        # Set the central widget
-        self.setCentralWidget(central_widget)
-
         self.setLayout(layout)
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def Volver(self):
         self.close()
@@ -383,8 +504,8 @@ class AgregarAuto(QMainWindow):
         palette.setColor(QPalette.PlaceholderText, placeholder_color)
         input.setPalette(palette)
     
-    def openOperacionRealizada(self, legajo, contraseña, ventana):
-        self.window1 = OperacionRealizadaAdmin(legajo, contraseña, ventana)
+    def openOperacionRealizada(self, legajo, contraseña):
+        self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
         self.window1.show()        
 
     def validate_data(self):    
@@ -394,7 +515,6 @@ class AgregarAuto(QMainWindow):
         año = self.input_año.text()
         tipo = self.input_tipo.text()
         gama = self.input_gama.text()
-        precioxdia = self.input_precioxdia.text()
 
         valid_data = True
 
@@ -425,7 +545,7 @@ class AgregarAuto(QMainWindow):
         if valid_data== True:
             self.show_confirmado()
             self.close()
-            self.openOperacionRealizada(self.legajo, self.contraseña, AgregarAuto())
+            self.openOperacionRealizada(self.legajo, self.contraseña)
             Administrador.diccEmpleados[self.legajo].agregarVehiculo(patente, modelo, marca, año, tipo ,gama)  
             util.escribirCsv('Vehiculos.csv', Vehiculos.diccVehiculos)
             
@@ -434,10 +554,12 @@ class ModificarAuto(QWidget):
     def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle("Modificar un auto")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo el valor de legajo y contraseña desde AdminWindow"""
-        self.legajo=legajo
+        self.legajo= int(legajo)
         self.contraseña=contraseña
 
     def initUI(self):
@@ -467,8 +589,7 @@ class ModificarAuto(QWidget):
         self.combo_atributo.addItem("Marca")
         self.combo_atributo.addItem("Modelo")
         self.combo_atributo.addItem("Tipo")
-        self.combo_atributo.addItem("Gama")
-        self.combo_atributo.addItem("Precio por dia")        
+        self.combo_atributo.addItem("Gama")       
 
         layout.addWidget(logo_label)
         layout.addWidget(label_patente)
@@ -493,6 +614,16 @@ class ModificarAuto(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def show_confirmado(self):
         self.label_confirmado.show()
@@ -519,7 +650,7 @@ class ModificarAuto(QWidget):
             validado= False
             self.PlaceholderText(self.input_patente, "La patente ingresada no existe")
         
-        if val.validaratributo(atributo)==False:
+        if val.validaratributoVehiculo(atributo)==False:
             validado= False
         else:
             match atributo:
@@ -592,10 +723,12 @@ class EliminarAuto(QWidget):
     def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle("Eliminar auto")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde AdminWindow el valor de legajo y contraeña"""
-        self.legajo=legajo
+        self.legajo=int(legajo)
         self.contraseña=contraseña
 
     def initUI(self):
@@ -635,6 +768,16 @@ class EliminarAuto(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def showError(self, text, color):
         self.error_label.clear()
@@ -673,10 +816,11 @@ class AgregarEmpleado(QWidget):
     def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle('Registro de Empleado')
-        self.setMinimumSize(700,700)
+        self.setMinimumSize(600,600)
+        self.center()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
-        self.legajo= legajo
+        self.legajo= int(legajo)
         self.contraseña=contraseña
 
         # Create a central widget and a layout
@@ -749,10 +893,21 @@ class AgregarEmpleado(QWidget):
         layout.addWidget(button2)
         
         # Set the central widget and apply the style sheet
-        self.setCentralWidget(central_widget)
+        self.setLayout(layout)
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)
+        self.show()
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def show_Confirmado(self):
         self.confirmado_label.show()
@@ -797,7 +952,7 @@ class AgregarEmpleado(QWidget):
             validado=False
             self.PlaceholderText(self.input_apellido, "Reingrese el apellido de forma correcta")
        
-        if val.validarFecha(fecnac)==False:
+        if val.validarFechaNac(fecnac)==False:
             validado=False
             self.PlaceholderText(self.input_fecnac, "Reingrese una fecha de nacimiento válida (Mayor 18 años)")
         
@@ -821,10 +976,12 @@ class EliminarEmpleado(QWidget):
     def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle("Eliminar empleado")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI"""
-        self.legajo=legajo
+        self.legajo=int(legajo)
         self.contraseña=contraseña
 
     def initUI(self):
@@ -864,6 +1021,16 @@ class EliminarEmpleado(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def openOperacionRealizada(self, legajo, contraseña):
         self.window1 = OperacionRealizadaAdmin(legajo, contraseña)
@@ -878,16 +1045,14 @@ class EliminarEmpleado(QWidget):
 
     def confirmButtonClicked(self):
         legajo= self.input_legajo.text().strip()
-        validado=True
 
-        if val.validarexistenciaclave(legajo, Administrador.setlegajos)==False:
-            validado=False
+        if val.validarexistenciaclave(str(legajo), {tupla[0] for tupla in Administrador.setlegajos})==False:
             self.showError("Ingrese un legajo válido", "red")
             self.input_legajo.clear()
         else:
             self.showError("La cuenta fue eliminada exitosamente", "green")
             self.close()
-            Administrador.diccEmpleados[self.legajo].darDeBajaEmpleado(legajo)
+            Administrador.diccEmpleados[int(legajo)].darDeBajaEmpleado()
             util.escribirCsv('Empleados.csv', Administrador.diccEmpleados)
             self.openOperacionRealizada(self.legajo, self.contraseña)
     
@@ -901,11 +1066,12 @@ class ModificarPrecioAuto(QWidget):
     def __init__(self,legajo, contraseña):
         super().__init__()
         self.setWindowTitle("Elegi tus fechas de alquiler")
-        self.setMinimumSize(700, 700)
+        self.setMinimumSize(600, 600)
+        self.center()
         self.initUI()
 
         """Traigo desde AdminWindow el valor de DNI, usuario y contraseña"""
-        self.legajo= legajo
+        self.legajo= int(legajo)
         self.contraseña=contraseña
 
     def initUI(self):
@@ -965,6 +1131,16 @@ class ModificarPrecioAuto(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def showError(self, text, color):
         self.error_label.clear()
@@ -999,10 +1175,12 @@ class FinalizarAlquiler(QWidget):
     def __init__(self, legajo, contraseña):
         super().__init__()
         self.setWindowTitle("Finalización de alquiler")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
-        self.legajo=legajo
+        self.legajo=int(legajo)
         self.contraseña=contraseña
 
     def initUI(self):
@@ -1041,6 +1219,16 @@ class FinalizarAlquiler(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def showError(self, text, color):
         self.error_label.clear()
@@ -1072,13 +1260,132 @@ class FinalizarAlquiler(QWidget):
         self.window = AdminWindow(self.legajo, self.contraseña)
         self.window.show()   
 
+class GestionEconomica(QWidget):
+    def __init__(self, legajo, contraseña):
+        super().__init__()
+        self.setWindowTitle('NoVoyEnTren.com')
+        self.setMinimumSize(700, 700)
+        self.legajo= int(legajo)
+        self.contraseña=contraseña
+
+        # Create a central widget and a layout
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+        layout.setAlignment(Qt.AlignCenter)
+
+        # Create a logo label
+        logo_label = QLabel(self)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(logo_label)
+
+        # Create buttons
+        self.button1 = QPushButton('Consultar ventas de un día en particular', central_widget)
+        self.button1.setIcon(QIcon('icon1.png'))  # Replace with the path to your button icon
+        self.button1.clicked.connect(self.openVentasPorDia)
+
+        self.button2 = QPushButton('Consultar ventas de un mes', central_widget)
+        self.button2.setIcon(QIcon('icon2.png'))  # Replace with the path to your button icon
+        self.button2.clicked.connect(self.openVentasPorMes)
+
+        # Add buttons to the layout
+        layout.addWidget(self.button1)
+        layout.addWidget(self.button2)
+
+        # Set the central widget and apply the style sheet
+        self.setCentralWidget(central_widget)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)
+
+    def openVentasPorDia(self):
+        self.close()
+        self.window1 = VentasPorDia(self.legajo, self.contraseña)
+        self.window1.show()
+
+    def openCancelacion(self):
+        self.close()
+        self.window2 = VentasPorMes(self.legajo, self.contraseña)
+        self.window2.show()
+
+class VentasPorDia(QWidget):
+    def __init__(self,legajo, contraseña):
+        super().__init__()
+        self.setWindowTitle("Gestion económica: ventas por dia")
+        self.setMinimumSize(700, 700)
+        self.initUI()
+
+        """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
+        self.legajo=int(legajo)
+        self.contraseña=contraseña
+
+    def initUI(self):
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+
+        # First Calendar
+        label1 = QLabel("Seleccione fecha de interés:")
+        layout.addWidget(label1)
+        self.calendar1 = QCalendarWidget()
+        layout.addWidget(self.calendar1)
+
+
+        """Se crea label reutilizable de confirmación y de error, oculto por defecto."""
+        self.label=QLabel()
+        self.label.hide()
+        layout.addWidget(self.label)
+
+        """Se crea boton de confirmar reserva y de volver a la página anterior"""
+        self.button1 = QPushButton("Confirmar")
+        layout.addWidget(self.button1)
+        self.button1.clicked.connect(self.ClickConfirmar)
+
+        self.button2 = QPushButton("Volver")
+        layout.addWidget(self.button2)
+        self.button2.clicked.connect(self.Volver)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+
+    def openOperacionRealizada(self, legajo, contraseña):
+        print("boca")
+    #     self.window1 = resultadoGestionEconomica(legajo, contraseña)
+    #     self.window1.show()
+
+    def showError(self, text, color):
+        self.label.clear()
+        self.label.setText(text)
+        coloraplicado= "color: " + color
+        self.label.setStyleSheet(coloraplicado)
+        self.label.show()
+
+    def ClickConfirmar(self):
+        fecha_interes = self.calendar1.selectedDate().toString("dd-MM-yyyy")
+
+        if val.validarFechaAConsultar(fecha_interes)==False:
+            self.showError("No hay resultados para la fecha indicada.", "red")
+        else:
+            sumaTotal = Administrador.diccEmpleados[self.legajo].consultarVentasXDia(fecha_interes)
+            self.showError("El total de ventas en " + fecha_interes + " es: " f"{sumaTotal}", "green")
+            
+                
+
+    def Volver(self):
+        self.close()
+        self.window = MainWindow(self.dni, self.usuario, self.contraseña)
+        self.window.show()
 
 """Se crea ventana de registro de usuarios"""
 class RegistroWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Registro de usuario')
-        self.setMinimumSize(700,700)
+        self.setMinimumSize(600,600)
+        self.center()
 
         """Se crea el layout y central widget"""
         central_widget = QWidget(self)
@@ -1086,7 +1393,7 @@ class RegistroWindow(QMainWindow):
 
         # Create a logo label
         logo_label = QLabel(self)
-        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(250,250, aspectRatioMode=True)
+        logo_pixmap = QPixmap('novoyentrenLOGO.png').scaled(200,200, aspectRatioMode=True)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)
 
@@ -1104,7 +1411,7 @@ class RegistroWindow(QMainWindow):
         label_apellido = QLabel("Apellido:", central_widget)
         self.input_apellido = QLineEdit(central_widget)
 
-        label_fecnac = QLabel("Fecha de nacimiento:", central_widget)
+        label_fecnac = QLabel("Fecha de nacimiento: (DD-MM-YYYY)", central_widget)
         self.input_fecnac = QLineEdit(central_widget)
 
         label_usuario = QLabel("Usuario:", central_widget)
@@ -1160,6 +1467,16 @@ class RegistroWindow(QMainWindow):
             style = est.read()
             self.setStyleSheet(style)
 
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
     """Se crea método para mostrar el label de confirmación"""
     def show_Confirmado(self):
         self.confirmado_label.show()
@@ -1213,7 +1530,7 @@ class RegistroWindow(QMainWindow):
             validado=False
             self.PlaceholderText(self.input_usuario, "Reingrese el usuario de forma correcta")
         
-        if val.validarFecha(fecnac)==False:
+        if val.validarFechaNac(fecnac)==False:
             validado=False
             self.PlaceholderText(self.input_fecnac, "Reingrese una fecha de nacimiento válida (Mayor 18 años)")
         
@@ -1236,6 +1553,8 @@ class RegistroRealizadoUsuario(QWidget):
     def __init__(self, dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle("Cancelación de reservas")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde RegistroWindow el valor de DNI, usuario y contraseña"""
@@ -1260,6 +1579,16 @@ class RegistroRealizadoUsuario(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
     def IrAlInicio(self):
         self.close()
         self.window1=RegistroWindow()
@@ -1272,7 +1601,8 @@ class MainWindow(QMainWindow):
     def __init__(self, dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle('NoVoyEnTren.com')
-        self.setMinimumSize(700, 700)
+        self.setMinimumSize(600, 600)
+        self.center()
 
         """Traigo desde la ventana de inicio los datos de usuario y dni"""
         self.dni=dni
@@ -1320,6 +1650,16 @@ class MainWindow(QMainWindow):
             style = est.read()
             self.setStyleSheet(style)
 
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
     def openReserva(self):
         self.close()
         self.window1 = CrearReserva(self.dni, self.usuario, self.contraseña)
@@ -1344,7 +1684,7 @@ class CrearReserva(QWidget):
     def __init__(self,dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle("Elegi tus fechas de alquiler")
-        self.setMinimumSize(700, 700)
+        self.setMinimumSize(600, 600)
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
@@ -1409,6 +1749,16 @@ class CrearReserva(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def openOperacionRealizada(self, dni, usuario, contraseña):
         self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña)
@@ -1460,6 +1810,7 @@ class Cancelacion(QWidget):
         super().__init__()
         self.setWindowTitle("Cancelación de reservas")
         self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
@@ -1497,6 +1848,16 @@ class Cancelacion(QWidget):
             self.setStyleSheet(style)        
         self.show()
 
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
     def showError(self, text, color):
         self.error_label.clear()
         self.error_label.setText(text)
@@ -1533,6 +1894,7 @@ class OperacionRealizadaUsuario(QWidget):
         super().__init__()
         self.setWindowTitle("Operación realizada")
         self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
@@ -1559,6 +1921,16 @@ class OperacionRealizadaUsuario(QWidget):
             self.setStyleSheet(style)        
         self.show()
     
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
     def Volver(self, ventana):
         self.close()
         self.window = MainWindow(self.dni,self.usuario, self.contraseña)
@@ -1569,6 +1941,7 @@ class finalizarOperacionUsuario(QWidget):
         super().__init__()
         self.setWindowTitle("Operación realizada")
         self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
@@ -1595,6 +1968,16 @@ class finalizarOperacionUsuario(QWidget):
             self.setStyleSheet(style)        
         self.show()
     
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
     def Volver(self):
         self.close()
         self.window = LoginWindow()
@@ -1605,6 +1988,7 @@ class CambioDatos(QWidget):
         super().__init__()
         self.setWindowTitle('Cambiar datos personales')
         self.setMinimumSize(600, 600)
+        self.center()
         self.initUI()
 
         """Traigo el valor de DNI, usuario y contraseña desde MainWindow"""
@@ -1656,6 +2040,16 @@ class CambioDatos(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def show_confirmado(self):
         self.label_confirmado.show()
@@ -1748,6 +2142,8 @@ class EliminarUsuario(QWidget):
     def __init__(self, dni, usuario, contraseña):
         super().__init__()
         self.setWindowTitle("Eliminar usuario")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
         """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
@@ -1794,6 +2190,19 @@ class EliminarUsuario(QWidget):
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
+    
+    def center(self):
+        # Get the screen's geometry
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        # Calculate the center point
+        center_point = screen_geometry.center()
+
+        # Adjust the window position
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
     def showError(self, text, color):
         self.error_label.clear()
@@ -1836,6 +2245,7 @@ class EliminarUsuario(QWidget):
             self.showError("La cuenta fue eliminada exitosamente", "green")
             Usuarios.diccUsuarios[dni].darDeBajaUsuario()
             util.escribirCsv('Usuarios.csv', Usuarios.diccUsuarios)
+            self.close()
             self.finalizarOperacion()
 
     def Volver(self):

@@ -64,9 +64,9 @@ def validarmodelo(modelo_vehiculo):
     return True
 
 
-'''Valido que el año ingresado no sea del futuro'''
+
 def validaranio(anio_ingresado): 
-            
+    '''Valido que el año ingresado no sea del futuro. devuelve bool'''        
     try:
         if int(anio_ingresado) <= date.today().year:
             return True
@@ -79,23 +79,24 @@ def validaranio(anio_ingresado):
         return False 
 
 
-'''Valido que el atributo que se quiera modificar sea uno de los definidos'''
+
 def validaratributoVehiculo(atributo_vehiculo): 
-       
+    """ Se ingresa por parametro el atributo a cambiar, y se valida que sea uno de los attr de vehiculos"""   
     if atributo_vehiculo.strip().lower() not in ['patente','modelo','marca','año','tipo','gama']:
         return False
     else:
         return True
-def validaratributoPersona(atributo_persona):    
+def validaratributoPersona(atributo_persona):  
+    """ Se ingresa por parametro el atributo a cambiar, y se valida que sea uno de los attr de personas"""  
     if atributo_persona.strip().lower() not in ['dni','nombre','apellido','fecnac','email','contraseña']:
         return False
     else:
         return True
 
 
-'''Valido que la clave de un diccionario exista en el set de claves asociado al mismo'''
+'''Valido que la clave de un diccionario exista en el set de claves asociado al mismo. devuelve bool'''
 def validarexistenciaclave(clave, set): 
-    """"""             
+                 
     if clave in set:
         return True
     else:
@@ -103,7 +104,7 @@ def validarexistenciaclave(clave, set):
      
 
 '''Valido que la persona se encuentre registrada. El set pasado por parametro es o bien setdnis de usuarios, o setlegajos de
-administrador. Ambos son conjuntos de tuplas, conteniendo el identificador y la contraseña hasheada en cada una de ellas. '''
+administrador. Ambos son conjuntos de tuplas, conteniendo el identificador(dni o legajo) y la contraseña hasheada en cada una de ellas. '''
 def validarexistenciaPersona(identificador, contraseña_ingresada, set):
         
     contraseña_ingresada = contraseña_ingresada.encode('utf-8')
@@ -176,7 +177,7 @@ def validarMesAConsultar(mes):
 
 '''Valido que la fecha de inicio de la reserva sea posterior a 5 días desde el presente'''
 def validarAgregarFechaInicio(fechainicio): 
-        
+    """ se ingresa fecinicio y se valida que difiere en al menos 5 dias con la fecha actual. devuelve bool"""    
     try:
         fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_actual = datetime.now().date()
@@ -193,7 +194,8 @@ def validarAgregarFechaInicio(fechainicio):
 
 '''Valido que la modificación de la fecha de inicio del alquiler pertenezca al futuro y sea previa a la fecha de fin del mismo'''
 def validarModifFechaInicio(fechainicio, fechafin):
-        
+    """ Se valida modificar fecinicio, se pasa por paramettro esta y fecfin. Se valida que la fecinicio difiere en 
+    mas de 5 dias con la actual y que sea anterior a la fecfin. Devuelve bool"""    
     try:
         fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_fin = datetime.strptime(fechafin,"%d-%m-%Y").date()
@@ -211,7 +213,7 @@ def validarModifFechaInicio(fechainicio, fechafin):
 
 '''Valido que la fecha de fin de alquiler sea posterior a la fecha de inicio de alquiler'''
 def validarFechaFin(fechainicio, fechafin): 
-           
+    """ Se ingresa por parametro una fechainicio y fechafin. Se valida que la fechafin sea posterior a la de ininico"""       
     try:
         fechainicio = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fechafin = datetime.strptime(fechafin,"%d-%m-%Y").date()
@@ -228,7 +230,7 @@ def validarFechaFin(fechainicio, fechafin):
 
 '''Valido que el largo del nombre de usuario sea mayor o igual que 5 caracteres, pero menor o igual que 20'''
 def validarusuario(usuario): 
-            
+    """ impone reestricciones minimas para el nombre de usuario y devuelve True si lo cumple"""        
     usuario = str(usuario).strip()
     try:
         if len(usuario) < 5 or len(usuario) > 20:
@@ -243,7 +245,8 @@ def validarusuario(usuario):
 
 
 '''Valido que el dni tenga entre 7 y 8 dígitos'''
-def validardni(dni):        
+def validardni(dni):
+    """ se verifica que el dni este formado por digitos y extension adecuada. Devuelve True si asi lo es."""        
     dni = str(dni).strip()
     try:
         if len(dni) < 7 or len(dni) > 8 or dni.isdigit() == False:
@@ -260,7 +263,8 @@ def validardni(dni):
 
 
 '''Valido que el nombre de la persona sólo contenga caracteres alfabéticos o espacios'''
-def validarnombre(nombre):     
+def validarnombre(nombre): 
+    """ Se verifia que el nombre este formado por letras"""    
     try:
         nombre = nombre.replace(' ','')
         if not nombre.isalpha():
@@ -275,7 +279,8 @@ def validarnombre(nombre):
 
 
 '''Valido que el mail no sea nulo y que contenga el "@"'''
-def validaremail(mail):       
+def validaremail(mail):
+    """ Verifica que el mail no sea nulo o no contenga @. Se devuelve True si pasa la validacion."""       
     try:
          if len(mail) == 0 or mail.count("@") == 0:
             print("El mail ingresado es incorrecto, intente de nuevo")
@@ -288,7 +293,9 @@ def validaremail(mail):
 
 
 '''Valido que el largo de la contraseña sea mayor o igual que 5 caracteres, pero menor o igual que 20'''
-def validarcontraseña(contraseña_ingresada):       
+def validarcontraseña(contraseña_ingresada):  
+    """ se ingresa la contraseña y se verifica que cumpla con las conidicones minimas y maximas de extension.
+    Devuelve True si contraseña tiene la extension adecuada."""         
     contraseña_ingresada = str(contraseña_ingresada)
     
     try:
@@ -303,7 +310,16 @@ def validarcontraseña(contraseña_ingresada):
                    
 
 '''Valido que la patente pueda ser una de las permitidas en Argentina'''
-def validarpatente(patente):      
+def validarpatente(patente): 
+    """_summary_
+
+    Args:
+        patente (str): patente del auto a ingresar
+
+    Returns:
+        bool: True si patente esta validada
+    """
+        
     patente = str(patente)
     
     try:
@@ -332,7 +348,16 @@ def validarpatente(patente):
 
 '''Valido que el atributo que el usuario quiera cambiar de su perfil, cumpla los requerimientos propio de dicho atributo'''
 def validarCambiarDatosPersona(atributo, valor_ingresado):
-     match atributo:
+    """_summary_
+
+    Args:
+        atributo (string): atributo a cambiar
+        valor_ingresado (string): nuevo valor para el attr
+
+    Returns:
+        bool: True si el valor esta validado
+    """
+    match atributo:
 
         case 'dni':
             return validardni(valor_ingresado)
@@ -355,6 +380,15 @@ def validarCambiarDatosPersona(atributo, valor_ingresado):
 
 '''Valido que el atributo que un administador quiera cambiar de un vehículo, cumpla los requerimientos propio de dicho atributo'''
 def validarCambiarDatosVehiculo(atributo,valor_ingresado):
+    """_summary_
+
+    Args:
+        atributo (string): atributo a cambiar
+        valor_ingresado (string): nuevo valor para el attr
+
+    Returns:
+        bool: True si el valor esta validado
+    """
     match atributo:
             
         case 'patente':

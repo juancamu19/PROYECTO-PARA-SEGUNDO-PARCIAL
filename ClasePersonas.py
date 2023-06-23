@@ -43,7 +43,7 @@ class Personas:
         2- Al cambiar la contraseña se debe hacer lo mismo, solo que en este caso la que se reemplaza es la tupla dni:contraseña
 
         Args:
-            identificador (str): identificado de la persona que quiere cambiar un dato suyo (dni)
+            identificador (str): identificado de la persona que quiere cambiar un dato suyo (dni) o legajo
             atributo (str): atributo que la persona quiera modificar
             valor_nuevo (str): valor nuevo que la persona quiera darle al atributo
         """
@@ -129,7 +129,7 @@ class Usuarios(Personas):
             apellido (str): apellido de la persona
             fecnac (datetime): fecha de nacimiento de la persona
             email (str): email de la persona
-            contraseñia (str): contraseña del perfil creado por la  persona
+            contraseña (str): contraseña del perfil creado por la  persona
         """
         contraseña = contraseña.encode('utf-8')
         objetoHash = hashlib.sha256(contraseña)

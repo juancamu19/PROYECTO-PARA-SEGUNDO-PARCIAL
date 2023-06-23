@@ -111,7 +111,7 @@ class Vehiculos():
         for k in Reserva.diccReservas.keys():
             fechaInicioReservak = datetime.strptime(Reserva.diccReservas[k].fechaInicio,"%d-%m-%Y").date()
             fechaFinReservak = datetime.strptime(Reserva.diccReservas[k].fechaFin,"%d-%m-%Y").date()
-            if Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].tipo == tipo_elegido and Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].gama == gama_elegida:
+            if Vehiculos.diccVehiculos[Reserva.diccReservas[k].patente_auto].tipo == tipo_elegido and Reserva.diccReservas[k].patente_auto in Vehiculos.setVehiculos:
                 if ((fecinicio >= fechaInicioReservak and fecinicio <= fechaFinReservak) or ( fecfin <= fechaFinReservak and fecfin >= fechaInicioReservak) or (fecinicio<=fechaInicioReservak and fecfin >= fechaFinReservak)) and (Reserva.diccReservas[k].fechaCancel in ['',None]):
                 
                     setvehiculosdisponibles.remove(Reserva.diccReservas[k].patente_auto)  

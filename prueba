@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget, QComboBox
+from PyQt5.QtWidgets import QApplication, QDesktopWidget, QMainWindow, QGridLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QCalendarWidget, QComboBox
 from PyQt5.QtGui import QPixmap, QIcon, QPalette, QColor
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt 
@@ -14,122 +14,99 @@ from ClaseReservas import Reserva
 from ClaseVehiculos import Vehiculos
 import hashlib
 
-
-class EliminarUsuario(QWidget):
+class Ventana(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Eliminar usuario")
+        self.setWindowTitle("Operación realizada")
+        self.setMinimumSize(600,600)
+        self.center()
         self.initUI()
 
-        """Traigo desde MainWindow el valor de DNI, usuario y contraseña"""
-        
+        self.idres=Reserva.cantReservas
 
     def initUI(self):
         layout = QVBoxLayout()
 
         # Label
-        label_dni = QLabel("Ingresa tu DNI:")
-        label_contra1 = QLabel("Ingresa tu Contraseña:")
-        label_contra2 = QLabel("Confirma tu Contraseña:")
-        
-        # Input Box
-        self.input_dni = QLineEdit()
-        self.input_contra1= QLineEdit()
-        self.input_contra2= QLineEdit()
+        label_aviso = QLabel("Su operación fue realizada exitosamente!")
+        label_aviso.setStyleSheet("color: green")
+        layout.addWidget(label_aviso)
 
-        layout.addWidget(label_dni)
-        layout.addWidget(self.input_dni)
-        layout.addWidget(label_contra1)
-        layout.addWidget(self.input_contra1)
-        layout.addWidget(label_contra2)
-        layout.addWidget(self.input_contra2)
-
-        """Se crea labels de confirmación y de error, ocultos por defecto."""
-        self.confirmado_label= QLabel("La cuenta fue eliminada exitosamente")
-        self.confirmado_label.setStyleSheet("color: green")
-        self.confirmado_label.hide()
-        layout.addWidget(self.confirmado_label)
-
-        self.error_label=QLabel()
-        self.error_label.hide()
-        layout.addWidget(self.error_label)
-
-        self.label_errordni=QLabel("Ingrese un DNI válido")
-        self.label_errordni.setStyleSheet("color: red")
-        self.label_errordni.hide()
-        layout.addWidget(self.label_errordni)
-
-        self.label_errorcontra=QLabel("Las contraseñas no coinciden o es inválida")
-        self.label_errorcontra.setStyleSheet("color: red")
-        self.label_errorcontra.hide()
-        layout.addWidget(self.label_errorcontra)
-
-        self.label_errorpersona=QLabel("Los datos no coinciden con una persona registrada")
-        self.label_errorpersona.setStyleSheet("color: red")
-        self.label_errorpersona.hide()
-        layout.addWidget(self.label_errorpersona)
-
-        # Button
-        self.button = QPushButton("Continuar")
-        self.button.clicked.connect(self.confirmButtonClicked)
-        layout.addWidget(self.button)
-
-        
+        self.button2 = QPushButton("Volver al Inicio")
+        self.button2.clicked.connect(self.Volver)
+        layout.addWidget(self.button2)
 
         self.setLayout(layout)
         with open('Estilo.qss', 'r') as est:
             style = est.read()
             self.setStyleSheet(style)        
         self.show()
-
-    def showError(self, text, color):
-        self.error_label.setText(text)
-        coloraplicado= "color: " + color
-        self.error_label.setStyleSheet(coloraplicado)
-        self.error_label.show()
-
-    def showConfirmado(self):
-        self.confirmado_label.show()
     
-    def showErrorDNI(self):
-        self.label_errordni.show()
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
 
-    def showErrorContra(self):
-        self.label_errorcontra.show()
+        center_point = screen_geometry.center()
 
-    def showErrorPersona(self):
-        self.label_errorpersona.show()
-    
-    # def openOperacionRealizada(self, dni, usuario, contraseña, ventana):
-    #     self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña, ventana)
-    #     self.window1.show()
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
 
-    def confirmButtonClicked(self):
-        dni= self.input_dni.text().strip()
-        contra1=self.input_contra1.text().strip()
-        contra2=self.input_contra2.text().strip()
-        validado=True
+    def Volver(self):
+        self.close()
+        self.window = ReservaRealizadaUsuario(self.idres)
+        self.window.show()
 
-        if val.validardni(dni)==False:
-            validado=False
-            self.showError("DNI erroneo", "red")
+class ReservaRealizadaUsuario(QWidget):
+    def __init__(self, idres):
+        super().__init__()
+        self.setWindowTitle("Operación realizada")
+        self.setMinimumSize(600,600)
+        self.idres=idres
+        self.center()
+        self.initUI()
         
-        # if contra1 != contra2 or val.validarcontraseña(contra1)==False:
-        #     validado=False
-        #     self.showErrorContra
 
-        # if val.validarexistenciaPersona(dni, contra1, Usuarios)==False:
-        #     validado=False
-        #     self.showErrorPersona()
-        else:
-            self.showConfirmado()
-            # self.openOperacionRealizada(self.dni, self.usuario, self.contraseña, EliminarUsuario())
+    def initUI(self):
+        layout = QVBoxLayout()
 
+        # Label
+        label_aviso = QLabel("Su operación fue realizada exitosamente!")
+        label_aviso.setStyleSheet("color: green")
+        layout.addWidget(label_aviso)
+
+        label_idres = QLabel(f"El id de su reserva es {self.idres}")
+        label_idres.setStyleSheet("color: green")
+        layout.addWidget(label_idres)
+
+        self.button2 = QPushButton("Volver al Inicio")
+        self.button2.clicked.connect(self.Volver)
+        layout.addWidget(self.button2)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
+    def Volver(self, ventana):
+        self.close()
+        
     
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main_window = EliminarUsuario()
+    main_window = Ventana()
     main_window.show()
     sys.exit(app.exec_())

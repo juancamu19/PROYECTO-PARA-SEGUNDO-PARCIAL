@@ -1760,8 +1760,8 @@ class CrearReserva(QWidget):
         new_y = int(center_point.y() - window_geometry.height() / 2)
         self.move(new_x, new_y)
 
-    def openOperacionRealizada(self, dni, usuario, contraseña):
-        self.window1 = OperacionRealizadaUsuario(dni, usuario, contraseña)
+    def openReservaRealizada(self, dni, usuario, contraseña, idres):
+        self.window1 = ReservaRealizadaUsuario(dni, usuario, contraseña, idres)
         self.window1.show()
 
     def showError(self, text, color):
@@ -1797,7 +1797,8 @@ class CrearReserva(QWidget):
                 self.close()
                 Usuarios.diccUsuarios[self.dni].agregarReserva(auto, fecha_inicio, fecha_fin)
                 util.escribirCsv('Reservas.csv', Reserva.diccReservas)
-                self.openOperacionRealizada(self.dni, self.usuario, self.contraseña)
+                idreserva= Reserva.cantReservas
+                self.openReservaRealizada(self.dni, self.usuario, self.contraseña, idreserva)
 
     def Volver(self):
         self.close()
@@ -1887,6 +1888,57 @@ class Cancelacion(QWidget):
         self.close()
         self.window = MainWindow(self.dni, self.usuario, self.contraseña)
         self.window.show()     
+
+class ReservaRealizadaUsuario(QWidget):
+    def __init__(self, dni, usuario, contraseña, idres):
+        super().__init__()
+        self.setWindowTitle("Operación realizada")
+        self.setMinimumSize(600,600)
+        self.center()
+        self.dni=dni
+        self.usuario=usuario
+        self.contraseña=contraseña
+        self.idres=idres
+
+        self.initUI()
+
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        # Label
+        label_aviso = QLabel("Su operación fue realizada exitosamente!")
+        label_aviso.setStyleSheet("color: green")
+        layout.addWidget(label_aviso)
+
+        label_idres = QLabel(f"El id de su reserva es {self.idres}")
+        label_idres.setStyleSheet("color: green")
+        layout.addWidget(label_idres)
+
+        self.button2 = QPushButton("Volver al Inicio")
+        self.button2.clicked.connect(self.Volver)
+        layout.addWidget(self.button2)
+
+        self.setLayout(layout)
+        with open('Estilo.qss', 'r') as est:
+            style = est.read()
+            self.setStyleSheet(style)        
+        self.show()
+    
+    def center(self):
+        screen_geometry = QDesktopWidget().availableGeometry()
+        window_geometry = self.geometry()
+
+        center_point = screen_geometry.center()
+
+        new_x = int(center_point.x() - window_geometry.width() / 2)
+        new_y = int(center_point.y() - window_geometry.height() / 2)
+        self.move(new_x, new_y)
+
+    def Volver(self):
+        self.close()
+        self.window = MainWindow(self.dni,self.usuario, self.contraseña)
+        self.window.show()
 
 
 class OperacionRealizadaUsuario(QWidget):

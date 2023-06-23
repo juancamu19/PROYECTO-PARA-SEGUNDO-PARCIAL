@@ -105,7 +105,7 @@ def validarexistenciaclave(clave, set):
 '''Valido que la persona se encuentre registrada. El set pasado por parametro es o bien setdnis de usuarios, o setlegajos de
 administrador. Ambos son conjuntos de tuplas, conteniendo el identificador y la contraseña hasheada en cada una de ellas. '''
 def validarexistenciaPersona(identificador, contraseña_ingresada, set):
-         
+        
     contraseña_ingresada = contraseña_ingresada.encode('utf-8')
     objetoHash = hashlib.sha256(contraseña_ingresada)
     contraHasheada = objetoHash.hexdigest()

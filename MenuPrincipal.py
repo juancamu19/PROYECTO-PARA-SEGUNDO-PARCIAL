@@ -443,7 +443,8 @@ else:
                             Administrador.diccEmpleados[legajo].modifPreciosAutos(tipo,gama,precio_nuevo)
 
 
-                        '''Eliminar otro empleado/administrador'''
+                        '''Eliminar otro empleado/administrador. El set que se pasa por parametro contiene
+                        unicamente los legajos de los empleados, donde cada legajo diferente es un elemento.'''
                         if opcion_elegida == '8':
                             legajoEliminar = input('Ingrese legajo del empleado que quiere eliminar ')
                             while  val.validarexistenciaclave(legajoEliminar,{tupla[0] for tupla in Administrador.setlegajos}) == False:

@@ -181,7 +181,7 @@ def validarAgregarFechaInicio(fechainicio):
     try:
         fecha_ingresada = datetime.strptime(fechainicio,"%d-%m-%Y").date()
         fecha_actual = datetime.now().date()
-        if (fecha_ingresada - fecha_actual).days >= 5:
+        if (fecha_ingresada - fecha_actual).days >= 0:
              return True
         else:
              print('La fecha ingresada debe tener como mínimo una anticipación de 5 días')

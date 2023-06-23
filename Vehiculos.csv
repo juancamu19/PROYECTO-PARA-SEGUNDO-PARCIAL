@@ -1,21 +1,9 @@
-<<<<<<< Updated upstream
 abc123,focus,ford,2022,sedan,media,True,15000
-abc124,ka,ford,2020,sedan,baja,True,12000
-ghf345,1500,dodge,2013,pick-up,alta,True,40000
-ac724ks,2008,peugeot,2016,suv,media,True,20000
-hmc709,kicks,nissan,2000,suv,baja,True,13000
-ab555az,spider,ferrari,2010,deportivo,alta,True,150000
-vgh125,f4000,ford,2000,pick-up,baja,True,15000
-ai347bg,sandero,renault,2019,suv,media,True,20000
-=======
-abc123,focus,ford,2022,sedan,media,True,15000
-abc124,ka,ford,2020,sedan,baja,True,12000
-abc125,ka,ford,2020,sedan,baja,True,12000
-ghf345,1500,dodge,2013,pick-up,alta,True,40000
+abc124,ka,ford,2020,sedan,baja,True,15000
+abc125,ka,ford,2020,sedan,baja,True,15000
 ac724ks,2008,peugeot,2016,suv,media,True,20000
 hmc709,kicks,nissan,2000,suv,baja,True,13000
 ab555az,spider,ferrari,2010,deportivo,alta,True,150000
 vgh125,f4000,ford,2000,pick-up,baja,True,15000
 ai347bg,sandero,renault,2019,suv,media,True,20000
 aaa112,Mondeo,Ford,2016,sedan,media,True,15000
->>>>>>> Stashed changes
